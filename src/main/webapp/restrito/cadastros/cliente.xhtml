@@ -1,0 +1,142 @@
+<ui:composition template="/templates/pagina.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:components="http://xmlns.jcp.org/jsf/composite/components">
+
+	<ui:define name="title">
+        Cadastro de Cliente
+    </ui:define>
+
+	<ui:define name="content">
+		<h:form id="form1">
+			<p:growl id="mensagem" />
+
+			<p:panel id="painelCliente" header="Cliente">
+				<p:panelGrid columns="2" layout="grid">
+					<p:panelGrid columns="1" layout="grid">
+						<p:panelGrid columns="2" layout="grid" style="margin-left: -20px"
+							columnClasses="ui-grid-col-2,ui-grid-col-10">
+							<h:panelGroup>
+								<p:outputLabel value="Código" for="codigo" />
+								<p:inputText id="codigo"
+									value="#{clienteBean.crudObj.cliIdCliente}" disabled="true" />
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:outputLabel value="Nome Completo" for="nome" />
+								<p:inputText id="nome" value="#{clienteBean.crudObj.cliNome}"
+									required="true" maxlength="50" style="width:100%" />
+							</h:panelGroup>
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" layout="grid" style="margin-left: -20px">
+							<h:panelGroup>
+								<p:outputLabel value="CPF" for="cpf" />
+								<p:inputMask id="cpf" value="#{clienteBean.crudObj.cliCpf}"
+									mask="999.999.999-99" required="true" style="width:100%">
+								</p:inputMask>
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:outputLabel value="Telefone" for="telefone" />
+								<p:inputMask id="telefone"
+									value="#{clienteBean.crudObj.cliTelefone}"
+									mask="(99) 99999-9999" required="true" style="width:100%" />
+							</h:panelGroup>
+						</p:panelGrid>
+
+						<p:panelGrid columns="1" layout="grid" style="margin-left: -20px">
+							<p:outputLabel value="E-mail" for="email" />
+							<p:inputText id="email" value="#{clienteBean.crudObj.cliEmail}"
+								required="true" maxlength="64" style="width:100%" />
+						</p:panelGrid>
+
+						<p:panelGrid columns="1" layout="grid" style="margin-left: -20px">
+							<p:outputLabel value="Endereço" for="endereco" />
+							<p:inputText id="endereco"
+								value="#{clienteBean.crudObj.cliEndereco}" required="true"
+								maxlength="150" style="width:100%" />
+						</p:panelGrid>
+					</p:panelGrid>
+				</p:panelGrid>
+			</p:panel>
+
+			<p:panel>
+				<div align="right">
+					<p:commandButton value="Salvar"
+						actionListener="#{clienteBean.salvar()}" icon="pi pi-save"
+						process="@form"
+						update=":form1:painelCliente :form1:clientesTable :form1:mensagem"
+						styleClass="btn-acoes ui-button-success" />
+
+					<p:commandButton value="Novo"
+						actionListener="#{clienteBean.criaObj()}" icon="pi pi-plus"
+						process="@this"
+						update=":form1:painelCliente :form1:painelCliente :form1:mensagem"
+						styleClass="btn-acoes ui-button-secondary"
+						style="margin-left:10px;" />
+
+					<p:commandButton value="Excluir"
+						actionListener="#{clienteBean.deletar()}" icon="pi pi-trash"
+						process="@this"
+						update=":form1:painelCliente :form1:clientesTable :form1:mensagem"
+						styleClass="btn-acoes ui-button-danger" style="margin-left:10px;" />
+				</div>
+			</p:panel>
+
+			<p:panel header="Clientes Cadastrados" style="margin-top:20px;">
+				<p:dataTable id="clientesTable" var="cliente"
+					value="#{clienteBean.clientes}" paginator="true" rows="10"
+					paginatorPosition="bottom" style="margin-top:10px;"
+					emptyMessage="Nenhum cliente encontrado">
+
+					<p:column headerText="Código" width="60">
+						<p:outputLabel value="#{cliente.cliIdCliente}" />
+					</p:column>
+
+					<p:column headerText="Nome">
+						<p:outputLabel value="#{cliente.cliNome}" />
+					</p:column>
+
+					<p:column headerText="CPF" width="125">
+						<p:outputLabel value="#{cliente.cliCpf}" />
+					</p:column>
+
+					<p:column headerText="Telefone" width="125">
+						<p:outputLabel value="#{cliente.cliTelefone}" />
+					</p:column>
+
+					<p:column headerText="E-mail">
+						<p:outputLabel value="#{cliente.cliEmail}" />
+					</p:column>
+
+					<p:column headerText="Ações" width="90">
+						<p:commandButton icon="pi pi-user-edit"
+							action="#{clienteBean.selecionarCliente(cliente)}"
+							process="@this"
+							update=":form1:painelCliente :form1:clientesTable :form1:mensagem"
+							styleClass="ui-button-success" style="margin-right: 10px;" />
+
+						<p:commandButton icon="pi pi-trash" styleClass="ui-button-danger"
+							update=":form1:mensagem" process="@this" onclick="PF('confirmDialogWidget').show()">
+							<p:confirmDialog header="Atenção!" widgetVar="confirmDialogWidget"
+								message="Você tem certeza que deseja excluir esse registro?">
+								<p:commandButton value="Sim" icon="pi pi-check"
+									action="#{clienteBean.excluirCliente(cliente)}"
+									update=":form1:clientesTable :form1:mensagem" process="@this"
+									immediate="true" oncomplete="PF('confirmDialogWidget').hide()" />
+
+								<p:commandButton value="Não" type="button"
+									styleClass="ui-confirmdialog-no" icon="pi pi-times"
+									onclick="PF('confirmDialogWidget').hide()" />
+							</p:confirmDialog>
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

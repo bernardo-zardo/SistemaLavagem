@@ -1,0 +1,50 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition>
+	<h:form id="menuForm">
+
+		<div
+			style="background-color: #fff; color: #333; display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #ddd;">
+
+			<div style="display: flex; align-items: center; flex-grow: 1;">
+				<div style="font-weight: bold; font-size: 22px; margin-left: 15px;">Lavagem Daniel</div>
+
+				<p:menubar autoDisplay="true" hideDelay="1000" rendered="#{gerBean.usuarioLogado}"
+					style="background:transparent; border:none; color:#333;">
+					<p:submenu label="Cadastros" icon="pi pi-fw pi-folder">
+						<p:menuitem value="Clientes" icon="pi pi-fw pi-users" outcome="/restrito/cadastros/cliente" />
+						<p:menuitem value="Veículos" icon="pi pi-fw pi-car" />
+						<p:menuitem value="Serviços" icon="pi pi-fw pi-briefcase" />
+						<p:menuitem value="Usuários" icon="pi pi-fw pi-user" />
+					</p:submenu>
+
+					<p:submenu label="Movimentos" icon="pi pi-fw pi-list">
+						<p:menuitem value="Pedidos" icon="pi pi-fw pi-shopping-cart" />
+						<p:menuitem value="Financeiro" icon="pi pi-fw pi-dollar" />
+					</p:submenu>
+				</p:menubar>
+			</div>
+
+			<div>
+				<p:commandButton value="Login" icon="pi pi-fw pi-sign-in"
+					action="#{loginBean.redirecionarParaLogin}"
+					rendered="#{not gerBean.usuarioLogado}" ajax="false"
+					styleClass="ui-button-info" />
+
+				<h:panelGroup rendered="#{gerBean.usuarioLogado}">
+					<p:outputLabel
+						value="#{responsavelLogadoBean.responsavelLogado.resNome}"
+						style="margin-right:10px; font-weight:bold;" />
+
+					<p:commandButton value="Sair" icon="pi pi-fw pi-sign-out"
+						action="#{gerBean.logout}" ajax="false"
+						styleClass="ui-button-info" />
+				</h:panelGroup>
+			</div>
+		</div>
+	</h:form>
+</ui:composition>
+</html>
