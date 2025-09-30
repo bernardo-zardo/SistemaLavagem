@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.bernardo.utils.StringUtil;
+
 /**
 *
 * @author Bernardo Zardo Mergen
@@ -194,5 +196,9 @@ public class Cliente implements Serializable {
 
 	public void setCliLongitude(Double cliLongitude) {
 		this.cliLongitude = cliLongitude;
+	}
+	
+	public String getCpfFormatado() {
+		return StringUtil.getCpfFormatado(cliCpf);
 	}
 }

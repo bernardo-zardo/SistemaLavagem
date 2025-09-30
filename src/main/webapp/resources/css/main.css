@@ -32,7 +32,7 @@ body .ui-panelgrid .ui-panelgrid-cell {
     padding: 2px 10px;
 }
 
-.ui-panelgrid-cell, .ui-inputtext, .ui-inputtextarea, .ui-panelgrid, .ui-panelgrid tbody, .ui-password, .ui-inputfield {
+.ui-inputtext, .ui-inputtextarea, .ui-password, .ui-inputfield {
     width: 100%;
 }
 
@@ -42,6 +42,11 @@ body .ui-panelgrid .ui-panelgrid-cell {
 
 .input250 {
     width: 250px !important;
+}
+
+.titulo {
+	font-size: 20px !important;
+	font-weight: bold !important;
 }
 
 .dropbtn {
@@ -99,12 +104,11 @@ body .ui-panelgrid .ui-panelgrid-cell {
 .ui-button {
     background-color: #1a96cc !important;
     border: none !important;
-    transition: transform 0.4s ease, box-shadow 0.4s ease; /* transição suave */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out !important;
 }
 
-/* Hover: leve aumento e sombra sutil */
 .ui-button:hover {
-    transform: scale(1.03); /* aumenta 5% */
+    transform: scale(1.05);
     cursor: pointer;
 }
 
@@ -237,4 +241,24 @@ body .ui-chkbox .ui-chkbox-box.ui-state-active {
     color: #333;
     font-family: Arial, sans-serif;
     font-weight: bold;
+}
+
+.painel-custom>.ui-panel-content {
+	border-radius: 12px !important;
+	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+	border: none !important;
+}
+
+.painel-custom-header>.ui-panel-titlebar {
+	border-top-left-radius: 12px !important;
+	border-top-right-radius: 12px !important;
+	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+	border: none !important;
+}
+
+.painel-custom-header>.ui-panel-content {
+	border-bottom-left-radius: 12px !important;
+	border-bottom-right-radius: 12px !important;
+	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+	border: none !important;
 }

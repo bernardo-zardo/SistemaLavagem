@@ -10,21 +10,15 @@
         Cadastro de Cliente
     </ui:define>
 
-	<ui:define name="head">
-		<link rel="stylesheet"
-			href="https://unpkg.com/leaflet/dist/leaflet.css" />
-		<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-	</ui:define>
-
 	<ui:define name="content">
 		<link rel="stylesheet"
 			href="https://unpkg.com/leaflet/dist/leaflet.css" />
 		<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
+	
 		<h:form id="form1">
 			<p:growl id="mensagem" />
 
-			<p:panel id="painelCliente" header="Cliente">
+			<p:panel header="Clientes Cadastrados" id="painelCliente" styleClass="painel-custom-header">
 				<p:panelGrid columns="2" layout="grid">
 					<p:panelGrid columns="1" layout="grid">
 						<p:panelGrid columns="2" layout="grid"
@@ -133,7 +127,7 @@
 				</p:panelGrid>
 			</p:panel>
 
-			<p:panel>
+			<p:panel styleClass="painel-custom">
 				<div align="right">
 					<p:commandButton value="Salvar"
 						actionListener="#{clienteBean.salvar()}" icon="pi pi-save"
@@ -156,8 +150,8 @@
 				</div>
 			</p:panel>
 
-			<p:panel header="Clientes Cadastrados">
-				<p:dataTable id="clientesTable" var="cliente"
+			<p:panel styleClass="painel-custom-header" header="Clientes Cadastrados" >
+				<p:dataTable id="clientesTable" var="cliente" reflow="true"
 					sortBy="#{cliente.cliIdCliente}" sortOrder="ascending"
 					value="#{clienteBean.clientes}" paginator="true" rows="10"
 					paginatorPosition="bottom" style="margin-top:10px;"
@@ -175,7 +169,7 @@
 					</p:column>
 
 					<p:column headerText="CPF" width="125" filterBy="#{cliente.cliCpf}">
-						<h:outputText value="#{cliente.cliCpf}" />
+						<h:outputText value="#{cliente.cpfFormatado}" />
 					</p:column>
 
 					<p:column headerText="Telefone" width="125">
@@ -217,57 +211,45 @@
 			</p:panel>
 
 			<p:dialog id="dlgMapa" widgetVar="mapDialog"
-				header="Localização do Cliente" modal="true" width="600"
-				height="400" responsive="true">
-				<div id="mapaCliente" style="width: 100%; height: 350px;"></div>
+				header="Localização do Cliente" modal="true" width="1200"
+				height="600" responsive="true">
+				<div id="mapaCliente" style="width: 100%; height: 500px;"></div>
 			</p:dialog>
 		</h:form>
 
 		<script>
-    var mapa = null;
-
-    function mostrarMapa(latStr, lngStr, nome) {
-        // Abre a dialog do PrimeFaces
-        PF('mapDialog').show();
-
-        // pequena espera para garantir que a dialog foi renderizada no DOM
-        setTimeout(function() {
-            // converte para string e troca vírgula por ponto (caso o EL tenha formatado com vírgula)
-            var latNum = parseFloat(String(latStr).replace(',', '.'));
-            var lngNum = parseFloat(String(lngStr).replace(',', '.'));
-
-            // debug rápido no console — remova depois
-            console.log('mostrarMapa() raw:', latStr, lngStr);
-            console.log('mostrarMapa() parsed:', latNum, lngNum);
-
-            // validações básicas
-            if (isNaN(latNum) || isNaN(lngNum)) {
-                alert('Coordenadas inválidas para o cliente.\nLatitude: ' + latStr + '\nLongitude: ' + lngStr);
-                return;
-            }
-
-            // remove instância anterior do mapa (se existir)
-            if (mapa !== null) {
-                mapa.remove();
-                mapa = null;
-            }
-
-            // cria o mapa e adiciona a camada de tiles do OSM
-            mapa = L.map('mapaCliente', { scrollWheelZoom: false }).setView([latNum, lngNum], 15);
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(mapa);
-
-            // marcador
-            L.marker([latNum, lngNum]).addTo(mapa)
-                .bindPopup(nome || 'Localização')
-                .openPopup();
-        }, 200);
-    }
-</script>
-
-
+		    var mapa = null;
+		
+		    function mostrarMapa(latStr, lngStr, nome) {
+		        PF('mapDialog').show();
+		
+		        setTimeout(function() {
+		            var latNum = parseFloat(String(latStr).replace(',', '.'));
+		            var lngNum = parseFloat(String(lngStr).replace(',', '.'));
+		
+		            console.log('mostrarMapa() raw:', latStr, lngStr);
+		            console.log('mostrarMapa() parsed:', latNum, lngNum);
+		
+		            if (isNaN(latNum) || isNaN(lngNum)) {
+		                alert('Coordenadas inválidas para o cliente.\nLatitude: ' + latStr + '\nLongitude: ' + lngStr);
+		                return;
+		            }
+		            if (mapa !== null) {
+		                mapa.remove();
+		                mapa = null;
+		            }
+		            mapa = L.map('mapaCliente', { scrollWheelZoom: false }).setView([latNum, lngNum], 15);
+		
+		            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		                maxZoom: 19,
+		                attribution: '© OpenStreetMap contributors'
+		            }).addTo(mapa);
+		
+		            L.marker([latNum, lngNum]).addTo(mapa)
+		                .bindPopup(nome || 'Localização')
+		                .openPopup();
+		        }, 200);
+		    }
+		</script>
 	</ui:define>
 </ui:composition>

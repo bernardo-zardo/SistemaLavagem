@@ -9,12 +9,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter("/restrito/*") // tudo que estiver em /restrito será protegido
+/**
+*
+* @author Bernardo Zardo Mergen
+*/
+@WebFilter("/restrito/*")
 public class LoginFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        // nada a inicializar
     }
 
     @Override
@@ -36,16 +39,13 @@ public class LoginFilter implements Filter {
         }
 
         if (logado) {
-            // usuário logado, continua para a página
             chain.doFilter(request, response);
         } else {
-            // redireciona para a página de login
             res.sendRedirect(req.getContextPath() + "/login.xhtml");
         }
     }
 
     @Override
     public void destroy() {
-        // nada a destruir
     }
 }

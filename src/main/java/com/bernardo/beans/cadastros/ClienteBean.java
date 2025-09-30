@@ -58,9 +58,7 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
         crudObj.setCliTelefone(StringUtil.getOnlyNumbers(crudObj.getCliTelefone()));
         crudObj.setCliCep(StringUtil.getOnlyNumbers(crudObj.getCliCep()));
         
-        String enderecoCompleto = crudObj.getCliRua() + ", " 
-                + crudObj.getCliCidade() + ", "
-                + crudObj.getCliUf() + ", Brasil";
+        String enderecoCompleto = crudObj.getCliRua() + ", " + crudObj.getCliCidade() + ", " + crudObj.getCliUf() + ", Brasil";
 
         double[] coords = GeocodingUtil.buscarLatLong(enderecoCompleto);
         if (coords != null) {
@@ -84,7 +82,7 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
                 return;
             }
         }
-        getClientes();
+        clientes = clienteService.filtrar(new HashMap<>());
         criaObj();
     }
     
