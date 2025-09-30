@@ -17,7 +17,7 @@ body, html {
     overflow: hidden;
     margin: 0;
     padding: 0;
-    overflow-y: auto; /* Garante a barra de rolagem vertical */
+    overflow-y: auto;
 }
 
 a {
@@ -28,12 +28,12 @@ a {
     background: lightgrey !important;
 }
 
-.ui-panelgrid-cell, .ui-inputtext, .ui-inputtextarea, .ui-panelgrid, .ui-panelgrid tbody, .ui-password, .ui-inputfield {
-    width: 100%;
+body .ui-panelgrid .ui-panelgrid-cell {
+    padding: 2px 10px;
 }
 
-body .ui-panelgrid .ui-panelgrid-cell {
-    padding: 4px 10px;
+.ui-panelgrid-cell, .ui-inputtext, .ui-inputtextarea, .ui-panelgrid, .ui-panelgrid tbody, .ui-password, .ui-inputfield {
+    width: 100%;
 }
 
 .inputCodigo {
@@ -49,15 +49,6 @@ body .ui-panelgrid .ui-panelgrid-cell {
     color: white;
     padding: 16px;
     font-size: 18px;
-    border: none;
-    cursor: pointer;
-}
-
-.dropbtnQuemSomos {
-    background-color: rgba(0, 0, 0, 0.0);
-    color: black;
-    padding: 16px;
-    font-size: 18px !important;  
     border: none;
     cursor: pointer;
 }
@@ -96,8 +87,8 @@ body .ui-panelgrid .ui-panelgrid-cell {
 }
 
 .btn-acoes {
-    width: 150px;
-    margin: 10px !important;
+    width: 130px;
+    margin: 6px !important;
 }
 
 .btn-acoes-auto {
@@ -106,8 +97,15 @@ body .ui-panelgrid .ui-panelgrid-cell {
 }
 
 .ui-button {
-    background-color: #0288d1 !important;
+    background-color: #1a96cc !important;
     border: none !important;
+    transition: transform 0.4s ease, box-shadow 0.4s ease; /* transição suave */
+}
+
+/* Hover: leve aumento e sombra sutil */
+.ui-button:hover {
+    transform: scale(1.03); /* aumenta 5% */
+    cursor: pointer;
 }
 
 .ui-panel {
@@ -148,7 +146,7 @@ body .ui-tabs .ui-tabs-nav {
 }
 
 body .ui-chkbox .ui-chkbox-box.ui-state-active {
-    background: #2196f3 !important;
+    background: #1a96cc !important;
 }
 
 .about-section {

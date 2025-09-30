@@ -4,7 +4,10 @@ import com.bernardo.beans.BuscaBean;
 import com.bernardo.entidades.Cliente;
 import com.bernardo.services.BaseCrud;
 import com.bernardo.services.ClienteService;
+import com.bernardo.utils.CEPUtil;
+import com.bernardo.utils.GeocodingUtil;
 import com.bernardo.utils.JsfUtil;
+import com.bernardo.utils.LocalizacaoJson;
 import com.bernardo.utils.StringUtil;
 
 import java.io.Serializable;
@@ -12,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -31,7 +35,12 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
 
     private boolean alterando;
     private List<Cliente> clientes;
-
+    
+    @PostConstruct
+    public void montaRegistros() {
+    	clientes = clienteService.filtrar(new HashMap<>());
+    }
+    
     @Override
     public void criaObj() {
         crudObj = new Cliente();
@@ -47,7 +56,18 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
 
         crudObj.setCliCpf(StringUtil.getOnlyNumbers(crudObj.getCliCpf()));
         crudObj.setCliTelefone(StringUtil.getOnlyNumbers(crudObj.getCliTelefone()));
+        crudObj.setCliCep(StringUtil.getOnlyNumbers(crudObj.getCliCep()));
+        
+        String enderecoCompleto = crudObj.getCliRua() + ", " 
+                + crudObj.getCliCidade() + ", "
+                + crudObj.getCliUf() + ", Brasil";
 
+        double[] coords = GeocodingUtil.buscarLatLong(enderecoCompleto);
+        if (coords != null) {
+        	crudObj.setCliLatitude(coords[0]);
+        	crudObj.setCliLongitude(coords[1]);
+        }
+        
         if (alterando) {
             clienteService.salvar(crudObj);
             JsfUtil.info("Cliente atualizado com sucesso!");
@@ -60,9 +80,8 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
                 clienteService.salvar(crudObj);
                 JsfUtil.info("Cliente salvo com sucesso!");
             } else {
-                crudObj = clientesExistentes.get(0);
-                alterando = true;
-                JsfUtil.warn("Cliente já existe, carregado para edição");
+                JsfUtil.warn("Cliente já cadastrado com esse CPF: " + clientesExistentes.get(0).getCliNome());
+                return;
             }
         }
         getClientes();
@@ -117,6 +136,18 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
         JsfUtil.info("Cliente excluido com sucesso!");
         criaObj();
     }
+    
+    public void preencherEnderecoPorCep() {
+        if (crudObj.getCliCep() != null && !crudObj.getCliCep().isEmpty()) {
+            LocalizacaoJson local = CEPUtil.buscarLocalizacao(crudObj.getCliCep().replaceAll("\\D", ""));
+            if (local != null) {
+                crudObj.setCliRua(local.getLogradouro());
+                crudObj.setCliBairro(local.getBairro());
+                crudObj.setCliCidade(local.getLocalidade());
+                crudObj.setCliUf(local.getUf());
+            }
+        }
+    }
 
     public Cliente getCrudObj() {
         return crudObj;
@@ -129,8 +160,12 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
     public void setAlterando(boolean alterando) {
         this.alterando = alterando;
     }
-    
-    public List<Cliente> getClientes() {
-        return clienteService.filtrar(new HashMap<>());
-    }
+
+	public List<Cliente> getClientes() {
+		return clientes;
+	}
+
+	public void setClientes(List<Cliente> clientes) {
+		this.clientes = clientes;
+	}
 }

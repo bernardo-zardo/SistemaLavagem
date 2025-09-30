@@ -10,15 +10,26 @@
         Cadastro de Cliente
     </ui:define>
 
+	<ui:define name="head">
+		<link rel="stylesheet"
+			href="https://unpkg.com/leaflet/dist/leaflet.css" />
+		<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+	</ui:define>
+
 	<ui:define name="content">
+		<link rel="stylesheet"
+			href="https://unpkg.com/leaflet/dist/leaflet.css" />
+		<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 		<h:form id="form1">
 			<p:growl id="mensagem" />
 
 			<p:panel id="painelCliente" header="Cliente">
 				<p:panelGrid columns="2" layout="grid">
 					<p:panelGrid columns="1" layout="grid">
-						<p:panelGrid columns="2" layout="grid" style="margin-left: -20px"
-							columnClasses="ui-grid-col-2,ui-grid-col-10">
+						<p:panelGrid columns="2" layout="grid"
+							columnClasses="ui-grid-col-2,ui-grid-col-10"
+							style="margin-left: -20px">
 							<h:panelGroup>
 								<p:outputLabel value="Código" for="codigo" />
 								<p:inputText id="codigo"
@@ -53,12 +64,70 @@
 							<p:inputText id="email" value="#{clienteBean.crudObj.cliEmail}"
 								required="true" maxlength="64" style="width:100%" />
 						</p:panelGrid>
+						
+						<p:divider style="width: 95%" />
 
 						<p:panelGrid columns="1" layout="grid" style="margin-left: -20px">
-							<p:outputLabel value="Endereço" for="endereco" />
-							<p:inputText id="endereco"
-								value="#{clienteBean.crudObj.cliEndereco}" required="true"
-								maxlength="150" style="width:100%" />
+							<p:outputLabel value="CEP" for="cep" />
+							<p:inputMask id="cep" value="#{clienteBean.crudObj.cliCep}"
+								mask="99999-999" required="true" style="width:100%">
+								<p:ajax event="blur"
+									listener="#{clienteBean.preencherEnderecoPorCep}"
+									update=":form1:endereco" />
+							</p:inputMask>
+						</p:panelGrid>
+
+						<h:panelGroup id="endereco">
+							<p:panelGrid columns="2" layout="grid" style="margin-left: -20px">
+								<h:panelGroup>
+									<p:outputLabel value="Rua" for="rua" />
+									<p:inputText id="rua" value="#{clienteBean.crudObj.cliRua}"
+										style="width:100%" />
+								</h:panelGroup>
+
+								<h:panelGroup>
+									<p:outputLabel value="Número" for="numero" />
+									<p:inputText id="numero"
+										value="#{clienteBean.crudObj.cliNumero}" style="width:100%" />
+								</h:panelGroup>
+							</p:panelGrid>
+
+							<p:panelGrid columns="2" layout="grid" style="margin-left: -20px">
+								<h:panelGroup>
+									<p:outputLabel value="Complemento" for="complemento" />
+									<p:inputText id="complemento"
+										value="#{clienteBean.crudObj.cliComplemento}"
+										style="width:100%" />
+								</h:panelGroup>
+
+								<h:panelGroup>
+									<p:outputLabel value="Bairro" for="bairro" />
+									<p:inputText id="bairro"
+										value="#{clienteBean.crudObj.cliBairro}" style="width:100%" />
+								</h:panelGroup>
+							</p:panelGrid>
+
+							<p:panelGrid columns="2" layout="grid" style="margin-left: -20px">
+								<h:panelGroup>
+									<p:outputLabel value="Cidade" for="cidade" />
+									<p:inputText id="cidade"
+										value="#{clienteBean.crudObj.cliCidade}" style="width:100%" />
+								</h:panelGroup>
+
+								<h:panelGroup>
+									<p:outputLabel value="UF" for="uf" />
+									<p:inputText id="uf" value="#{clienteBean.crudObj.cliUf}"
+										size="2" style="width:100%" />
+								</h:panelGroup>
+							</p:panelGrid>
+						</h:panelGroup>
+						
+						<p:divider style="width: 95%" />
+						
+						<p:panelGrid layout="grid" columns="1" style="margin-left: -20px">
+							<p:commandButton icon="pi pi-map-marker" value="Visualizar Localização"
+							onclick="mostrarMapa('#{clienteBean.crudObj.cliLatitude}', '#{clienteBean.crudObj.cliLongitude}', '#{clienteBean.crudObj.cliNome}'); return false;"
+							type="button" style="margin-right: 5px;" disabled="#{clienteBean.crudObj.cliLatitude eq null}" />
 						</p:panelGrid>
 					</p:panelGrid>
 				</p:panelGrid>
@@ -87,48 +156,57 @@
 				</div>
 			</p:panel>
 
-			<p:panel header="Clientes Cadastrados" style="margin-top:20px;">
+			<p:panel header="Clientes Cadastrados">
 				<p:dataTable id="clientesTable" var="cliente"
+					sortBy="#{cliente.cliIdCliente}" sortOrder="ascending"
 					value="#{clienteBean.clientes}" paginator="true" rows="10"
 					paginatorPosition="bottom" style="margin-top:10px;"
-					emptyMessage="Nenhum cliente encontrado">
+					emptyMessage="Nenhum cliente encontrado" filterEvent="keyup">
 
-					<p:column headerText="Código" width="60">
-						<p:outputLabel value="#{cliente.cliIdCliente}" />
+					<p:column headerText="Código" width="85"
+						sortBy="#{cliente.cliIdCliente}"
+						filterBy="#{cliente.cliIdCliente}">
+						<h:outputText value="#{cliente.cliIdCliente}" />
 					</p:column>
 
-					<p:column headerText="Nome">
-						<p:outputLabel value="#{cliente.cliNome}" />
+					<p:column headerText="Nome" sortBy="#{cliente.cliNome}"
+						filterBy="#{cliente.cliNome}">
+						<h:outputText value="#{cliente.cliNome}" />
 					</p:column>
 
-					<p:column headerText="CPF" width="125">
-						<p:outputLabel value="#{cliente.cliCpf}" />
+					<p:column headerText="CPF" width="125" filterBy="#{cliente.cliCpf}">
+						<h:outputText value="#{cliente.cliCpf}" />
 					</p:column>
 
 					<p:column headerText="Telefone" width="125">
-						<p:outputLabel value="#{cliente.cliTelefone}" />
+						<h:outputText value="#{cliente.cliTelefone}" />
 					</p:column>
 
 					<p:column headerText="E-mail">
-						<p:outputLabel value="#{cliente.cliEmail}" />
+						<h:outputText value="#{cliente.cliEmail}" />
 					</p:column>
 
-					<p:column headerText="Ações" width="90">
+					<p:column headerText="Ações" width="140">
+						<p:commandButton icon="pi pi-map-marker"
+							onclick="mostrarMapa('#{cliente.cliLatitude}', '#{cliente.cliLongitude}', '#{cliente.cliNome}'); return false;"
+							type="button" style="margin-right: 5px;" />
+
 						<p:commandButton icon="pi pi-user-edit"
 							action="#{clienteBean.selecionarCliente(cliente)}"
 							process="@this"
 							update=":form1:painelCliente :form1:clientesTable :form1:mensagem"
-							styleClass="ui-button-success" style="margin-right: 10px;" />
+							styleClass="ui-button-success" style="margin-right: 5px;" />
 
 						<p:commandButton icon="pi pi-trash" styleClass="ui-button-danger"
-							update=":form1:mensagem" process="@this" onclick="PF('confirmDialogWidget').show()">
-							<p:confirmDialog header="Atenção!" widgetVar="confirmDialogWidget"
+							update=":form1:mensagem" process="@this"
+							onclick="PF('confirmDialogWidget').show()">
+							<p:confirmDialog header="Atenção!"
+								widgetVar="confirmDialogWidget"
 								message="Você tem certeza que deseja excluir esse registro?">
 								<p:commandButton value="Sim" icon="pi pi-check"
 									action="#{clienteBean.excluirCliente(cliente)}"
 									update=":form1:clientesTable :form1:mensagem" process="@this"
 									immediate="true" oncomplete="PF('confirmDialogWidget').hide()" />
-
 								<p:commandButton value="Não" type="button"
 									styleClass="ui-confirmdialog-no" icon="pi pi-times"
 									onclick="PF('confirmDialogWidget').hide()" />
@@ -137,6 +215,59 @@
 					</p:column>
 				</p:dataTable>
 			</p:panel>
+
+			<p:dialog id="dlgMapa" widgetVar="mapDialog"
+				header="Localização do Cliente" modal="true" width="600"
+				height="400" responsive="true">
+				<div id="mapaCliente" style="width: 100%; height: 350px;"></div>
+			</p:dialog>
 		</h:form>
+
+		<script>
+    var mapa = null;
+
+    function mostrarMapa(latStr, lngStr, nome) {
+        // Abre a dialog do PrimeFaces
+        PF('mapDialog').show();
+
+        // pequena espera para garantir que a dialog foi renderizada no DOM
+        setTimeout(function() {
+            // converte para string e troca vírgula por ponto (caso o EL tenha formatado com vírgula)
+            var latNum = parseFloat(String(latStr).replace(',', '.'));
+            var lngNum = parseFloat(String(lngStr).replace(',', '.'));
+
+            // debug rápido no console — remova depois
+            console.log('mostrarMapa() raw:', latStr, lngStr);
+            console.log('mostrarMapa() parsed:', latNum, lngNum);
+
+            // validações básicas
+            if (isNaN(latNum) || isNaN(lngNum)) {
+                alert('Coordenadas inválidas para o cliente.\nLatitude: ' + latStr + '\nLongitude: ' + lngStr);
+                return;
+            }
+
+            // remove instância anterior do mapa (se existir)
+            if (mapa !== null) {
+                mapa.remove();
+                mapa = null;
+            }
+
+            // cria o mapa e adiciona a camada de tiles do OSM
+            mapa = L.map('mapaCliente', { scrollWheelZoom: false }).setView([latNum, lngNum], 15);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(mapa);
+
+            // marcador
+            L.marker([latNum, lngNum]).addTo(mapa)
+                .bindPopup(nome || 'Localização')
+                .openPopup();
+        }, 200);
+    }
+</script>
+
+
 	</ui:define>
 </ui:composition>
