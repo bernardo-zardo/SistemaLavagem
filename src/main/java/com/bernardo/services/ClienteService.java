@@ -43,6 +43,6 @@ public class ClienteService extends BaseService<Cliente> {
     public List<Cliente> getPessoaPorCpf(String cpf) {
        String sql = "SELECT * FROM CLIENTE c "
                 + "WHERE c.CLI_CPF = '" + cpf + "'";
-        return customEntityManager.executeNativeQuery(Responsavel.class, sql);
+        return customEntityManager.executeNativeQuery(Cliente.class, sql);
     }
 }

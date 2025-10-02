@@ -78,7 +78,7 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
                 clienteService.salvar(crudObj);
                 JsfUtil.info("Cliente salvo com sucesso!");
             } else {
-                JsfUtil.warn("Cliente já cadastrado com esse CPF: " + clientesExistentes.get(0).getCliNome());
+                JsfUtil.warn("Cliente já cadastrado com o CPF: " + clientesExistentes.get(0).getCliNome());
                 return;
             }
         }
@@ -90,21 +90,6 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
     public void deletar() {
     	clienteService.deletar(crudObj);
     	getClientes();
-    }
-
-    public void buscarCliente() {
-        String cpf = StringUtil.getOnlyNumbers(crudObj.getCliCpf());
-        Map<String, Object> filtros = new HashMap<>();
-        filtros.put("cliCpf", cpf);
-        List<Cliente> clientes = clienteService.filtrar(filtros);
-
-        if (!clientes.isEmpty()) {
-            crudObj = clientes.get(0);
-            alterando = true;
-            crudObj.setCliCpf(StringUtil.getCpfFormatado(crudObj.getCliCpf()));
-        } else {
-            JsfUtil.warn("Cliente não encontrado");
-        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.bernardo.entidades;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -65,26 +66,6 @@ public class Cliente implements Serializable {
 
     public Cliente() {
     }
-
-    public Cliente(Integer cliIdCliente, String cliNome, String cliCep, String cliRua, String cliNumero,
-			String cliComplemento, String cliBairro, String cliCidade, String cliUf, String cliTelefone,
-			String cliEmail, String cliCpf, Double cliLatitude, Double cliLongitude) {
-		super();
-		this.cliIdCliente = cliIdCliente;
-		this.cliNome = cliNome;
-		this.cliCep = cliCep;
-		this.cliRua = cliRua;
-		this.cliNumero = cliNumero;
-		this.cliComplemento = cliComplemento;
-		this.cliBairro = cliBairro;
-		this.cliCidade = cliCidade;
-		this.cliUf = cliUf;
-		this.cliTelefone = cliTelefone;
-		this.cliEmail = cliEmail;
-		this.cliCpf = cliCpf;
-		this.cliLatitude = cliLatitude;
-		this.cliLongitude = cliLongitude;
-	}
 
 	public Integer getCliIdCliente() {
         return cliIdCliente;
@@ -200,5 +181,22 @@ public class Cliente implements Serializable {
 	
 	public String getCpfFormatado() {
 		return StringUtil.getCpfFormatado(cliCpf);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(cliIdCliente);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cliente other = (Cliente) obj;
+		return Objects.equals(cliIdCliente, other.cliIdCliente);
 	}
 }

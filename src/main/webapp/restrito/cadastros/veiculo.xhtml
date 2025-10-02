@@ -1,0 +1,162 @@
+<ui:composition template="/templates/pagina.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:components="http://xmlns.jcp.org/jsf/composite/components">
+
+	<ui:define name="title">
+        Cadastro de Veículo
+    </ui:define>
+
+	<ui:define name="content">
+		<h:form id="form1">
+			<p:growl id="mensagem" />
+
+			<p:panel header="Veículo" id="painelVeiculo"
+				styleClass="painel-custom-header">
+				<p:panelGrid columns="2" layout="grid">
+					<p:panelGrid columns="1" layout="grid">
+						<p:panelGrid columns="2" layout="grid" style="margin-left:-20px">
+							<h:panelGroup>
+								<p:outputLabel value="Código" for="codigo" />
+								<p:inputText id="codigo"
+									value="#{veiculoBean.crudObj.veiIdVeiculo}" disabled="true" />
+							</h:panelGroup>
+							
+							<h:panelGroup>
+								<p:outputLabel value="Cliente" for="cliente" />
+								<br />
+								<p:selectOneMenu id="cliente"
+									value="#{veiculoBean.crudObj.veiCliente}" filter="true"
+									filterMatchMode="contains" style="width: 100%">
+									<f:selectItem itemLabel="Selecione um cliente"
+										itemValue="#{null}" noSelectionOption="true" />
+									<f:selectItems value="#{veiculoBean.clientes}" var="c"
+										itemLabel="#{c.cliNome}" itemValue="#{c}" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" layout="grid" style="margin-left:-20px">
+							<h:panelGroup>
+								<p:outputLabel value="Marca" for="marca" />
+								<p:inputText id="marca" value="#{veiculoBean.crudObj.veiMarca}"
+									maxlength="45" style="width:100%" />
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:outputLabel value="Modelo" for="modelo" />
+								<p:inputText id="modelo"
+									value="#{veiculoBean.crudObj.veiModelo}" maxlength="45"
+									style="width:100%" />
+							</h:panelGroup>
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" layout="grid" style="margin-left:-20px">
+							<h:panelGroup>
+								<p:outputLabel value="Cor" for="cor" />
+								<p:inputText id="cor" value="#{veiculoBean.crudObj.veiCor}"
+									maxlength="45" style="width:100%" />
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:outputLabel value="Placa" for="placa" />
+								<p:inputText id="placa" value="#{veiculoBean.crudObj.veiPlaca}"
+									maxlength="15" style="width:100%" required="true" />
+							</h:panelGroup>
+						</p:panelGrid>
+
+					</p:panelGrid>
+				</p:panelGrid>
+			</p:panel>
+
+			<p:panel styleClass="painel-custom">
+				<div align="right">
+					<p:commandButton value="Salvar"
+						actionListener="#{veiculoBean.salvar()}" icon="pi pi-save"
+						process="@form"
+						update=":form1:painelVeiculo :form1:veiculosTable :form1:mensagem"
+						styleClass="btn-acoes ui-button-success" />
+
+					<p:commandButton value="Novo"
+						actionListener="#{veiculoBean.criaObj()}" icon="pi pi-plus"
+						process="@this" update=":form1:painelVeiculo :form1:mensagem"
+						styleClass="btn-acoes ui-button-secondary"
+						style="margin-left:10px;" />
+
+					<p:commandButton value="Excluir"
+						actionListener="#{veiculoBean.deletar()}" icon="pi pi-trash"
+						process="@this"
+						update=":form1:painelVeiculo :form1:veiculosTable :form1:mensagem"
+						styleClass="btn-acoes ui-button-danger" style="margin-left:10px;" />
+				</div>
+			</p:panel>
+
+			<p:panel styleClass="painel-custom-header"
+				header="Veículos Cadastrados">
+				<p:dataTable id="veiculosTable" var="veiculo" reflow="true"
+					sortBy="#{veiculo.veiIdVeiculo}" sortOrder="ascending"
+					value="#{veiculoBean.veiculos}" paginator="true" rows="10"
+					paginatorPosition="bottom" style="margin-top:10px;"
+					emptyMessage="Nenhum veículo encontrado" filterEvent="keyup">
+
+					<p:column headerText="Código" width="85"
+						sortBy="#{veiculo.veiIdVeiculo}"
+						filterBy="#{veiculo.veiIdVeiculo}">
+						<h:outputText value="#{veiculo.veiIdVeiculo}" />
+					</p:column>
+
+					<p:column headerText="Cliente"
+						sortBy="#{veiculo.veiCliente.cliNome}"
+						filterBy="#{veiculo.veiCliente.cliNome}">
+						<h:outputText value="#{veiculo.veiCliente.cliNome}" />
+					</p:column>
+
+					<p:column headerText="Marca" sortBy="#{veiculo.veiMarca}"
+						filterBy="#{veiculo.veiMarca}">
+						<h:outputText value="#{veiculo.veiMarca}" />
+					</p:column>
+
+					<p:column headerText="Modelo" sortBy="#{veiculo.veiModelo}"
+						filterBy="#{veiculo.veiModelo}">
+						<h:outputText value="#{veiculo.veiModelo}" />
+					</p:column>
+
+					<p:column headerText="Cor" filterBy="#{veiculo.veiCor}">
+						<h:outputText value="#{veiculo.veiCor}" />
+					</p:column>
+
+					<p:column headerText="Placa" filterBy="#{veiculo.veiPlaca}">
+						<h:outputText value="#{veiculo.veiPlaca}" />
+					</p:column>
+
+					<p:column headerText="Ações" width="140">
+						<p:commandButton icon="pi pi-pencil"
+							action="#{veiculoBean.selecionarVeiculo(veiculo)}"
+							process="@this"
+							update=":form1:painelVeiculo :form1:veiculosTable :form1:mensagem"
+							styleClass="ui-button-success" style="margin-right: 5px;" />
+
+						<p:commandButton icon="pi pi-trash" styleClass="ui-button-danger"
+							update=":form1:mensagem" process="@this"
+							onclick="PF('confirmDialogWidget').show()">
+							<p:confirmDialog header="Atenção!"
+								widgetVar="confirmDialogWidget"
+								message="Você tem certeza que deseja excluir esse registro?">
+								<p:commandButton value="Sim" icon="pi pi-check"
+									action="#{veiculoBean.excluirVeiculo(veiculo)}"
+									update=":form1:veiculosTable :form1:mensagem" process="@this"
+									immediate="true" oncomplete="PF('confirmDialogWidget').hide()" />
+								<p:commandButton value="Não" type="button"
+									styleClass="ui-confirmdialog-no" icon="pi pi-times"
+									onclick="PF('confirmDialogWidget').hide()" />
+							</p:confirmDialog>
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
