@@ -1,5 +1,6 @@
 package com.bernardo.services;
 
+import com.bernardo.entidades.TipoServico;
 import com.bernardo.entidades.Veiculo;
 import com.bernardo.utils.FiltrosPesquisa;
 import javax.ejb.Stateless;
@@ -18,31 +19,30 @@ import java.util.Set;
  */
 @Stateless
 @Named
-public class VeiculoService extends BaseService<Veiculo> {
+public class TipoServicoService extends BaseService<TipoServico> {
 
     private static final long serialVersionUID = 1L;
 
 	@Override
     protected List<FiltrosPesquisa> getFiltros(Map<String, Object> filtros) {
         List<FiltrosPesquisa> filtrosPesquisa = new ArrayList<>();
-        add(filtrosPesquisa, "v.veiIdVeiculo = '?veiIdVeiculo'", "veiIdVeiculo", filtros.get("veiIdVeiculo"));
-        add(filtrosPesquisa, "v.veiPlaca = '?veiPlaca'", "veiPlaca", filtros.get("veiPlaca"));
+        add(filtrosPesquisa, "t.tsIdTipoServico = '?tsIdTipoServico'", "tsIdTipoServico", filtros.get("tsIdTipoServico"));
         return filtrosPesquisa;
     }
 
-    public List<Veiculo> filtrar(Map<String, Object> filtros) {
-        String sql = "SELECT v FROM Veiculo v ";
+    public List<TipoServico> filtrar(Map<String, Object> filtros) {
+        String sql = "SELECT t FROM TipoServico t ";
         sql = adicionarFiltros(sql, getFiltros(filtros));
         Query query = customEntityManager.getEntityManager().createQuery(sql);
 
-        Set<Veiculo> veiculoList = new HashSet<>();
-        veiculoList.addAll(query.getResultList());
-        return new ArrayList<>(veiculoList);
+        Set<TipoServico> tipoServicoList = new HashSet<>();
+        tipoServicoList.addAll(query.getResultList());
+        return new ArrayList<>(tipoServicoList);
     }
 
-    public List<Veiculo> getVeiculoPorId(String idVeiculo) {
-       String sql = "SELECT * FROM VEICULO v "
-                + "WHERE v.VEI_ID_VEICULO = '" + idVeiculo + "'";
-        return customEntityManager.executeNativeQuery(Veiculo.class, sql);
+    public List<TipoServico> getTipoServicoPorId(String idTipoServico) {
+       String sql = "SELECT * FROM TIPO_SERVICO t "
+                + "WHERE t.TS_ID_TIPO_SERVICO = '" + idTipoServico + "'";
+        return customEntityManager.executeNativeQuery(TipoServico.class, sql);
     }
 }

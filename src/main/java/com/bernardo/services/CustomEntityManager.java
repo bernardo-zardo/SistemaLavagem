@@ -12,7 +12,9 @@ import java.util.List;
 @LocalBean
 public class CustomEntityManager implements Serializable {
 
-    @PersistenceContext(name = "gestao_clinica")
+    private static final long serialVersionUID = 1L;
+    
+	@PersistenceContext(name = "gestao_clinica")
     private EntityManager entityManager;
 
     public EntityManager getEntityManager() {

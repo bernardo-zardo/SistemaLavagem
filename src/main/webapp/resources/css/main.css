@@ -135,14 +135,20 @@ body .ui-tabs .ui-tabs-nav {
 
 .ui-button-danger {
     background-color: #d32f2f !important;
+    background: #d32f2f !important;
+    border: #d32f2f !important;
 }
 
 .ui-button-success {
     background-color: #093e80 !important;
+    background: #093e80 !important;
+    border: #093e80 !important;
 }
 
 .ui-button-secondary {
     background-color: #1a96cc !important;
+    background: #1a96cc !important;
+    border: #1a96cc !important;
 }
 
 .ui-chkbox .ui-chkbox-label {

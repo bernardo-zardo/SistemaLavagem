@@ -21,17 +21,22 @@
 						<p:panelGrid columns="2" layout="grid" style="margin-left:-20px">
 							<h:panelGroup>
 								<p:outputLabel value="Código" for="codigo" />
-								<p:inputText id="codigo"
+								<br />
+								<p:inputText id="codigo" style="width: 100px"
 									value="#{veiculoBean.crudObj.veiIdVeiculo}" disabled="true" />
 							</h:panelGroup>
-							
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" layout="grid" style="margin-left: -20px">
 							<h:panelGroup>
 								<p:outputLabel value="Cliente" for="cliente" />
 								<br />
-								<p:selectOneMenu id="cliente"
+								<p:selectOneMenu id="cliente" required="true"
+									requiredMessage="O campo Cliente é obrigatório."
 									value="#{veiculoBean.crudObj.veiCliente}" filter="true"
 									filterMatchMode="contains" style="width: 100%">
-									<f:selectItem itemLabel="Selecione um cliente"
+									<f:selectItem
+										itemLabel="Selecione o Cliente proprietário do Veículo"
 										itemValue="#{null}" noSelectionOption="true" />
 									<f:selectItems value="#{veiculoBean.clientes}" var="c"
 										itemLabel="#{c.cliNome}" itemValue="#{c}" />
@@ -43,14 +48,14 @@
 							<h:panelGroup>
 								<p:outputLabel value="Marca" for="marca" />
 								<p:inputText id="marca" value="#{veiculoBean.crudObj.veiMarca}"
-									maxlength="45" style="width:100%" />
+									maxlength="45" style="width:100%" required="true" />
 							</h:panelGroup>
 
 							<h:panelGroup>
 								<p:outputLabel value="Modelo" for="modelo" />
 								<p:inputText id="modelo"
 									value="#{veiculoBean.crudObj.veiModelo}" maxlength="45"
-									style="width:100%" />
+									style="width:100%" required="true" />
 							</h:panelGroup>
 						</p:panelGrid>
 
@@ -58,9 +63,11 @@
 							<h:panelGroup>
 								<p:outputLabel value="Cor" for="cor" />
 								<p:inputText id="cor" value="#{veiculoBean.crudObj.veiCor}"
-									maxlength="45" style="width:100%" />
+									maxlength="45" style="width:100%" required="true" />
 							</h:panelGroup>
+						</p:panelGrid>
 
+						<p:panelGrid columns="2" layout="grid" style="margin-left:-20px">
 							<h:panelGroup>
 								<p:outputLabel value="Placa" for="placa" />
 								<p:inputText id="placa" value="#{veiculoBean.crudObj.veiPlaca}"
@@ -140,22 +147,23 @@
 							styleClass="ui-button-success" style="margin-right: 5px;" />
 
 						<p:commandButton icon="pi pi-trash" styleClass="ui-button-danger"
-							update=":form1:mensagem" process="@this"
-							onclick="PF('confirmDialogWidget').show()">
-							<p:confirmDialog header="Atenção!"
-								widgetVar="confirmDialogWidget"
-								message="Você tem certeza que deseja excluir esse registro?">
-								<p:commandButton value="Sim" icon="pi pi-check"
-									action="#{veiculoBean.excluirVeiculo(veiculo)}"
-									update=":form1:veiculosTable :form1:mensagem" process="@this"
-									immediate="true" oncomplete="PF('confirmDialogWidget').hide()" />
-								<p:commandButton value="Não" type="button"
-									styleClass="ui-confirmdialog-no" icon="pi pi-times"
-									onclick="PF('confirmDialogWidget').hide()" />
-							</p:confirmDialog>
+							action="#{veiculoBean.excluirVeiculo(veiculo)}"
+							update=":form1:veiculosTable :form1:mensagem :form1:painelVeiculo"
+							process="@this">
+							<p:confirm header="Atenção!"
+								message="Você tem certeza que deseja excluir esse registro?"
+								icon="pi pi-exclamation-triangle" />
 						</p:commandButton>
 					</p:column>
 				</p:dataTable>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+					width="350">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+				</p:confirmDialog>
 			</p:panel>
 		</h:form>
 	</ui:define>

@@ -14,11 +14,12 @@
 		<link rel="stylesheet"
 			href="https://unpkg.com/leaflet/dist/leaflet.css" />
 		<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-	
+
 		<h:form id="form1">
 			<p:growl id="mensagem" />
 
-			<p:panel header="Cliente" id="painelCliente" styleClass="painel-custom-header">
+			<p:panel header="Cliente" id="painelCliente"
+				styleClass="painel-custom-header">
 				<p:panelGrid columns="2" layout="grid">
 					<p:panelGrid columns="1" layout="grid">
 						<p:panelGrid columns="2" layout="grid"
@@ -26,7 +27,7 @@
 							style="margin-left: -20px">
 							<h:panelGroup>
 								<p:outputLabel value="Código" for="codigo" />
-								<p:inputText id="codigo"
+								<p:inputText id="codigo" style="width: 100px"
 									value="#{clienteBean.crudObj.cliIdCliente}" disabled="true" />
 							</h:panelGroup>
 
@@ -58,7 +59,7 @@
 							<p:inputText id="email" value="#{clienteBean.crudObj.cliEmail}"
 								required="true" maxlength="64" style="width:100%" />
 						</p:panelGrid>
-						
+
 						<p:divider style="width: 95%" />
 
 						<p:panelGrid columns="1" layout="grid" style="margin-left: -20px">
@@ -115,13 +116,15 @@
 								</h:panelGroup>
 							</p:panelGrid>
 						</h:panelGroup>
-						
+
 						<p:divider style="width: 95%" />
-						
+
 						<p:panelGrid layout="grid" columns="1" style="margin-left: -20px">
-							<p:commandButton icon="pi pi-map-marker" value="Visualizar Localização"
-							onclick="mostrarMapa('#{clienteBean.crudObj.cliLatitude}', '#{clienteBean.crudObj.cliLongitude}', '#{clienteBean.crudObj.cliNome}'); return false;"
-							type="button" style="margin-right: 5px;" disabled="#{clienteBean.crudObj.cliLatitude eq null}" />
+							<p:commandButton icon="pi pi-map-marker"
+								value="Visualizar Localização"
+								onclick="mostrarMapa('#{clienteBean.crudObj.cliLatitude}', '#{clienteBean.crudObj.cliLongitude}', '#{clienteBean.crudObj.cliNome}'); return false;"
+								type="button" style="margin-right: 5px;"
+								disabled="#{clienteBean.crudObj.cliLatitude eq null}" />
 						</p:panelGrid>
 					</p:panelGrid>
 				</p:panelGrid>
@@ -150,7 +153,8 @@
 				</div>
 			</p:panel>
 
-			<p:panel styleClass="painel-custom-header" header="Clientes Cadastrados" >
+			<p:panel styleClass="painel-custom-header"
+				header="Clientes Cadastrados">
 				<p:dataTable id="clientesTable" var="cliente" reflow="true"
 					sortBy="#{cliente.cliIdCliente}" sortOrder="ascending"
 					value="#{clienteBean.clientes}" paginator="true" rows="10"
@@ -192,28 +196,29 @@
 							styleClass="ui-button-success" style="margin-right: 5px;" />
 
 						<p:commandButton icon="pi pi-trash" styleClass="ui-button-danger"
-							update=":form1:mensagem" process="@this"
-							onclick="PF('confirmDialogWidget').show()">
-							<p:confirmDialog header="Atenção!"
-								widgetVar="confirmDialogWidget"
-								message="Você tem certeza que deseja excluir esse registro?">
-								<p:commandButton value="Sim" icon="pi pi-check"
-									action="#{clienteBean.excluirCliente(cliente)}"
-									update=":form1:clientesTable :form1:mensagem" process="@this"
-									immediate="true" oncomplete="PF('confirmDialogWidget').hide()" />
-								<p:commandButton value="Não" type="button"
-									styleClass="ui-confirmdialog-no" icon="pi pi-times"
-									onclick="PF('confirmDialogWidget').hide()" />
-							</p:confirmDialog>
+							action="#{clienteBean.excluirCliente(cliente)}"
+							update=":form1:clientesTable :form1:mensagem :form1:painelCliente"
+							process="@this">
+							<p:confirm header="Atenção!"
+								message="Você tem certeza que deseja excluir esse registro?"
+								icon="pi pi-exclamation-triangle" />
 						</p:commandButton>
 					</p:column>
 				</p:dataTable>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+					width="350">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+				</p:confirmDialog>
 			</p:panel>
 
 			<p:dialog id="dlgMapa" widgetVar="mapDialog"
 				header="Localização do Cliente" modal="true" width="1200"
 				height="600" responsive="true">
-				<div id="mapaCliente" style="width: 100%; height: 500px;"></div>
+				<div id="mapaCliente" style="width: 100%; height: 600px;"></div>
 			</p:dialog>
 		</h:form>
 

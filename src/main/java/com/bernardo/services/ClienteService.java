@@ -1,18 +1,17 @@
 package com.bernardo.services;
 
-import com.bernardo.entidades.Cliente;
-import com.bernardo.entidades.Responsavel;
-import com.bernardo.entidades.Usuarios;
-import com.bernardo.utils.FiltrosPesquisa;
-import javax.ejb.Stateless;
-import javax.inject.Named;
-import javax.persistence.Query;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.ejb.Stateless;
+import javax.inject.Named;
+import javax.persistence.Query;
+
+import com.bernardo.entidades.Cliente;
+import com.bernardo.utils.FiltrosPesquisa;
 
 /**
  *
@@ -22,7 +21,9 @@ import java.util.Set;
 @Named
 public class ClienteService extends BaseService<Cliente> {
 
-    @Override
+    private static final long serialVersionUID = 1L;
+
+	@Override
     protected List<FiltrosPesquisa> getFiltros(Map<String, Object> filtros) {
         List<FiltrosPesquisa> filtrosPesquisa = new ArrayList<>();
         add(filtrosPesquisa, "c.cliCpf = '?cliCpf'", "cliCpf", filtros.get("cliCpf"));

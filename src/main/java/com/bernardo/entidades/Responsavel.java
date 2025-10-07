@@ -17,7 +17,9 @@ import javax.persistence.Table;
 @Table(name = "RESPONSAVEL")
 public class Responsavel implements Serializable {
 
-    @Id
+    private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "RES_ID_RESPONSAVEL", nullable = false)
     private Integer resIdResponsavel;

@@ -2,6 +2,7 @@ package com.bernardo.beans.cadastros;
 
 import com.bernardo.beans.BuscaBean;
 import com.bernardo.entidades.Cliente;
+import com.bernardo.entidades.Veiculo;
 import com.bernardo.services.BaseCrud;
 import com.bernardo.services.ClienteService;
 import com.bernardo.utils.CEPUtil;
@@ -89,19 +90,11 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
     @Override
     public void deletar() {
     	clienteService.deletar(crudObj);
-    	getClientes();
+    	criaObj();
+        JsfUtil.info("Cliente excluído com sucesso!");
+        clientes = clienteService.filtrar(new HashMap<>());
     }
 
-    @Override
-    public void setObjetoCrudPesquisa() {
-        Cliente cliente = BuscaBean.getResultadoPesquisa(Cliente.class);
-        if (cliente != null) {
-            crudObj = cliente;
-            alterando = true;
-            crudObj.setCliCpf(StringUtil.getCpfFormatado(crudObj.getCliCpf()));
-        }
-    }
-    
     public void selecionarCliente(Cliente cliente) {
         this.crudObj = cliente;
         this.alterando = true;
@@ -110,8 +103,9 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
     public void excluirCliente(Cliente cliente) {
         this.crudObj = cliente;
         clienteService.deletar(cliente);
-        JsfUtil.info("Cliente excluido com sucesso!");
         criaObj();
+        JsfUtil.info("Cliente excluído com sucesso!");
+        clientes = clienteService.filtrar(new HashMap<>());
     }
     
     public void excluirClienteSelecionado() {

@@ -15,7 +15,9 @@ import java.io.Serializable;
  */
 public abstract class BaseCrud<T> implements Serializable {
 
-    @EJB
+    private static final long serialVersionUID = 1L;
+
+	@EJB
     protected CustomEntityManager customEntityManager;
 
     @Inject
@@ -54,8 +56,6 @@ public abstract class BaseCrud<T> implements Serializable {
             JsfUtil.error("Não foi possível excluir o registro");
         }
     }
-
-    public abstract void setObjetoCrudPesquisa();
 
     public GerBean getGerBean() {
         return gerBean;

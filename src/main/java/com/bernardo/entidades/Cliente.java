@@ -20,6 +20,8 @@ import com.bernardo.utils.StringUtil;
 @Table(name = "CLIENTE")
 public class Cliente implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CLI_ID_CLIENTE", nullable = false)

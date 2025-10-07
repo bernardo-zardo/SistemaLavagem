@@ -20,7 +20,9 @@ import javax.persistence.Table;
 @Table(name = "VEICULO")
 public class Veiculo implements Serializable {
 
-    @Id
+    private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "VEI_ID_VEICULO", nullable = false)
     private Integer veiIdVeiculo;

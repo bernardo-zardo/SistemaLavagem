@@ -78,16 +78,9 @@ public class VeiculoBean extends BaseCrud<Veiculo> implements Serializable {
     @Override
     public void deletar() {
     	veiculoService.deletar(crudObj);
-    	getVeiculos();
-    }
-
-    @Override
-    public void setObjetoCrudPesquisa() {
-        Veiculo veiculo = BuscaBean.getResultadoPesquisa(Veiculo.class);
-        if (veiculo != null) {
-            crudObj = veiculo;
-            alterando = true;
-        }
+    	criaObj();
+    	JsfUtil.info("Veículo excluído com sucesso!");
+    	veiculos = veiculoService.filtrar(new HashMap<>());
     }
     
     public void selecionarVeiculo(Veiculo veiculo) {
@@ -98,8 +91,9 @@ public class VeiculoBean extends BaseCrud<Veiculo> implements Serializable {
     public void excluirVeiculo(Veiculo veiculo) {
         this.crudObj = veiculo;
         veiculoService.deletar(veiculo);
-        JsfUtil.info("Cliente excluido com sucesso!");
         criaObj();
+        JsfUtil.info("Veículo excluído com sucesso!");
+        veiculos = veiculoService.filtrar(new HashMap<>());
     }
     
     public Veiculo getCrudObj() {

@@ -13,7 +13,9 @@ import java.util.Map;
  */
 public abstract class BaseService<T> implements Serializable {
 
-    @EJB
+    private static final long serialVersionUID = 1L;
+    
+	@EJB
     protected CustomEntityManager customEntityManager;
 
     protected abstract List<FiltrosPesquisa> getFiltros(Map<String, Object> filtros);

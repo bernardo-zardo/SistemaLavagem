@@ -15,7 +15,9 @@ import java.util.List;
  */
 public abstract class BasePesquisa<T> implements Serializable {
 
-    @Inject
+    private static final long serialVersionUID = 1L;
+
+	@Inject
     protected BuscaBean buscaBean;
 
     @Inject
