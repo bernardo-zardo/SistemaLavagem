@@ -36,12 +36,13 @@ body .ui-panelgrid .ui-panelgrid-cell {
     width: 100%;
 }
 
-.inputCodigo {
-    width: 200px !important;
+
+.datePicker .ui-inputfield {
+    width: calc(100% - 2.5em); /* ou - 40px, depende do ícone */
 }
 
-.input250 {
-    width: 250px !important;
+.inputCodigo {
+    width: 200px !important;
 }
 
 .titulo {

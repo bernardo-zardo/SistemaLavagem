@@ -24,7 +24,7 @@
 					<p:panelGrid columns="1" layout="grid">
 						<p:panelGrid columns="2" layout="grid"
 							columnClasses="ui-grid-col-2,ui-grid-col-10"
-							style="margin-left: -20px">
+							style="margin-left: -10px">
 							<h:panelGroup>
 								<p:outputLabel value="Código" for="codigo" />
 								<p:inputText id="codigo" style="width: 100px"
@@ -38,7 +38,7 @@
 							</h:panelGroup>
 						</p:panelGrid>
 
-						<p:panelGrid columns="2" layout="grid" style="margin-left: -20px">
+						<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
 							<h:panelGroup>
 								<p:outputLabel value="CPF" for="cpf" />
 								<p:inputMask id="cpf" value="#{clienteBean.crudObj.cliCpf}"
@@ -54,15 +54,15 @@
 							</h:panelGroup>
 						</p:panelGrid>
 
-						<p:panelGrid columns="1" layout="grid" style="margin-left: -20px">
+						<p:panelGrid columns="1" layout="grid" style="margin-left: -10px">
 							<p:outputLabel value="E-mail" for="email" />
 							<p:inputText id="email" value="#{clienteBean.crudObj.cliEmail}"
 								required="true" maxlength="64" style="width:100%" />
 						</p:panelGrid>
 
-						<p:divider style="width: 95%" />
+						<p:divider style="width: 99%;" />
 
-						<p:panelGrid columns="1" layout="grid" style="margin-left: -20px">
+						<p:panelGrid columns="1" layout="grid" style="margin-left: -10px">
 							<p:outputLabel value="CEP" for="cep" />
 							<p:inputMask id="cep" value="#{clienteBean.crudObj.cliCep}"
 								mask="99999-999" required="true" style="width:100%">
@@ -73,7 +73,7 @@
 						</p:panelGrid>
 
 						<h:panelGroup id="endereco">
-							<p:panelGrid columns="2" layout="grid" style="margin-left: -20px">
+							<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
 								<h:panelGroup>
 									<p:outputLabel value="Rua" for="rua" />
 									<p:inputText id="rua" value="#{clienteBean.crudObj.cliRua}"
@@ -87,7 +87,7 @@
 								</h:panelGroup>
 							</p:panelGrid>
 
-							<p:panelGrid columns="2" layout="grid" style="margin-left: -20px">
+							<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
 								<h:panelGroup>
 									<p:outputLabel value="Complemento" for="complemento" />
 									<p:inputText id="complemento"
@@ -102,7 +102,7 @@
 								</h:panelGroup>
 							</p:panelGrid>
 
-							<p:panelGrid columns="2" layout="grid" style="margin-left: -20px">
+							<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
 								<h:panelGroup>
 									<p:outputLabel value="Cidade" for="cidade" />
 									<p:inputText id="cidade"
@@ -117,9 +117,9 @@
 							</p:panelGrid>
 						</h:panelGroup>
 
-						<p:divider style="width: 95%" />
+						<p:divider style="width: 99%;" />
 
-						<p:panelGrid layout="grid" columns="1" style="margin-left: -20px">
+						<p:panelGrid layout="grid" columns="1" style="margin-left: -10px">
 							<p:commandButton icon="pi pi-map-marker"
 								value="Visualizar Localização"
 								onclick="mostrarMapa('#{clienteBean.crudObj.cliLatitude}', '#{clienteBean.crudObj.cliLongitude}', '#{clienteBean.crudObj.cliNome}'); return false;"

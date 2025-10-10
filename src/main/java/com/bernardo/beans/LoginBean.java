@@ -1,6 +1,5 @@
 package com.bernardo.beans;
 
-//import com.fabioG.utils.WhatsAppUtil;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +34,6 @@ public class LoginBean implements Serializable {
     private String senha;
     private String cpf;
     private String telefone;
-    private String novaSenha;
-    private String confirmacaoNovaSenha;
     private List<Responsavel> usuariosEncontrados = new ArrayList<>();
     
     @PostConstruct
@@ -99,35 +96,6 @@ public class LoginBean implements Serializable {
     	JsfUtil.redirect("/SistemaLavagem/publico/cadastros/usuario.xhtml");
     }
     
-//    public void alterarSenha() {
-//        if (novaSenha.length() < 8) {
-//            JsfUtil.error("A senha deve conter ao menos 8 caracteres");
-//            return;
-//        }
-//
-//        if (!novaSenha.equals(confirmacaoNovaSenha)) {
-//            JsfUtil.error("A senha e a confirmação da senha não conferem");
-//            return;
-//        }
-//
-//        for (Usuarios usuario : usuariosEncontrados) {
-//            String novaSenhaMD5 = StringUtil.getMD5(novaSenha);
-//            usuario.setSenha(novaSenhaMD5);
-//            usuario = usuariosService.salvar(usuario);
-//        }
-//
-//        JsfUtil.info("Senha Alterada com Sucesso");
-//        JsfUtil.pfHideDialog("wvDlgEsqueciMinhaSenha");
-//        limparCamposDialog();
-//    }
-    
-    private void limparCamposDialog() {
-        cpf = null;
-        telefone = null;
-        novaSenha = null;
-        confirmacaoNovaSenha = null;
-    }
-
     public String getNome() {
         return nome;
     }
