@@ -1,7 +1,9 @@
 package com.bernardo.entidades;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -113,6 +115,20 @@ public class Servico implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	
+	public String getDescEntrega() {
+	    if (this.serPrecoEntrega == null) {
+	        return "Sem Entrega";
+	    }
+
+	    NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+	    return "Entrega incluída: " + nf.format(this.serPrecoEntrega);
+	}
+	
+	public String getPrecoTotalFormat() {
+		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+	    return nf.format(this.serPrecoTotal);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.bernardo.utils;
+package com.bernardo.converters;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -6,14 +6,15 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
 import com.bernardo.beans.cadastros.ServicoBean;
+import com.bernardo.consultas.ConsultaServicoBean;
 import com.bernardo.entidades.TipoServico;
 
 /**
  *
  * @author Bernardo Zardo Mergen
  */
-@FacesConverter(forClass = TipoServico.class)
-public class TipoServicoConverter implements Converter<TipoServico> {
+@FacesConverter("tipoServicoConsultaConverter")
+public class TipoServicoConsultaConverter implements Converter<TipoServico> {
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, TipoServico tipoServico) {
@@ -30,8 +31,8 @@ public class TipoServicoConverter implements Converter<TipoServico> {
         }
         Integer id = Integer.valueOf(value);
 
-        ServicoBean bean = context.getApplication()
-                .evaluateExpressionGet(context, "#{servicoBean}", ServicoBean.class);
+        ConsultaServicoBean bean = context.getApplication()
+                .evaluateExpressionGet(context, "#{consultaServicoBean}", ConsultaServicoBean.class);
 
         return bean.getTiposServico()
                    .stream()
@@ -40,3 +41,4 @@ public class TipoServicoConverter implements Converter<TipoServico> {
                    .orElse(null);
     }
 }
+

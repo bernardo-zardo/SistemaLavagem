@@ -1,0 +1,160 @@
+<ui:composition template="/templates/pagina.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<ui:define name="title">
+        Cadastro de Serviço
+    </ui:define>
+
+	<ui:define name="content">
+		<h:form id="form1">
+			<p:growl id="mensagem" />
+			<p:panel header="Filtros de Serviço"
+				styleClass="painel-custom-header">
+				<p:panelGrid columns="2" layout="grid">
+					<p:panelGrid columns="1" layout="grid">
+
+						<p:panelGrid columns="2" layout="grid"
+							columnClasses="ui-g-nopad, ui-g-nopad" style="margin-left:-10px">
+							<h:panelGroup>
+								<p:outputLabel value="Data Inicial" for="dataIni" />
+								<br />
+								<p:datePicker id="dataIni" showOnFocus="false"
+									value="#{consultaServicoBean.filtroDataIni}" showIcon="true"
+									pattern="dd/MM/yyyy" styleClass="datePicker"
+									style="width:200px" />
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:outputLabel value="Data Final" for="dataFim" />
+								<br />
+								<p:datePicker id="dataFim" showOnFocus="false"
+									value="#{consultaServicoBean.filtroDataFim}" showIcon="true"
+									pattern="dd/MM/yyyy" styleClass="datePicker"
+									style="width:200px" />
+							</h:panelGroup>
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+							<p:selectCheckboxMenu id="tiposServico"
+								value="#{consultaServicoBean.filtroTiposServico}"
+								label="Tipos de Serviço" filter="true"
+								filterMatchMode="contains" style="width: 100%"
+								converter="tipoServicoConsultaConverter">
+								<f:selectItems value="#{consultaServicoBean.tiposServico}"
+									var="t" itemLabel="#{t.tsNome}" itemValue="#{t}" />
+							</p:selectCheckboxMenu>
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+							<p:selectCheckboxMenu id="veiculos"
+								value="#{consultaServicoBean.filtroVeiculos}" label="Veículos"
+								filter="true" filterMatchMode="contains" style="width: 100%"
+								converter="veiculoConsultaConverter">
+								<f:selectItems value="#{consultaServicoBean.veiculos}" var="v"
+									itemLabel="#{v.veiModelo}" itemValue="#{v}" />
+							</p:selectCheckboxMenu>
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+							<p:selectCheckboxMenu id="responsaveis"
+								value="#{consultaServicoBean.filtroResponsaveis}"
+								label="Responsáveis" filter="true" filterMatchMode="contains"
+								style="width: 100%" converter="responsavelConsultaConverter">
+								<f:selectItems value="#{consultaServicoBean.responsaveis}"
+									var="r" itemLabel="#{r.resNome}" itemValue="#{r}" />
+							</p:selectCheckboxMenu>
+						</p:panelGrid>
+
+						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
+							<p:outputLabel value="Entregas" />
+							<p:selectOneRadio id="line"
+								value="#{consultaServicoBean.filtroEntrega}"
+								layout="lineDirection">
+								<f:selectItem itemLabel="Ambos" itemValue="A" />
+								<f:selectItem itemLabel="Com Entrega" itemValue="C" />
+								<f:selectItem itemLabel="Sem Entrega" itemValue="S" />
+							</p:selectOneRadio>
+						</p:panelGrid>
+					</p:panelGrid>
+				</p:panelGrid>
+			</p:panel>
+
+			<p:panel styleClass="painel-custom">
+				<div align="right">
+					<p:commandButton value="Limpar Filtros" icon="pi pi-eraser"
+						actionListener="#{consultaServicoBean.filtrarServicos()}"
+						update="@form" />
+
+					<p:commandButton value="Pesquisar" icon="pi pi-search"
+						actionListener="#{consultaServicoBean.filtrarServicos()}"
+						update="@form" styleClass="btn-acoes ui-button-success" />
+				</div>
+			</p:panel>
+
+			<p:panel styleClass="painel-custom-header"
+				header="Serviços Filtrados">
+				<p:dataGrid id="gridServicos"
+					value="#{consultaServicoBean.servicosFiltrados}" var="s"
+					columns="4" paginator="true" rows="4" paginatorPosition="bottom"
+					styleClass="dataGrid-servicos"
+					emptyMessage="Nenhum serviço encontrado.">
+
+					<p:panel styleClass="card-servico">
+						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
+
+							<h:outputText value="#{s.serData}"
+								style="font-weight: bold; font-size: 17px; margin-left: -3px">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</h:outputText>
+
+							<p:panelGrid layout="grid" columns="1"
+								style="margin-left: -10px; margin-top: 5px">
+								<h:outputText value="#{s.serTipoServico.tipoServicoDesc}"
+									style="font-weight: bold; color: #1a96cc" />
+
+								<h:outputText
+									value="Veículo: #{s.serVeiculo.veiModelo} - #{s.serVeiculo.veiPlaca}" />
+
+								<h:outputText value="Responsável: #{s.serResponsavel.resNome}" />
+								
+								<h:outputText value="#{s.descEntrega}" />
+								
+								<h:outputText value="Preço Total: #{s.precoTotalFormat}" style="font-weight: bold; margin-top: 5px" />
+							</p:panelGrid>
+						</p:panelGrid>
+					</p:panel>
+
+				</p:dataGrid>
+			</p:panel>
+
+		</h:form>
+
+		<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function() {
+        var input = PF('dataPickerWidget').jq.find('input');
+        
+        input.on('input', function() {
+            var val = input.val().replace(/\D/g, ''); // Remove tudo que não é número
+
+            if (val.length > 2 && val.length <= 4)
+                val = val.slice(0, 2) + '/' + val.slice(2);
+            else if (val.length > 4 && val.length <= 8)
+                val = val.slice(0, 2) + '/' + val.slice(2, 4) + '/' + val.slice(4);
+            else if (val.length > 8 && val.length <= 10)
+                val = val.slice(0, 2) + '/' + val.slice(2, 4) + '/' + val.slice(4, 8) + ' ' + val.slice(8);
+            else if (val.length > 10)
+                val = val.slice(0, 2) + '/' + val.slice(2, 4) + '/' + val.slice(4, 8) + ' ' + val.slice(8, 10) + ':' + val.slice(10, 12);
+
+            input.val(val);
+        });
+    });
+    //]]>
+</script>
+
+	</ui:define>
+</ui:composition>

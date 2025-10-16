@@ -14,7 +14,7 @@
 		<h:form id="form1">
 			<p:growl id="mensagem" />
 
-			<p:panel header="Veículo" id="painelVeiculo"
+			<p:panel header="Cadastro de Veículo" id="painelVeiculo"
 				styleClass="painel-custom-header">
 				<p:panelGrid columns="2" layout="grid">
 					<p:panelGrid columns="1" layout="grid">
@@ -65,9 +65,7 @@
 								<p:inputText id="cor" value="#{veiculoBean.crudObj.veiCor}"
 									maxlength="45" style="width:100%" required="true" />
 							</h:panelGroup>
-						</p:panelGrid>
-
-						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+							
 							<h:panelGroup>
 								<p:outputLabel value="Placa" for="placa" />
 								<p:inputText id="placa" value="#{veiculoBean.crudObj.veiPlaca}"

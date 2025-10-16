@@ -4,7 +4,6 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
 import com.bernardo.entidades.Responsavel;
-import com.bernardo.entidades.Usuarios;
 
 import java.io.Serializable;
 

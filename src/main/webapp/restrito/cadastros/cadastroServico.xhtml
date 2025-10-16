@@ -12,49 +12,82 @@
 	<ui:define name="content">
 		<h:form id="form1">
 			<p:growl id="mensagem" />
-			<p:panel header="Serviço" id="painelServico"
+			<p:panel header="Cadastro de Serviço" id="painelServico"
 				styleClass="painel-custom-header">
 				<p:panelGrid columns="2" layout="grid">
+
 					<p:panelGrid columns="1" layout="grid">
-						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+
+						<p:panelGrid columns="2" layout="grid"
+							columnClasses="ui-grid-col-2,ui-grid-col-10"
+							style="margin-left:-10px">
 							<h:panelGroup>
 								<p:outputLabel value="Código" for="codigo" />
 								<br />
 								<p:inputText id="codigo" style="width: 100px"
 									value="#{servicoBean.crudObj.serIdServico}" disabled="true" />
 							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:outputLabel value="Data e Hora do Serviço" for="data" />
+								<br />
+								<p:datePicker id="data" value="#{servicoBean.crudObj.serData}"
+									showIcon="true" required="true" styleClass="datePicker" style="width: 220px"
+									pattern="dd/MM/yyyy HH:mm" showTime="true" showOnFocus="false"
+									requiredMessage="O campo Data é obrigatório."
+									widgetVar="dataPickerWidget" />
+							</h:panelGroup>
 						</p:panelGrid>
 
-						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
-							<p:outputLabel value="Data do Serviço" for="data" />
-							<p:datePicker id="data" value="#{servicoBean.crudObj.serData}"
-								showIcon="true" required="true" styleClass="datePicker"
-								pattern="dd/MM/yyyy"
-								requiredMessage="O campo Data é obrigatório."
-								widgetVar="dataPickerWidget" />
-						</p:panelGrid>
-						
 						<p:divider style="width: 99%;" />
-						
+
+						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
+							<p:outputLabel value="Tipo de Serviço" for="tipoServico" />
+							<p:selectOneMenu id="tipoServico" filter="true"
+								filterMatchMode="contains" required="true"
+								requiredMessage="O campo Tipo de Serviço é obrigatório."
+								value="#{servicoBean.crudObj.serTipoServico}" style="width:100%">
+								<f:selectItem itemLabel="Selecione um tipo" itemValue="#{null}"
+									noSelectionOption="true" />
+								<f:selectItems value="#{servicoBean.tiposServico}" var="t"
+									itemLabel="#{t.tsNome}" itemValue="#{t}" />
+							</p:selectOneMenu>
+						</p:panelGrid>
+
 						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
 							<h:panelGroup>
-								<p:outputLabel value="Tipo de Serviço" for="tipoServico" />
-								<p:selectOneMenu id="tipoServico" filter="true"
+								<p:outputLabel value="Veículo" for="veiculo" />
+								<p:selectOneMenu id="veiculo" filter="true"
 									filterMatchMode="contains" required="true"
-									requiredMessage="O campo Tipo de Serviço é obrigatório."
-									value="#{servicoBean.crudObj.serTipoServico}"
+									requiredMessage="O campo Veículo é obrigatório."
+									value="#{servicoBean.crudObj.serVeiculo}" style="width:100%">
+									<f:selectItem itemLabel="Selecione um veículo"
+										itemValue="#{null}" noSelectionOption="true" />
+									<f:selectItems value="#{servicoBean.veiculos}" var="v"
+										itemLabel="#{v.veiModelo} - #{v.veiPlaca}" itemValue="#{v}" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:outputLabel value="Responsável" for="responsavel" />
+								<p:selectOneMenu id="responsavel" filter="true"
+									filterMatchMode="contains" required="true"
+									requiredMessage="O campo Responsável é obrigatório."
+									value="#{servicoBean.crudObj.serResponsavel}"
 									style="width:100%">
-									<f:selectItem itemLabel="Selecione um tipo" itemValue="#{null}"
-										noSelectionOption="true" />
-									<f:selectItems value="#{servicoBean.tiposServico}" var="t"
-										itemLabel="#{t.tsNome}" itemValue="#{t}" />
+									<f:selectItem itemLabel="Selecione o responsável"
+										itemValue="#{null}" noSelectionOption="true" />
+									<f:selectItems value="#{servicoBean.responsaveis}" var="r"
+										itemLabel="#{r.resNome}" itemValue="#{r}" />
 								</p:selectOneMenu>
 							</h:panelGroup>
 						</p:panelGrid>
-						
+
+						<p:divider style="width: 99%;" />
+
 						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
 							<p:selectBooleanCheckbox value="#{servicoBean.possuiEntrega}"
-								itemLabel="Serviço de entrega de veículo incluído">
+								itemLabel="Incluir entrega do veículo ao cliente">
 								<p:ajax process="@this" update="@this :form1:panelPreco" />
 							</p:selectBooleanCheckbox>
 						</p:panelGrid>
@@ -70,42 +103,11 @@
 									style="width:100%" />
 							</h:panelGroup>
 						</p:panelGrid>
-						
-						<p:divider style="width: 99%;" />
 
-						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
-							<h:panelGroup>
-								<p:outputLabel value="Veículo" for="veiculo" />
-								<p:selectOneMenu id="veiculo" filter="true"
-									filterMatchMode="contains" required="true"
-									requiredMessage="O campo Veículo é obrigatório."
-									value="#{servicoBean.crudObj.serVeiculo}" style="width:100%">
-									<f:selectItem itemLabel="Selecione um veículo"
-										itemValue="#{null}" noSelectionOption="true" />
-									<f:selectItems value="#{servicoBean.veiculos}" var="v"
-										itemLabel="#{v.veiModelo} - #{v.veiPlaca}" itemValue="#{v}" />
-								</p:selectOneMenu>
-							</h:panelGroup>
-						</p:panelGrid>
-
-						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
-							<h:panelGroup>
-								<p:outputLabel value="Responsável" for="responsavel" />
-								<p:selectOneMenu id="responsavel" filter="true"
-									filterMatchMode="contains" required="true"
-									requiredMessage="O campo Responsável é obrigatório."
-									value="#{servicoBean.crudObj.serResponsavel}"
-									style="width:100%">
-									<f:selectItem itemLabel="Selecione o responsável"
-										itemValue="#{null}" noSelectionOption="true" />
-									<f:selectItems value="#{servicoBean.responsaveis}" var="r"
-										itemLabel="#{r.resNome}" itemValue="#{r}" />
-								</p:selectOneMenu>
-							</h:panelGroup>
-						</p:panelGrid>
 					</p:panelGrid>
 				</p:panelGrid>
 			</p:panel>
+
 
 			<p:panel styleClass="painel-custom">
 				<div align="right">
@@ -145,7 +147,7 @@
 
 					<p:column headerText="Data" sortBy="#{servico.serData}">
 						<h:outputText value="#{servico.serData}">
-							<f:convertDateTime pattern="dd/MM/yyyy" />
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
 						</h:outputText>
 					</p:column>
 
@@ -201,16 +203,28 @@
 		</h:form>
 
 		<script type="text/javascript">
-		    $(document).ready(function() {
-		        var input = PF('dataPickerWidget').jq.find('input');
-		
-		        input.on('input', function() {
-		            var val = input.val().replace(/\D/g, ''); // Remove tudo que não é número
-		            if(val.length >= 2) val = val.slice(0,2) + '/' + val.slice(2);
-		            if(val.length >= 5) val = val.slice(0,5) + '/' + val.slice(5,9);
-		            input.val(val);
-		        });
-		    });
-		</script>
+    //<![CDATA[
+    $(document).ready(function() {
+        var input = PF('dataPickerWidget').jq.find('input');
+        
+        input.on('input', function() {
+            var val = input.val().replace(/\D/g, ''); // Remove tudo que não é número
+
+            if (val.length > 2 && val.length <= 4)
+                val = val.slice(0, 2) + '/' + val.slice(2);
+            else if (val.length > 4 && val.length <= 8)
+                val = val.slice(0, 2) + '/' + val.slice(2, 4) + '/' + val.slice(4);
+            else if (val.length > 8 && val.length <= 10)
+                val = val.slice(0, 2) + '/' + val.slice(2, 4) + '/' + val.slice(4, 8) + ' ' + val.slice(8);
+            else if (val.length > 10)
+                val = val.slice(0, 2) + '/' + val.slice(2, 4) + '/' + val.slice(4, 8) + ' ' + val.slice(8, 10) + ':' + val.slice(10, 12);
+
+            input.val(val);
+        });
+    });
+    //]]>
+</script>
+
+
 	</ui:define>
 </ui:composition>

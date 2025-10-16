@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,7 +15,14 @@ import java.util.regex.Pattern;
  * @author Bernardo Zardo Mergen
  */
 public class StringUtil {
-
+	
+	private static final SimpleDateFormat MYSQL_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
+	public static String toMySQLDateTime(Date date) {
+        if (date == null) return null;
+        return "'" + MYSQL_FORMAT.format(date) + "'";
+    }
+	
     public static String getStringISO(String string) {
         return new String(string.getBytes(), StandardCharsets.ISO_8859_1);
     }

@@ -1,6 +1,8 @@
 package com.bernardo.entidades;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -56,6 +58,11 @@ public class TipoServico implements Serializable {
 
 	public void setTsPreco(Double tsPreco) {
 		this.tsPreco = tsPreco;
+	}
+	
+	public String getTipoServicoDesc() {
+		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+	    return this.tsNome + " - " + nf.format(this.tsPreco);
 	}
 
 	@Override

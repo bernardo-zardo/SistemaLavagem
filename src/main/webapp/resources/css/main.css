@@ -36,7 +36,6 @@ body .ui-panelgrid .ui-panelgrid-cell {
     width: 100%;
 }
 
-
 .datePicker .ui-inputfield {
     width: calc(100% - 2.5em); /* ou - 40px, depende do ícone */
 }
@@ -268,4 +267,23 @@ body .ui-chkbox .ui-chkbox-box.ui-state-active {
 	border-bottom-right-radius: 12px !important;
 	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
 	border: none !important;
+}
+
+.dataGrid-servicos .ui-datagrid-content {
+    border: none !important;
+}
+
+.card-servico {
+    border-radius: 12px !important;
+	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-servico>.ui-panel-content {
+	border: none !important;
+}
+
+.card-servico:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }

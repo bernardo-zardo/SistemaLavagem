@@ -1,4 +1,4 @@
-package com.bernardo.utils;
+package com.bernardo.converters;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;

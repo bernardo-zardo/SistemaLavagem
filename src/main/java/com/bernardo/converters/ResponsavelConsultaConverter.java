@@ -1,19 +1,15 @@
-package com.bernardo.utils;
+package com.bernardo.converters;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-import com.bernardo.beans.cadastros.ServicoBean;
+import com.bernardo.consultas.ConsultaServicoBean;
 import com.bernardo.entidades.Responsavel;
 
-/**
- *
- * @author Bernardo Zardo Mergen
- */
-@FacesConverter(forClass = Responsavel.class)
-public class ResponsavelConverter implements Converter<Responsavel> {
+@FacesConverter("responsavelConsultaConverter")
+public class ResponsavelConsultaConverter implements Converter<Responsavel> {
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, Responsavel responsavel) {
@@ -28,15 +24,14 @@ public class ResponsavelConverter implements Converter<Responsavel> {
         if (value == null || value.isBlank()) {
             return null;
         }
+
         Integer id = Integer.valueOf(value);
+        ConsultaServicoBean bean = context.getApplication()
+                .evaluateExpressionGet(context, "#{consultaServicoBean}", ConsultaServicoBean.class);
 
-        ServicoBean bean = context.getApplication()
-                .evaluateExpressionGet(context, "#{servicoBean}", ServicoBean.class);
-
-        return bean.getResponsaveis()
-                   .stream()
-                   .filter(r -> r.getResIdResponsavel().equals(id))
-                   .findFirst()
-                   .orElse(null);
+        return bean.getResponsaveis().stream()
+                .filter(r -> r.getResIdResponsavel().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 }
