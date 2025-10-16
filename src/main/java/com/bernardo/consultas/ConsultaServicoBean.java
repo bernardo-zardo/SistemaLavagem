@@ -78,8 +78,15 @@ public class ConsultaServicoBean implements Serializable {
 		}
     }
     
-    public void limparFiltros () {
-    	
+    public void limparFiltros() {
+    	filtroEntrega = "A";
+    	LocalDate hoje = LocalDate.now();
+        LocalDate seteDiasAtras = hoje.minusDays(7);
+        filtroDataIni = Date.from(seteDiasAtras.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        filtroDataFim = Date.from(hoje.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        filtroTiposServico = new ArrayList<>();
+        filtroVeiculos = new ArrayList<>();
+        filtroResponsaveis = new ArrayList<>();
     }
     
 	public Date getFiltroDataIni() {
