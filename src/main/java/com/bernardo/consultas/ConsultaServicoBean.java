@@ -22,6 +22,7 @@ import com.bernardo.services.ResponsavelService;
 import com.bernardo.services.ServicoService;
 import com.bernardo.services.TipoServicoService;
 import com.bernardo.services.VeiculoService;
+import com.bernardo.utils.JsfUtil;
 
 /**
 *
@@ -72,10 +73,11 @@ public class ConsultaServicoBean implements Serializable {
     }
     
     public void filtrarServicos() {
+        if (filtroDataIni.after(filtroDataFim)) {
+            JsfUtil.warn("A data de início não pode ser maior que a data fim.");
+            return;
+        }
     	servicosFiltrados = servicoService.consultarServicosFiltrados(filtroEntrega, filtroDataIni, filtroDataFim, filtroTiposServico, filtroVeiculos, filtroResponsaveis);
-    	for (Servico serv : servicosFiltrados) {
-			System.out.println(serv.getSerIdServico());
-		}
     }
     
     public void limparFiltros() {
