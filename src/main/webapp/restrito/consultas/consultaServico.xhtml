@@ -55,7 +55,7 @@
 								filter="true" filterMatchMode="contains" style="width: 100%"
 								converter="veiculoConsultaConverter">
 								<f:selectItems value="#{consultaServicoBean.veiculos}" var="v"
-									itemLabel="#{s.serVeiculo.veiModelo} - #{s.serVeiculo.veiPlaca}" itemValue="#{v}" />
+									itemLabel="#{v.veiModelo} - #{v.veiPlaca}" itemValue="#{v}" />
 							</p:selectCheckboxMenu>
 						</p:panelGrid>
 
@@ -136,21 +136,17 @@
 		<script type="text/javascript">
 			//<![CDATA[
 			    $(document).ready(function() {
-			        function aplicarMascara(widgetVar) {
+			    	function aplicarMascara(widgetVar) {
 			            var input = PF(widgetVar).jq.find('input');
 			            
 			            input.on('input', function() {
-			                var val = input.val().replace(/\D/g, '');
-			
+			                var val = input.val().replace(/\D/g, ''); // Remove tudo que não é número
+
 			                if (val.length > 2 && val.length <= 4)
 			                    val = val.slice(0, 2) + '/' + val.slice(2);
-			                else if (val.length > 4 && val.length <= 8)
-			                    val = val.slice(0, 2) + '/' + val.slice(2, 4) + '/' + val.slice(4);
-			                else if (val.length > 8 && val.length <= 10)
-			                    val = val.slice(0, 2) + '/' + val.slice(2, 4) + '/' + val.slice(4, 8) + ' ' + val.slice(8);
-			                else if (val.length > 10)
-			                    val = val.slice(0, 2) + '/' + val.slice(2, 4) + '/' + val.slice(4, 8) + ' ' + val.slice(8, 10) + ':' + val.slice(10, 12);
-			
+			                else if (val.length > 4)
+			                    val = val.slice(0, 2) + '/' + val.slice(2, 4) + '/' + val.slice(4, 8);
+
 			                input.val(val);
 			            });
 			        }

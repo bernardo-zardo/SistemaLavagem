@@ -5,45 +5,104 @@
 
 <ui:composition>
 	<h:form id="menuForm">
+		<header class="topbar">
+			<nav class="topbar-nav">
+				<a href="#" class="topbar-brand"> <i class="fa-solid fa-car-on"></i>
+					Lavagem Daniel
+				</a>
 
-		<div
-			style="background-color: #fff; color: #333; display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #ddd;">
+				<button type="button" class="topbar-toggle" id="mobile-menu-button"
+				    aria-controls="topbar-menu" aria-expanded="false">
+				    <i class="pi pi-bars"></i>
+				</button>
 
-			<div style="display: flex; align-items: center; flex-grow: 1;">
-				<div style="font-weight: bold; font-size: 22px; margin-left: 15px;">Lavagem Daniel</div>
+				<div class="topbar-menu" id="topbar-menu">
+					<h:panelGroup rendered="#{gerBean.usuarioLogado}" layout="block"
+						styleClass="topbar-nav-main">
+						<ul class="topbar-nav-list">
+							<li class="nav-item dropdown"><a href="#"
+								class="nav-link dropdown-toggle"> <i class="pi pi-folder"></i>
+									Cadastros
+							</a>
+								<div class="dropdown-menu">
+									<h:link outcome="/restrito/cadastros/cliente"
+										styleClass="dropdown-item">
+										<i class="pi pi-users"></i> Clientes </h:link>
+									<h:link outcome="/restrito/cadastros/veiculo"
+										styleClass="dropdown-item">
+										<i class="pi pi-car"></i> Veículos </h:link>
+									<h:link outcome="/restrito/cadastros/tipoServico"
+										styleClass="dropdown-item">
+										<i class="pi pi-tags"></i> Tipos de Serviço </h:link>
+									<h:link outcome="/restrito/cadastros/cadastroServico"
+										styleClass="dropdown-item">
+										<i class="pi pi-briefcase"></i> Serviços </h:link>
+								</div></li>
+							<li class="nav-item dropdown"><a href="#"
+								class="nav-link dropdown-toggle"> <i class="pi pi-search"></i>
+									Consultas
+							</a>
+								<div class="dropdown-menu">
+									<h:link outcome="/restrito/consultas/consultaServico"
+										styleClass="dropdown-item">
+										<i class="pi pi-briefcase"></i> Serviços </h:link>
+								</div></li>
+						</ul>
+					</h:panelGroup>
 
-				<p:menubar autoDisplay="true" hideDelay="1000" rendered="#{gerBean.usuarioLogado}"
-					style="background:transparent; border:none; color:#333;">
-					<p:submenu label="Cadastros" icon="pi pi-fw pi-folder">
-						<p:menuitem value="Clientes" icon="pi pi-fw pi-users" outcome="/restrito/cadastros/cliente" />
-						<p:menuitem value="Veículos" icon="pi pi-fw pi-car" outcome="/restrito/cadastros/veiculo" />
-						<p:menuitem value="Tipos de Serviço" icon="pi pi-fw pi-tags" outcome="/restrito/cadastros/tipoServico" />
-						<p:menuitem value="Serviços" icon="pi pi-fw pi-briefcase" outcome="/restrito/cadastros/cadastroServico" />
-					</p:submenu>
-					
-					<p:submenu label="Consultas" icon="pi pi-fw pi-search">
-						<p:menuitem value="Serviços" icon="pi pi-fw pi-briefcase" outcome="/restrito/consultas/consultaServico" />
-					</p:submenu>
-				</p:menubar>
-			</div>
+					<div class="topbar-nav-user">
+						<h:panelGroup rendered="#{not gerBean.usuarioLogado}">
+							<p:commandButton value="Login" icon="pi pi-fw pi-sign-in"
+								action="#{loginBean.redirecionarParaLogin}" ajax="false"
+								styleClass="user-button ui-button-login" />
+						</h:panelGroup>
 
-			<div>
-				<p:commandButton value="Login" icon="pi pi-fw pi-sign-in"
-					action="#{loginBean.redirecionarParaLogin}"
-					rendered="#{not gerBean.usuarioLogado}" ajax="false"
-					styleClass="ui-button-info" />
+						<h:panelGroup rendered="#{gerBean.usuarioLogado}"
+							styleClass="user-info-group">
+							<span class="user-name"> <i class="pi pi-user"></i> <p:outputLabel
+									value="#{responsavelLogadoBean.responsavelLogado.resNome}" />
+							</span>
+							<p:commandButton value="Sair" icon="pi pi-fw pi-sign-out"
+								action="#{gerBean.logout}" ajax="false"
+								styleClass="user-button ui-button-login" />
+						</h:panelGroup>
+					</div>
+				</div>
+			</nav>
+		</header>
 
-				<h:panelGroup rendered="#{gerBean.usuarioLogado}">
-					<p:outputLabel
-						value="#{responsavelLogadoBean.responsavelLogado.resNome}"
-						style="margin-right:10px; font-weight:bold;" />
-
-					<p:commandButton value="Sair" icon="pi pi-fw pi-sign-out"
-						action="#{gerBean.logout}" ajax="false"
-						styleClass="ui-button-info" />
-				</h:panelGroup>
-			</div>
-		</div>
+		<script type="text/javascript">
+			//<![CDATA[
+			    document.addEventListener('DOMContentLoaded', function () {
+			        const mobileMenuButton = document.getElementById('mobile-menu-button');
+			        const topbarMenu = document.getElementById('topbar-menu');
+			        const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+			
+			        // Toggle mobile menu
+			        if (mobileMenuButton) {
+			            mobileMenuButton.addEventListener('click', () => {
+			                topbarMenu.classList.toggle('active');
+			            });
+			        }
+			        
+			        // Handle dropdowns, especially for mobile view
+			        dropdownToggles.forEach(toggle => {
+			            toggle.addEventListener('click', function(event) {
+			                // Prevent link from navigating on click
+			                event.preventDefault();
+			                
+			                // For smaller screens, toggle an 'active' class to show/hide the dropdown
+			                if (window.innerWidth <= 992) {
+			                    const parentDropdown = this.closest('.dropdown');
+			                    if (parentDropdown) {
+			                        parentDropdown.classList.toggle('active');
+			                    }
+			                }
+			            });
+			        });
+			    });
+			//]]>
+			</script>
 	</h:form>
 </ui:composition>
 </html>
