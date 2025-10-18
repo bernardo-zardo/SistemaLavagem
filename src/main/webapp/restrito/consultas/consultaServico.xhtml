@@ -6,7 +6,7 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 	<ui:define name="title">
-        Cadastro de Serviço
+        Consulta de Serviço
     </ui:define>
 
 	<ui:define name="content">
@@ -22,7 +22,8 @@
 							<h:panelGroup>
 								<p:outputLabel value="Data Inicial" for="dataIni" />
 								<br />
-								<p:datePicker id="dataIni" showOnFocus="false" widgetVar="dataIniWidget"
+								<p:datePicker id="dataIni" showOnFocus="false"
+									widgetVar="dataIniWidget"
 									value="#{consultaServicoBean.filtroDataIni}" showIcon="true"
 									pattern="dd/MM/yyyy" styleClass="datePicker"
 									style="width:200px" />
@@ -31,7 +32,8 @@
 							<h:panelGroup>
 								<p:outputLabel value="Data Final" for="dataFim" />
 								<br />
-								<p:datePicker id="dataFim" showOnFocus="false" widgetVar="dataFimWidget"
+								<p:datePicker id="dataFim" showOnFocus="false"
+									widgetVar="dataFimWidget"
 									value="#{consultaServicoBean.filtroDataFim}" showIcon="true"
 									pattern="dd/MM/yyyy" styleClass="datePicker"
 									style="width:200px" />
@@ -87,16 +89,49 @@
 				<div align="right">
 					<p:commandButton value="Limpar Filtros" icon="pi pi-eraser"
 						actionListener="#{consultaServicoBean.limparFiltros()}"
-						update=":form1:panelFiltros" />
+						update=":form1:panelFiltros" styleClass="btn-acoes-auto"/>
 
 					<p:commandButton value="Pesquisar" icon="pi pi-search"
 						actionListener="#{consultaServicoBean.filtrarServicos()}"
-						update=":form1:mensagem :form1:gridServicos" styleClass="btn-acoes ui-button-success" />
+						update=":form1:mensagem :form1:panelRegistros :form1:panelTotais"
+						styleClass="btn-acoes ui-button-success" />
 				</div>
 			</p:panel>
 
-			<p:panel styleClass="painel-custom-header"
+			<p:panelGrid id="panelTotais" layout="grid" columns="4"
+				styleClass="panelgrid-transparente" style="padding: 10px;">
+				<p:panel styleClass="card-total">
+					<i class="pi pi-briefcase icone-total" />
+					<h:outputText value="Serviços Realizados" styleClass="titulo-total" />
+					<h:outputText value="#{consultaServicoBean.totalServicos}"
+						styleClass="valor-total" />
+				</p:panel>
+
+				<p:panel styleClass="card-total">
+					<i class="pi pi-wallet icone-total" />
+					<h:outputText value="Receita Total" styleClass="titulo-total" />
+					<h:outputText value="R$ #{consultaServicoBean.receitaTotalFormat()}"
+						styleClass="valor-total" />
+				</p:panel>
+
+				<p:panel styleClass="card-total">
+					<i class="pi pi-car icone-total" />
+					<h:outputText value="Entregas Realizadas" styleClass="titulo-total" />
+					<h:outputText value="#{consultaServicoBean.totalComEntrega}"
+						styleClass="valor-total" />
+				</p:panel>
+
+				<p:panel styleClass="card-total">
+					<i class="pi pi-chart-line icone-total" />
+					<h:outputText value="Preço Médio" styleClass="titulo-total" />
+					<h:outputText value="R$ #{consultaServicoBean.precoMedioFormat()}"
+						styleClass="valor-total" />
+				</p:panel>
+			</p:panelGrid>
+
+			<p:panel id="panelRegistros" styleClass="painel-custom-header"
 				header="Serviços Filtrados">
+
 				<p:dataGrid id="gridServicos" layout="grid"
 					value="#{consultaServicoBean.servicosFiltrados}" var="s"
 					columns="4" paginator="true" rows="4" paginatorPosition="bottom"
@@ -106,24 +141,44 @@
 					<p:panel styleClass="card-servico">
 						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
 
-							<h:outputText value="#{s.serData}"
-								style="font-weight: bold; font-size: 17px; margin-left: -3px">
-								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-							</h:outputText>
+							<p:panelGrid layout="grid" columns="2"
+								columnClasses="ui-grid-col-11,ui-grid-col-1">
+
+								<p:panelGrid layout="grid" columns="1" style="margin-left:-20px">
+									<h:outputText value="#{s.serData}"
+										style="font-weight: bold; font-size: 19px; margin-left: -3px">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</p:panelGrid>
+
+								<p:panelGrid layout="grid" columns="1">
+									<p:button icon="pi pi-pencil"
+										outcome="/restrito/cadastros/cadastroServico.xhtml"
+										styleClass="ui-button-success" style="margin-right: 5px;"
+										target="_blank">
+										<f:param name="servicoId" value="#{s.serIdServico}" />
+									</p:button>
+								</p:panelGrid>
+							</p:panelGrid>
+
 
 							<p:panelGrid layout="grid" columns="1"
-								style="margin-left: -10px; margin-top: 5px">
+								style="margin-left: -10px; margin-top: -10px">
 								<h:outputText value="#{s.serTipoServico.tipoServicoDesc}"
-									style="font-weight: bold; color: #1a96cc" />
+									style="font-weight: bold; color: #1976d2" />
 
 								<h:outputText
 									value="Veículo: #{s.serVeiculo.veiModelo} - #{s.serVeiculo.veiPlaca}" />
 
 								<h:outputText value="Responsável: #{s.serResponsavel.resNome}" />
-								
+
 								<h:outputText value="#{s.descEntrega}" />
-								
-								<h:outputText value="Preço Total: #{s.precoTotalFormat}" style="font-weight: bold; margin-top: 5px" />
+
+								<p:panelGrid layout="grid" columns="1"
+									style="margin-left: -10px; margin-top: 5px">
+									<h:outputText value="Preço Total: #{s.precoTotalFormat}"
+										style="font-weight: bold; margin-top: 10px; font-size: 18px;" />
+								</p:panelGrid>
 							</p:panelGrid>
 						</p:panelGrid>
 					</p:panel>

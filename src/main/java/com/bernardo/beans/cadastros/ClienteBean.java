@@ -98,6 +98,7 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
     public void selecionarCliente(Cliente cliente) {
         this.crudObj = cliente;
         this.alterando = true;
+        JsfUtil.info("Cliente selecionado.");
     }
     
     public void excluirCliente(Cliente cliente) {

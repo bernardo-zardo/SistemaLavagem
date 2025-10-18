@@ -65,6 +65,7 @@ public class TipoServicoBean extends BaseCrud<TipoServico> implements Serializab
     public void selecionarTipoServico(TipoServico tipoServico) {
         this.crudObj = tipoServico;
         this.alterando = true;
+        JsfUtil.info("Tipo de Serviço selecionado.");
     }
     
     public void excluirTipoServico(TipoServico tipoServico) {

@@ -86,6 +86,7 @@ public class VeiculoBean extends BaseCrud<Veiculo> implements Serializable {
     public void selecionarVeiculo(Veiculo veiculo) {
         this.crudObj = veiculo;
         this.alterando = true;
+        JsfUtil.info("Veículo selecionado.");
     }
     
     public void excluirVeiculo(Veiculo veiculo) {

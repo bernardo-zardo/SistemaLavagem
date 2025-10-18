@@ -3,10 +3,10 @@ package com.bernardo.beans.cadastros;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -24,101 +24,111 @@ import com.bernardo.services.VeiculoService;
 import com.bernardo.utils.JsfUtil;
 
 /**
-*
-* @author Bernardo Zardo Mergen
-*/
+ *
+ * @author Bernardo Zardo Mergen
+ */
 @Named
 @ViewScoped
 public class ServicoBean extends BaseCrud<Servico> implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    
-    @EJB
-    private ServicoService servicoService;
-    @EJB
-    private VeiculoService veiculoService;
-    @EJB
-    private ClienteService clienteService;
-    @EJB
-    private ResponsavelService responsavelService;
-    @EJB
-    private TipoServicoService tipoServicoService;
+	private static final long serialVersionUID = 1L;
 
-    private boolean alterando;
-    private List<Veiculo> veiculos;
-    private List<Cliente> clientes;
-    private List<Responsavel> responsaveis;
-    private List<Servico> servicos;
-    private List<TipoServico> tiposServico;
-    private boolean possuiEntrega = false;
-    
-    @PostConstruct
-    public void montaRegistros() {
-    	veiculos = veiculoService.filtrar(new HashMap<>());
-    	clientes = clienteService.filtrar(new HashMap<>());
-    	responsaveis = responsavelService.filtrar(new HashMap<>());
-    	servicos = servicoService.filtrar(new HashMap<>());
-    	tiposServico = tipoServicoService.filtrar(new HashMap<>());
-    }
-    
-    @Override
-    public void criaObj() {
-        crudObj = new Servico();
-        alterando = false;
-    }
+	@EJB
+	private ServicoService servicoService;
+	@EJB
+	private VeiculoService veiculoService;
+	@EJB
+	private ClienteService clienteService;
+	@EJB
+	private ResponsavelService responsavelService;
+	@EJB
+	private TipoServicoService tipoServicoService;
 
-    @Override
-    public void salvar() {
-    	Double valorTotal = 0.0;
-    	if (crudObj.getSerPrecoEntrega() != null) {
-    		valorTotal = crudObj.getSerTipoServico().getTsPreco() + crudObj.getSerPrecoEntrega();
-    	} else {
-    		valorTotal = crudObj.getSerTipoServico().getTsPreco();
-    	}
-    	crudObj.setSerPrecoTotal(valorTotal);
-    	if (alterando) {
-        	veiculoService.salvar(crudObj);
-            JsfUtil.info("Serviço atualizado com sucesso!");
-        } else {
-                veiculoService.salvar(crudObj);
-                JsfUtil.info("Veículo salvo com sucesso!");
-        }
-        servicos = servicoService.filtrar(new HashMap<>());
-        criaObj();
-    }
-    
-    @Override
-    public void deletar() {
-    	servicoService.deletar(crudObj);
-    	criaObj();
-    	JsfUtil.info("Serviço excluído com sucesso!");
-    	servicos = servicoService.filtrar(new HashMap<>());
-    }
-    
-    public void selecionarServico(Servico servico) {
-        this.crudObj = servico;
-        this.alterando = true;
-    }
-    
-    public void excluirServico(Servico servico) {
-        this.crudObj = servico;
-        servicoService.deletar(servico);
-        criaObj();
-        JsfUtil.info("Serviço excluído com sucesso!");
-        servicos = servicoService.filtrar(new HashMap<>());
-    }
-    
-    public Servico getCrudObj() {
-        return crudObj;
-    }
+	private boolean alterando;
+	private List<Veiculo> veiculos;
+	private List<Cliente> clientes;
+	private List<Responsavel> responsaveis;
+	private List<Servico> servicos;
+	private List<TipoServico> tiposServico;
+	private boolean possuiEntrega = false;
 
-    public boolean isAlterando() {
-        return alterando;
-    }
+	@PostConstruct
+	public void montaRegistros() {
 
-    public void setAlterando(boolean alterando) {
-        this.alterando = alterando;
-    }
+		String servicoIdParam = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("servicoId");
+		if (servicoIdParam != null) {
+				Long servicoId = Long.valueOf(servicoIdParam);
+				List<Servico> servicoParam = servicoService.getServicoPorId(servicoId.toString());
+				this.crudObj = servicoParam.get(0);
+				this.alterando = true;
+		}
+
+		veiculos = veiculoService.filtrar(new HashMap<>());
+		clientes = clienteService.filtrar(new HashMap<>());
+		responsaveis = responsavelService.filtrar(new HashMap<>());
+		servicos = servicoService.filtrar(new HashMap<>());
+		tiposServico = tipoServicoService.filtrar(new HashMap<>());
+	}
+
+	@Override
+	public void criaObj() {
+		crudObj = new Servico();
+		alterando = false;
+	}
+
+	@Override
+	public void salvar() {
+		Double valorTotal = 0.0;
+		if (crudObj.getSerPrecoEntrega() != null) {
+			valorTotal = crudObj.getSerTipoServico().getTsPreco() + crudObj.getSerPrecoEntrega();
+		} else {
+			valorTotal = crudObj.getSerTipoServico().getTsPreco();
+		}
+		crudObj.setSerPrecoTotal(valorTotal);
+		if (alterando) {
+			veiculoService.salvar(crudObj);
+			JsfUtil.info("Serviço atualizado com sucesso!");
+		} else {
+			veiculoService.salvar(crudObj);
+			JsfUtil.info("Veículo salvo com sucesso!");
+		}
+		servicos = servicoService.filtrar(new HashMap<>());
+		criaObj();
+	}
+
+	@Override
+	public void deletar() {
+		servicoService.deletar(crudObj);
+		criaObj();
+		JsfUtil.info("Serviço excluído com sucesso!");
+		servicos = servicoService.filtrar(new HashMap<>());
+	}
+
+	public void selecionarServico(Servico servico) {
+		this.crudObj = servico;
+		this.alterando = true;
+		JsfUtil.info("Serviço selecionado.");
+	}
+
+	public void excluirServico(Servico servico) {
+		this.crudObj = servico;
+		servicoService.deletar(servico);
+		criaObj();
+		JsfUtil.info("Serviço excluído com sucesso!");
+		servicos = servicoService.filtrar(new HashMap<>());
+	}
+
+	public Servico getCrudObj() {
+		return crudObj;
+	}
+
+	public boolean isAlterando() {
+		return alterando;
+	}
+
+	public void setAlterando(boolean alterando) {
+		this.alterando = alterando;
+	}
 
 	public List<Veiculo> getVeiculos() {
 		return veiculos;

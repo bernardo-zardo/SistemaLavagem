@@ -1,12 +1,16 @@
 package com.bernardo.consultas;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -57,6 +61,11 @@ public class ConsultaServicoBean implements Serializable {
     private List<Veiculo> filtroVeiculos;
     private List<Responsavel> filtroResponsaveis;
     
+    private int totalServicos;
+    private double totalFinanceiro;
+    private int totalComEntrega;
+    private double precoMedio;
+    
     private List<Servico> servicosFiltrados = new ArrayList<>();
     
     @PostConstruct
@@ -78,6 +87,7 @@ public class ConsultaServicoBean implements Serializable {
             return;
         }
     	servicosFiltrados = servicoService.consultarServicosFiltrados(filtroEntrega, filtroDataIni, filtroDataFim, filtroTiposServico, filtroVeiculos, filtroResponsaveis);
+    	atualizarTotais();
     }
     
     public void limparFiltros() {
@@ -89,6 +99,43 @@ public class ConsultaServicoBean implements Serializable {
         filtroTiposServico = new ArrayList<>();
         filtroVeiculos = new ArrayList<>();
         filtroResponsaveis = new ArrayList<>();
+    }
+    
+    public void atualizarTotais() {
+        if (servicosFiltrados == null || servicosFiltrados.isEmpty()) {
+            totalServicos = 0;
+            totalFinanceiro = 0;
+            totalComEntrega = 0;
+            precoMedio = 0;
+            return;
+        }
+
+        totalServicos = servicosFiltrados.size();
+
+        totalFinanceiro = servicosFiltrados.stream()
+                .filter(s -> s.getSerPrecoTotal() != null)
+                .mapToDouble(Servico::getSerPrecoTotal)
+                .sum();
+
+        totalComEntrega = (int) servicosFiltrados.stream()
+                .filter(s -> s.getSerPrecoEntrega() != null)
+                .count();
+
+        long countComPreco = servicosFiltrados.stream()
+                .filter(s -> s.getSerPrecoTotal() != null)
+                .count();
+
+        precoMedio = countComPreco > 0 ? totalFinanceiro / countComPreco : 0;
+    }
+
+    public String receitaTotalFormat() {
+    	NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+	    return nf.format(totalFinanceiro);
+    }
+    
+    public String precoMedioFormat() {
+    	NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+	    return nf.format(this.precoMedio);
     }
     
 	public Date getFiltroDataIni() {
@@ -131,6 +178,38 @@ public class ConsultaServicoBean implements Serializable {
 		this.filtroResponsaveis = filtroResponsaveis;
 	}
 	
+	public int getTotalServicos() {
+		return totalServicos;
+	}
+
+	public void setTotalServicos(int totalServicos) {
+		this.totalServicos = totalServicos;
+	}
+
+	public double getTotalFinanceiro() {
+		return totalFinanceiro;
+	}
+
+	public void setTotalFinanceiro(double totalFinanceiro) {
+		this.totalFinanceiro = totalFinanceiro;
+	}
+
+	public int getTotalComEntrega() {
+		return totalComEntrega;
+	}
+
+	public void setTotalComEntrega(int totalComEntrega) {
+		this.totalComEntrega = totalComEntrega;
+	}
+
+	public double getPrecoMedio() {
+		return precoMedio;
+	}
+
+	public void setPrecoMedio(double precoMedio) {
+		this.precoMedio = precoMedio;
+	}
+
 	public String getFiltroEntrega() {
 		return filtroEntrega;
 	}

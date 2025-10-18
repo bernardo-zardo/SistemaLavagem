@@ -191,13 +191,13 @@
 							type="button" style="margin-right: 5px;" />
 
 						<p:commandButton icon="pi pi-user-edit"
-							action="#{clienteBean.selecionarCliente(cliente)}"
+							actionListener="#{clienteBean.selecionarCliente(cliente)}"
 							process="@this"
 							update=":form1:painelCliente :form1:clientesTable :form1:mensagem"
 							styleClass="ui-button-success" style="margin-right: 5px;" />
 
 						<p:commandButton icon="pi pi-trash" styleClass="ui-button-danger"
-							action="#{clienteBean.excluirCliente(cliente)}"
+							actionListener="#{clienteBean.excluirCliente(cliente)}"
 							update=":form1:clientesTable :form1:mensagem :form1:painelCliente"
 							process="@this">
 							<p:confirm header="Atenção!"

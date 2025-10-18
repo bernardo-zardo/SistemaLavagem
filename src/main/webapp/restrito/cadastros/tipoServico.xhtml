@@ -60,13 +60,12 @@
 					<p:commandButton value="Novo" icon="pi pi-plus"
 						actionListener="#{tipoServicoBean.criaObj()}" process="@this"
 						update=":form1:painelTipoServico :form1:mensagem"
-						styleClass="btn-acoes ui-button-secondary"
-						style="margin-left:10px;" />
+						styleClass="btn-acoes ui-button-secondary" />
 
 					<p:commandButton value="Excluir" icon="pi pi-trash"
 						actionListener="#{tipoServicoBean.deletar()}" process="@this"
 						update=":form1:painelTipoServico :form1:tiposServicoTable :form1:mensagem"
-						styleClass="btn-acoes ui-button-danger" style="margin-left:10px;" />
+						styleClass="btn-acoes ui-button-danger" />
 				</div>
 			</p:panel>
 
@@ -99,13 +98,13 @@
 
 					<p:column headerText="Ações" width="140">
 						<p:commandButton icon="pi pi-pencil"
-							action="#{tipoServicoBean.selecionarTipoServico(tipo)}"
+							actionListener="#{tipoServicoBean.selecionarTipoServico(tipo)}"
 							process="@this"
 							update=":form1:painelTipoServico :form1:tiposServicoTable :form1:mensagem"
 							styleClass="ui-button-success" style="margin-right:5px;" />
 
 						<p:commandButton icon="pi pi-trash" styleClass="ui-button-danger"
-							action="#{tipoServicoBean.excluirTipoServico(tipo)}"
+							actionListener="#{tipoServicoBean.excluirTipoServico(tipo)}"
 							update=":form1:tiposServicoTable :form1:painelTipoServico :form1:mensagem"
 							process="@this">
 							<p:confirm header="Atenção!"

@@ -88,14 +88,13 @@
 					<p:commandButton value="Novo"
 						actionListener="#{veiculoBean.criaObj()}" icon="pi pi-plus"
 						process="@this" update=":form1:painelVeiculo :form1:mensagem"
-						styleClass="btn-acoes ui-button-secondary"
-						style="margin-left:10px;" />
+						styleClass="btn-acoes ui-button-secondary" />
 
 					<p:commandButton value="Excluir"
 						actionListener="#{veiculoBean.deletar()}" icon="pi pi-trash"
 						process="@this"
 						update=":form1:painelVeiculo :form1:veiculosTable :form1:mensagem"
-						styleClass="btn-acoes ui-button-danger" style="margin-left:10px;" />
+						styleClass="btn-acoes ui-button-danger" />
 				</div>
 			</p:panel>
 
@@ -139,13 +138,13 @@
 
 					<p:column headerText="Ações" width="140">
 						<p:commandButton icon="pi pi-pencil"
-							action="#{veiculoBean.selecionarVeiculo(veiculo)}"
+							actionListener="#{veiculoBean.selecionarVeiculo(veiculo)}"
 							process="@this"
 							update=":form1:painelVeiculo :form1:veiculosTable :form1:mensagem"
 							styleClass="ui-button-success" style="margin-right: 5px;" />
 
 						<p:commandButton icon="pi pi-trash" styleClass="ui-button-danger"
-							action="#{veiculoBean.excluirVeiculo(veiculo)}"
+							actionListener="#{veiculoBean.excluirVeiculo(veiculo)}"
 							update=":form1:veiculosTable :form1:mensagem :form1:painelVeiculo"
 							process="@this">
 							<p:confirm header="Atenção!"

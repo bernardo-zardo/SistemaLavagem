@@ -120,14 +120,13 @@
 					<p:commandButton value="Novo"
 						actionListener="#{servicoBean.criaObj()}" icon="pi pi-plus"
 						process="@this" update=":form1:painelServico :form1:mensagem"
-						styleClass="btn-acoes ui-button-secondary"
-						style="margin-left:10px;" />
+						styleClass="btn-acoes ui-button-secondary" />
 
 					<p:commandButton value="Excluir"
 						actionListener="#{servicoBean.deletar()}" icon="pi pi-trash"
 						process="@this"
 						update=":form1:painelServico :form1:servicosTable :form1:mensagem"
-						styleClass="btn-acoes ui-button-danger" style="margin-left:10px;" />
+						styleClass="btn-acoes ui-button-danger" />
 				</div>
 			</p:panel>
 
@@ -176,13 +175,13 @@
 
 					<p:column headerText="Ações" width="140">
 						<p:commandButton icon="pi pi-pencil"
-							action="#{servicoBean.selecionarServico(servico)}"
+							actionListener="#{servicoBean.selecionarServico(servico)}"
 							process="@this"
 							update=":form1:painelServico :form1:servicosTable :form1:mensagem"
 							styleClass="ui-button-success" style="margin-right: 5px;" />
 
 						<p:commandButton icon="pi pi-trash" styleClass="ui-button-danger"
-							action="#{servicoBean.excluirServico(servico)}"
+							actionListener="#{servicoBean.excluirServico(servico)}"
 							update=":form1:servicosTable :form1:mensagem :form1:painelServico"
 							process="@this">
 							<p:confirm header="Atenção!"

@@ -62,24 +62,25 @@ body .ui-panelgrid .ui-panelgrid-cell {
 
 .btn-acoes {
 	width: 130px;
-	margin: 6px !important;
+	margin: 3px !important;
 }
 
 .btn-acoes-auto {
 	width: auto;
-	margin: 10px !important;
+	margin: 3px !important;
 }
 
 .ui-button {
-	background-color: #1a96cc !important;
-	border: none !important;
-	transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out
-		!important;
+    background-color: #1a96cc !important;
+    border: none !important;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease !important;
+    color: #fff;
 }
 
 .ui-button:hover {
-	transform: scale(1.05);
-	cursor: pointer;
+    filter: brightness(0.85);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
 }
 
 .ui-panel {
@@ -116,9 +117,9 @@ body .ui-tabs .ui-tabs-nav {
 }
 
 .ui-button-secondary {
-	background-color: #1a96cc !important;
-	background: #1a96cc !important;
-	border: #1a96cc !important;
+	background-color: #1976d2 !important;
+	background: #1976d2 !important;
+	border: #1976d2 !important;
 }
 
 .ui-button-login {
@@ -251,7 +252,7 @@ body .ui-chkbox .ui-chkbox-box.ui-state-active {
 
 .card-servico {
 	border-radius: 12px !important;
-	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 	transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -260,13 +261,14 @@ body .ui-chkbox .ui-chkbox-box.ui-state-active {
 }
 
 .card-servico:hover {
-	transform: scale(1.02);
-	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+	transform: translateY(-3px);
 }
 
 /* Topbar */
 .topbar {
-	background: linear-gradient(90deg, rgba(6, 43, 112, 1) 0%, rgba(27, 156, 209, 1) 100%);
+	background: linear-gradient(90deg, rgba(6, 43, 112, 1) 0%,
+		rgba(27, 156, 209, 1) 100%);
 	padding: 0 2rem;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	color: #ffffff;
@@ -453,4 +455,63 @@ body .ui-chkbox .ui-chkbox-box.ui-state-active {
 	.topbar-toggle {
 		display: block;
 	}
+}
+
+.card-total {
+	position: relative;
+	border-radius: 10px;
+	padding: 18px;
+	background-color: #ffffff;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+	text-align: left;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-total:hover {
+	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+	transform: translateY(-2px);
+}
+
+.card-total>.ui-panel-content {
+	border: none !important;
+}
+
+.titulo-total {
+	font-size: 18px;
+	font-weight: 600;
+	color: #1976d2;
+	margin-bottom: 8px;
+	display: block;
+}
+
+.valor-total {
+	font-size: 26px;
+	font-weight: bold;
+	color: #333;
+}
+
+.icone-total {
+	position: absolute;
+	right: 16px;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 40px !important;
+	color: #999;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ui-panelgrid-blank table {
+	background: transparent !important;
+	border: none !important;
+	box-shadow: none !important;
+}
+
+.panelgrid-transparente {
+	background: transparent !important;
+	border: none !important;
+	box-shadow: none !important;
+}
+
+.panelgrid-transparente .ui-panelgrid-cell {
+	background: transparent !important;
 }
