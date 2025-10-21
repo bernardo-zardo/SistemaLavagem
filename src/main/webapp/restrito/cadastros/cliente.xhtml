@@ -22,20 +22,26 @@
 				styleClass="painel-custom-header">
 				<p:panelGrid columns="2" layout="grid">
 					<p:panelGrid columns="1" layout="grid">
-						<p:panelGrid columns="2" layout="grid"
-							columnClasses="ui-grid-col-2,ui-grid-col-10"
-							style="margin-left: -10px">
+						<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
 							<h:panelGroup>
 								<p:outputLabel value="Código" for="codigo" />
 								<br />
 								<p:inputText id="codigo" style="width: 100px"
 									value="#{clienteBean.crudObj.cliIdCliente}" disabled="true" />
 							</h:panelGroup>
+						</p:panelGrid>
 
+						<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
 							<h:panelGroup>
 								<p:outputLabel value="Nome Completo" for="nome" />
 								<p:inputText id="nome" value="#{clienteBean.crudObj.cliNome}"
 									required="true" maxlength="50" style="width:100%" />
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:outputLabel value="E-mail" for="email" />
+								<p:inputText id="email" value="#{clienteBean.crudObj.cliEmail}"
+									required="true" maxlength="64" style="width:100%" />
 							</h:panelGroup>
 						</p:panelGrid>
 
@@ -55,16 +61,11 @@
 							</h:panelGroup>
 						</p:panelGrid>
 
-						<p:panelGrid columns="1" layout="grid" style="margin-left: -10px">
-							<p:outputLabel value="E-mail" for="email" />
-							<p:inputText id="email" value="#{clienteBean.crudObj.cliEmail}"
-								required="true" maxlength="64" style="width:100%" />
-						</p:panelGrid>
-
 						<p:divider style="width: 99%;" />
 
-						<p:panelGrid columns="1" layout="grid" style="margin-left: -10px">
+						<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
 							<p:outputLabel value="CEP" for="cep" />
+							<br />
 							<p:inputMask id="cep" value="#{clienteBean.crudObj.cliCep}"
 								mask="99999-999" required="true" style="width:100%">
 								<p:ajax event="blur"

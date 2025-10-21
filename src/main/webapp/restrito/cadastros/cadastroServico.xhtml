@@ -18,16 +18,16 @@
 
 					<p:panelGrid columns="1" layout="grid">
 
-						<p:panelGrid columns="2" layout="grid"
-							columnClasses="ui-grid-col-2,ui-grid-col-10"
-							style="margin-left:-10px">
+						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
 							<h:panelGroup>
 								<p:outputLabel value="Código" for="codigo" />
 								<br />
 								<p:inputText id="codigo" style="width: 100px"
 									value="#{servicoBean.crudObj.serIdServico}" disabled="true" />
 							</h:panelGroup>
-
+						</p:panelGrid>
+						
+						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
 							<h:panelGroup>
 								<p:outputLabel value="Data do Serviço" for="data" />
 								<br />
@@ -41,8 +41,10 @@
 
 						<p:divider style="width: 99%;" />
 
-						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
+						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+							<h:panelGroup>
 							<p:outputLabel value="Tipo de Serviço" for="tipoServico" />
+							<br />
 							<p:selectOneMenu id="tipoServico" filter="true"
 								filterMatchMode="contains" required="true"
 								requiredMessage="O campo Tipo de Serviço é obrigatório."
@@ -52,6 +54,21 @@
 								<f:selectItems value="#{servicoBean.tiposServico}" var="t"
 									itemLabel="#{t.tsNome}" itemValue="#{t}" />
 							</p:selectOneMenu>
+							</h:panelGroup>
+							
+							<h:panelGroup>
+								<p:outputLabel value="Responsável" for="responsavel" />
+								<p:selectOneMenu id="responsavel" filter="true"
+									filterMatchMode="contains" required="true"
+									requiredMessage="O campo Responsável é obrigatório."
+									value="#{servicoBean.crudObj.serResponsavel}"
+									style="width:100%">
+									<f:selectItem itemLabel="Selecione o responsável"
+										itemValue="#{null}" noSelectionOption="true" />
+									<f:selectItems value="#{servicoBean.responsaveis}" var="r"
+										itemLabel="#{r.resNome}" itemValue="#{r}" />
+								</p:selectOneMenu>
+							</h:panelGroup>
 						</p:panelGrid>
 
 						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
@@ -65,20 +82,6 @@
 										itemValue="#{null}" noSelectionOption="true" />
 									<f:selectItems value="#{servicoBean.veiculos}" var="v"
 										itemLabel="#{v.veiModelo} - #{v.veiPlaca}" itemValue="#{v}" />
-								</p:selectOneMenu>
-							</h:panelGroup>
-
-							<h:panelGroup>
-								<p:outputLabel value="Responsável" for="responsavel" />
-								<p:selectOneMenu id="responsavel" filter="true"
-									filterMatchMode="contains" required="true"
-									requiredMessage="O campo Responsável é obrigatório."
-									value="#{servicoBean.crudObj.serResponsavel}"
-									style="width:100%">
-									<f:selectItem itemLabel="Selecione o responsável"
-										itemValue="#{null}" noSelectionOption="true" />
-									<f:selectItems value="#{servicoBean.responsaveis}" var="r"
-										itemLabel="#{r.resNome}" itemValue="#{r}" />
 								</p:selectOneMenu>
 							</h:panelGroup>
 						</p:panelGrid>

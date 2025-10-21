@@ -1,0 +1,223 @@
+<ui:composition template="/templates/pagina.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<ui:define name="title">
+        Cadastro de Agendamento
+    </ui:define>
+
+	<ui:define name="content">
+		<h:form id="form1">
+			<p:growl id="mensagem" />
+
+			<p:panel header="Cadastro de Agendamento" id="painelAgendamento"
+				styleClass="painel-custom-header">
+				<p:panelGrid columns="2" layout="grid">
+
+					<p:panelGrid columns="1" layout="grid">
+
+						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+							<h:panelGroup>
+								<p:outputLabel value="Código" for="codigo" />
+								<br />
+								<p:inputText id="codigo" style="width: 100px"
+									value="#{agendamentoBean.crudObj.agIdAgendamento}"
+									disabled="true" />
+							</h:panelGroup>
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+							<h:panelGroup>
+								<p:outputLabel value="Data" for="data" />
+								<br />
+								<p:datePicker id="data"
+									value="#{agendamentoBean.crudObj.agData}" pattern="dd/MM/yyyy"
+									required="true" requiredMessage="Selecione uma data"
+									showIcon="true" style="width:200px" styleClass="datePicker">
+									<p:ajax event="dateSelect"
+										listener="#{agendamentoBean.carregarHorariosDisponiveis}"
+										update="hora" />
+								</p:datePicker>
+							</h:panelGroup>
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+							<h:panelGroup>
+								<p:outputLabel value="Horários Disponíveis" for="hora" />
+								<br />
+								<p:selectOneMenu id="hora"
+									value="#{agendamentoBean.crudObj.agHora}" required="true"
+									requiredMessage="Selecione um horário." style="width:100%"
+									converter="horaConverter">
+									<f:selectItem itemLabel="Selecione..." itemValue="#{null}" />
+									<f:selectItems value="#{agendamentoBean.horariosDisponiveis}"
+										var="hora" itemLabel="#{agendamentoBean.formatarHora(hora)}" itemValue="#{hora}" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+							<h:panelGroup>
+								<p:outputLabel value="Tipo de Serviço" for="tipoServico" />
+								<br />
+								<p:selectOneMenu id="tipoServico" filter="true"
+									filterMatchMode="contains" required="true"
+									requiredMessage="O campo Tipo de Serviço é obrigatório."
+									value="#{agendamentoBean.crudObj.agTipoServico}"
+									style="width:100%">
+									<f:selectItem itemLabel="Selecione um tipo" itemValue="#{null}"
+										noSelectionOption="true" />
+									<f:selectItems value="#{agendamentoBean.tiposServico}" var="t"
+										itemLabel="#{t.tsNome}" itemValue="#{t}" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:outputLabel value="Veículo" for="veiculo" />
+								<br />
+								<p:selectOneMenu id="veiculo" filter="true"
+									filterMatchMode="contains" required="true"
+									requiredMessage="O campo Veículo é obrigatório."
+									value="#{agendamentoBean.crudObj.agVeiculo}" style="width:100%">
+									<f:selectItem itemLabel="Selecione um veículo"
+										itemValue="#{null}" noSelectionOption="true" />
+									<f:selectItems value="#{agendamentoBean.veiculos}" var="v"
+										itemLabel="#{v.veiModelo} - #{v.veiPlaca}" itemValue="#{v}" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+							<h:panelGroup>
+								<p:outputLabel value="Status" for="status" />
+								<br />
+								<p:selectOneMenu id="status"
+									value="#{agendamentoBean.crudObj.agStatus}" required="true"
+									style="width:100%"
+									requiredMessage="O campo Status é obrigatório.">
+									<f:selectItem itemLabel="Pendente" itemValue="P" />
+									<f:selectItem itemLabel="Concluído" itemValue="C" />
+									<f:selectItem itemLabel="Cancelado" itemValue="X" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+						</p:panelGrid>
+
+					</p:panelGrid>
+				</p:panelGrid>
+			</p:panel>
+
+			<p:panel styleClass="painel-custom">
+				<div align="right">
+					<p:commandButton value="Salvar"
+						actionListener="#{agendamentoBean.salvar()}" icon="pi pi-save"
+						process="@form"
+						update=":form1:painelAgendamento :form1:agendamentosTable :form1:mensagem"
+						styleClass="btn-acoes ui-button-success" />
+
+					<p:commandButton value="Novo"
+						actionListener="#{agendamentoBean.criaObj()}" icon="pi pi-plus"
+						process="@this" update=":form1:painelAgendamento :form1:mensagem"
+						styleClass="btn-acoes ui-button-secondary" />
+
+					<p:commandButton value="Excluir"
+						actionListener="#{agendamentoBean.deletar()}" icon="pi pi-trash"
+						process="@this"
+						update=":form1:painelAgendamento :form1:agendamentosTable :form1:mensagem"
+						styleClass="btn-acoes ui-button-danger" />
+				</div>
+			</p:panel>
+
+			<p:panel styleClass="painel-custom-header"
+				header="Agendamentos Cadastrados">
+				<p:dataTable id="agendamentosTable" var="agendamento" reflow="true"
+					sortBy="#{agendamento.agIdAgendamento}" sortOrder="ascending"
+					value="#{agendamentoBean.agendamentos}" paginator="true" rows="10"
+					paginatorPosition="bottom" style="margin-top:10px;"
+					emptyMessage="Nenhum agendamento encontrado" filterEvent="keyup">
+
+					<p:column headerText="Código" width="85"
+						sortBy="#{agendamento.agIdAgendamento}"
+						filterBy="#{agendamento.agIdAgendamento}">
+						<h:outputText value="#{agendamento.agIdAgendamento}" />
+					</p:column>
+
+					<p:column headerText="Data" sortBy="#{agendamento.agData}">
+						<h:outputText value="#{agendamento.agData}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Horário" sortBy="#{agendamento.agHora}">
+						<h:outputText value="#{agendamento.agHora}">
+							<f:convertDateTime pattern="HH:mm" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Tipo de Serviço"
+						sortBy="#{agendamento.agTipoServico.tsNome}">
+						<h:outputText value="#{agendamento.agTipoServico.tsNome}" />
+					</p:column>
+
+					<p:column headerText="Veículo"
+						sortBy="#{agendamento.agVeiculo.veiModelo}">
+						<h:outputText
+							value="#{agendamento.agVeiculo.veiModelo} - #{agendamento.agVeiculo.veiPlaca}" />
+					</p:column>
+
+					<p:column headerText="Status" sortBy="#{agendamento.agStatus}">
+						<h:outputText
+							value="#{agendamento.agStatus eq 'P' ? 'Pendente' : (agendamento.agStatus eq 'C' ? 'Concluído' : 'Cancelado')}" />
+					</p:column>
+
+					<p:column headerText="Ações" width="140">
+						<p:commandButton icon="pi pi-pencil"
+							actionListener="#{agendamentoBean.selecionarAgendamento(agendamento)}"
+							process="@this"
+							update=":form1:painelAgendamento :form1:agendamentosTable :form1:mensagem"
+							styleClass="ui-button-success" style="margin-right: 5px;" />
+
+						<p:commandButton icon="pi pi-trash" styleClass="ui-button-danger"
+							actionListener="#{agendamentoBean.excluirAgendamento(agendamento)}"
+							update=":form1:agendamentosTable :form1:mensagem :form1:painelAgendamento"
+							process="@this">
+							<p:confirm header="Atenção!"
+								message="Você tem certeza que deseja excluir esse registro?"
+								icon="pi pi-exclamation-triangle" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+					width="350">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+				</p:confirmDialog>
+			</p:panel>
+		</h:form>
+
+		<script type="text/javascript">
+		//<![CDATA[
+	    $(document).ready(function() {
+	    	function aplicarMascara(widgetVar) {
+	            var input = PF(widgetVar).jq.find('input');
+	            input.on('input', function() {
+	                var val = input.val().replace(/\D/g, '');
+	                if (val.length > 2 && val.length <= 4)
+	                    val = val.slice(0, 2) + '/' + val.slice(2);
+	                else if (val.length > 4)
+	                    val = val.slice(0, 2) + '/' + val.slice(2, 4) + '/' + val.slice(4, 8);
+	                input.val(val);
+	            });
+	        }
+	        aplicarMascara('dataAgWidget');
+	    });
+		//]]>
+		</script>
+
+	</ui:define>
+</ui:composition>

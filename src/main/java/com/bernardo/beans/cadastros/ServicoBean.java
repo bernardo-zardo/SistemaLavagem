@@ -90,7 +90,7 @@ public class ServicoBean extends BaseCrud<Servico> implements Serializable {
 			JsfUtil.info("Serviço atualizado com sucesso!");
 		} else {
 			veiculoService.salvar(crudObj);
-			JsfUtil.info("Veículo salvo com sucesso!");
+			JsfUtil.info("Serviço salvo com sucesso!");
 		}
 		servicos = servicoService.filtrar(new HashMap<>());
 		criaObj();

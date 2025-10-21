@@ -1,24 +1,23 @@
 package com.bernardo.services;
 
-import com.bernardo.entidades.Cliente;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.ejb.Stateless;
+import javax.inject.Named;
+import javax.persistence.Query;
+
 import com.bernardo.entidades.Responsavel;
 import com.bernardo.entidades.Servico;
 import com.bernardo.entidades.TipoServico;
 import com.bernardo.entidades.Veiculo;
 import com.bernardo.utils.FiltrosPesquisa;
 import com.bernardo.utils.StringUtil;
-
-import javax.ejb.Stateless;
-import javax.inject.Named;
-import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  *
