@@ -24,7 +24,7 @@ public class GerBean implements Serializable {
 
     public void logout() {
         JsfUtil.getCurrentInstance().getExternalContext().invalidateSession();
-    	JsfUtil.redirect("/SistemaLavagem/login.xhtml");
+    	JsfUtil.redirect("/SistemaLavagem/landingPage.xhtml");
     }
 
     public boolean isUsuarioLogado() {

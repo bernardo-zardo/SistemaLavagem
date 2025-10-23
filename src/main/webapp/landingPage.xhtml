@@ -1,0 +1,184 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="/templates/paginaLandingPage.xhtml">
+
+	<ui:define name="title">
+        Lavagem Daniel
+    </ui:define>
+
+	<ui:define name="content">
+
+		<style>
+body {
+	font-family: 'Inter', sans-serif;
+}
+.bg-brand-dark {
+	background-color: #062B70; 
+}
+
+.text-brand-dark {
+	color: #062B70;
+}
+.bg-brand-light {
+	background-color: #1B9CD1;
+}
+
+.text-brand-light {
+	color: #6FC7EC;
+}
+.bg-brand-accent {
+	background-color: #F0F9FF; 
+}
+.bg-hero-gradient {
+	background: linear-gradient(90deg, rgba(6, 43, 112, 1) 0%,
+		rgba(27, 156, 209, 1) 100%);
+}
+section:first-of-type {
+	padding-top: 70px; 
+}
+</style>
+		<div
+			class="min-h-screen bg-hero-gradient flex items-center pt-20 md:pt-0">
+			<div
+				class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+				<div class="text-center md:text-left">
+					<span class="font-semibold text-xl uppercase text-white">Bem-vindo
+						à Lavagem Daniel</span>
+					<h1
+						class="text-5xl md:text-6xl font-extrabold text-white mt-4 mb-6 leading-tight">
+						Excelência em lavagem automotiva desde 1995.
+					</h1>
+					<p class="text-lg text-gray-200 mb-8 max-w-lg mx-auto md:mx-0">
+						Na Lavagem Daniel, combinamos cuidado e paixão por
+						carros para entregar um resultado que impressiona. </p>
+					<a href="#servicos"
+						class="bg-white text-brand-dark font-bold py-3 px-8 rounded-lg text-lg shadow-xl hover:bg-gray-200 transition-all duration-300 transform hover:scale-105">
+						Ver Serviços </a>
+				</div>
+
+				<div class="flex justify-center">
+					<img
+						src="https://placehold.co/600x400/062B70/FFFFFF?text=Carro+Limpo+e+Brilhante"
+						alt="Carro limpo e brilhante na Lavagem Daniel"
+						class="rounded-2xl shadow-2xl w-full max-w-lg object-cover" />
+				</div>
+			</div>
+		</div>
+
+		<div id="servicos" class="py-24 bg-white">
+			<div class="container mx-auto px-6">
+				<h2 class="text-4xl font-extrabold text-center text-brand-dark mb-4">Nossos
+					Serviços Premium</h2>
+				<p class="text-lg text-gray-600 text-center mb-16 max-w-2xl mx-auto">
+					Oferecemos uma gama completa de serviços para cuidar do seu veículo
+					com a máxima quality.</p>
+
+				<div class="grid md:grid-cols-3 gap-8">
+					<div
+						class="bg-white border border-gray-100 p-8 rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
+						<img src="https://placehold.co/80x80/1B9CD1/FFFFFF?text=Icone+1"
+							alt="Ícone de Lavagem Completa" class="rounded-lg mb-6" />
+						<h3 class="text-2xl font-bold text-brand-dark mb-3">Lavagem
+							Detalhada</h3>
+						<p class="text-gray-600 leading-relaxed">Limpeza externa e
+							interna minuciosa, aspiração completa, e acabamento de pneus e
+							vidros.</p>
+					</div>
+
+					<div
+						class="bg-white border border-gray-100 p-8 rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
+						<img src="https://placehold.co/80x80/1B9CD1/FFFFFF?text=Icone+2"
+							alt="Ícone de Polimento" class="rounded-lg mb-6" />
+						<h3 class="text-2xl font-bold text-brand-dark mb-3">Polimento
+							e Cristalização</h3>
+						<p class="text-gray-600 leading-relaxed">Restaure o brilho
+							original da pintura e proteja seu carro contra as ações do tempo.</p>
+					</div>
+
+					<div
+						class="bg-white border border-gray-100 p-8 rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
+						<img src="https://placehold.co/80x80/1B9CD1/FFFFFF?text=Icone+3"
+							alt="Ícone de Higienização" class="rounded-lg mb-6" />
+						<h3 class="text-2xl font-bold text-brand-dark mb-3">Higienização
+							Interna</h3>
+						<p class="text-gray-600 leading-relaxed">Limpeza profunda de
+							bancos, carpetes e teto, eliminando ácaros, fungos e bactérias.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="sobre" class="py-24 bg-brand-accent">
+			<div
+				class="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+				<div>
+					<img
+						src="https://placehold.co/500x350/062B70/FFFFFF?text=Nossa+Equipe"
+						alt="Equipe Lavagem Daniel" class="rounded-2xl shadow-2xl w-full" />
+				</div>
+
+				<div>
+					<h2 class="text-4xl font-extrabold text-brand-dark mb-6">Apaixonados
+						por Carros, Comprometidos com Você.</h2>
+					<p class="text-gray-700 text-lg mb-6 leading-relaxed">A Lavagem
+						Daniel não é apenas mais uma lavagem de carros. Somos entusiastas
+						de automóveis dedicados a oferecer um serviço de excelência. Desde
+						2015, nosso objetivo é tratar cada veículo como se fosse nosso.</p>
+					<p class="text-gray-700 text-lg leading-relaxed">Utilizamos
+						apenas produtos de alta qualidade e as técnicas mais modernas para
+						garantir que seu carro saia daqui não apenas limpo, mas protegido
+						e valorizado.</p>
+				</div>
+			</div>
+		</div>
+
+		<div id="contato" class="py-24 bg-hero-gradient text-white">
+			<div class="container mx-auto px-6 text-center">
+				<h2 class="text-4xl font-extrabold mb-6">Pronto para Deixar seu
+					Carro Brilhando?</h2>
+				<p class="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">Não
+					espere mais! Agende seu horário conosco hoje mesmo e descubra a
+					diferença que um cuidado profissional pode fazer.</p>
+				<a
+					href="https://api.whatsapp.com/send?phone=SEUNUMERO&amp;text=Ol%C3%A1%2C%20gostaria%20de%20agendar%20um%20hor%C3%A1rio%21"
+					target="_blank"
+					class="bg-white text-brand-light font-extrabold py-4 px-10 rounded-full text-lg shadow-xl hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 inline-block">
+					Fale Conosco no WhatsApp </a>
+			</div>
+		</div>
+
+		<div class="bg-brand-dark text-blue-200 py-12">
+			<div class="container mx-auto px-6 text-center">
+				<p class="font-medium mb-2">&copy; 2025 Lavagem Daniel. Todos os
+					direitos reservados.</p>
+				<p class="text-sm text-blue-300">Rua Exemplo, 123 - Bairro
+					Modelo - Sua Cidade/UF</p>
+				<div class="flex justify-center space-x-6 mt-4">
+					<a href="#" class="hover:text-white transition-colors">Instagram</a>
+					<a href="#" class="hover:text-white transition-colors">Facebook</a>
+				</div>
+			</div>
+		</div>
+
+		<script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const topbarMenu = document.getElementById('topbar-menu');
+    
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', () => {
+                    topbarMenu.classList.toggle('hidden');
+                    const isExpanded = !topbarMenu.classList.contains('hidden');
+                    mobileMenuButton.setAttribute('aria-expanded', isExpanded);
+                });
+            }
+        });
+    </script>
+
+	</ui:define>
+</ui:composition>
+</html>

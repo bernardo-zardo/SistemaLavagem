@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition>
+	<h:form id="menuForm">
+		<header class="topbar-2">
+			<nav class="topbar-nav">
+
+				<a href="#" class="topbar-brand"
+					style="color: #062B70; text-decoration: none;"> <i
+					class="fa-solid fa-car-on"></i> Lavagem Daniel
+				</a>
+
+				<button type="button" class="topbar-toggle" id="mobile-menu-button"
+					aria-controls="topbar-menu" aria-expanded="false">
+					<i class="pi pi-bars" style="color: #062B70"></i>
+				</button>
+
+				<div class="topbar-menu" id="topbar-menu">
+
+					<div class="topbar-nav-main">
+						<ul class="topbar-nav-list">
+							<li class="nav-item"><a href="#servicos" class="nav-link" style="color: #062B70">Serviços</a>
+							</li>
+							<li class="nav-item"><a href="#sobre" class="nav-link" style="color: #062B70">Sobre
+									Nós</a></li>
+							<li class="nav-item"><a href="#contato" class="nav-link" style="color: #062B70">Contato</a>
+							</li>
+						</ul>
+					</div>
+
+					<div class="topbar-nav-user">
+						<h:panelGroup rendered="#{not gerBean.usuarioLogado}">
+							<p:commandButton value="Login" icon="pi pi-fw pi-sign-in"
+								action="#{loginBean.redirecionarParaLogin}" ajax="false"
+								styleClass="user-button ui-button-login" />
+						</h:panelGroup>
+
+						<h:panelGroup rendered="#{gerBean.usuarioLogado}"
+							styleClass="user-info-group">
+							<span class="user-name"> <i class="pi pi-user"></i> <p:outputLabel
+									value="#{responsavelLogadoBean.responsavelLogado.resNome}" />
+							</span>
+							<p:commandButton value="Sair" icon="pi pi-fw pi-sign-out"
+								action="#{gerBean.logout}" ajax="false"
+								styleClass="user-button ui-button-login" />
+						</h:panelGroup>
+					</div>
+				</div>
+			</nav>
+		</header>
+
+		<script type="text/javascript">
+			//<![CDATA[
+			    document.addEventListener('DOMContentLoaded', function () {
+			        const mobileMenuButton = document.getElementById('mobile-menu-button');
+			        const topbarMenu = document.getElementById('topbar-menu');
+			
+			        // Toggle mobile menu
+			        if (mobileMenuButton) {
+			            mobileMenuButton.addEventListener('click', (e) => {
+			            	e.preventDefault(); // Previne qualquer ação padrão do botão
+			                topbarMenu.classList.toggle('active');
+			            });
+			        }
+			    });
+			//]]>
+			</script>
+	</h:form>
+</ui:composition>
+</html>

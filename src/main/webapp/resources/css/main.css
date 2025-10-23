@@ -126,6 +126,8 @@ body .ui-tabs .ui-tabs-nav {
 	background-color: #0e5695 !important;
 	background: #0e5695 !important;
 	border: #0e5695 !important;
+	width: 110px;
+    border-radius: 12px !important;
 }
 
 .ui-chkbox .ui-chkbox-label {
@@ -269,6 +271,13 @@ body .ui-chkbox .ui-chkbox-box.ui-state-active {
 .topbar {
 	background: linear-gradient(90deg, rgba(6, 43, 112, 1) 0%,
 		rgba(27, 156, 209, 1) 100%);
+	padding: 0 2rem;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	color: #ffffff;
+}
+
+.topbar-2 {
+	background: #fff;
 	padding: 0 2rem;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	color: #ffffff;
