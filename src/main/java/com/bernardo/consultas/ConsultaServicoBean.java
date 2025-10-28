@@ -118,7 +118,7 @@ public class ConsultaServicoBean implements Serializable {
                 .sum();
 
         totalComEntrega = (int) servicosFiltrados.stream()
-                .filter(s -> s.getSerPrecoEntrega() != null)
+                .filter(s -> s.getSerPrecoServicoExtra() != null)
                 .count();
 
         long countComPreco = servicosFiltrados.stream()

@@ -36,8 +36,8 @@ public class Servico implements Serializable {
     @Column(name = "SER_DATA")
     private Date serData;
 
-    @Column(name = "SER_PRECO_ENTREGA")
-    private Double serPrecoEntrega;
+    @Column(name = "SER_PRECO_SERVICO_EXTRA")
+    private Double serPrecoServicoExtra;
     
     @Column(name = "SER_PRECO_TOTAL")
     private Double serPrecoTotal;
@@ -53,6 +53,12 @@ public class Servico implements Serializable {
     @ManyToOne(optional = false)
     @JoinColumn(name = "SER_ID_RESPONSAVEL", referencedColumnName = "RES_ID_RESPONSAVEL", nullable = false)
     private Responsavel serResponsavel;
+    
+    @Column(name = "SER_POSSUI_BUSCA_VEICULO", nullable = false)
+    private boolean serPossuiBuscaVeiculo;
+
+    @Column(name = "SER_POSSUI_ENTREGA_VEICULO", nullable = false)
+    private boolean serPossuiEntregaVeiculo;
 
 	public Servico() {
 	}
@@ -73,14 +79,30 @@ public class Servico implements Serializable {
 		this.serData = serData;
 	}
 
-	public Double getSerPrecoEntrega() {
-		return serPrecoEntrega;
+	public Double getSerPrecoServicoExtra() {
+		return serPrecoServicoExtra;
 	}
 
-	public void setSerPrecoEntrega(Double serPrecoEntrega) {
-		this.serPrecoEntrega = serPrecoEntrega;
+	public void setSerPrecoServicoExtra(Double serPrecoServicoExtra) {
+		this.serPrecoServicoExtra = serPrecoServicoExtra;
 	}
-	
+
+	public boolean isSerPossuiBuscaVeiculo() {
+		return serPossuiBuscaVeiculo;
+	}
+
+	public void setSerPossuiBuscaVeiculo(boolean serPossuiBuscaVeiculo) {
+		this.serPossuiBuscaVeiculo = serPossuiBuscaVeiculo;
+	}
+
+	public boolean isSerPossuiEntregaVeiculo() {
+		return serPossuiEntregaVeiculo;
+	}
+
+	public void setSerPossuiEntregaVeiculo(boolean serPossuiEntregaVeiculo) {
+		this.serPossuiEntregaVeiculo = serPossuiEntregaVeiculo;
+	}
+
 	public Double getSerPrecoTotal() {
 		return serPrecoTotal;
 	}
@@ -118,12 +140,12 @@ public class Servico implements Serializable {
 	}
 	
 	public String getDescEntrega() {
-	    if (this.serPrecoEntrega == null) {
+	    if (this.serPrecoServicoExtra == null) {
 	        return "Sem Entrega";
 	    }
 
 	    NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
-	    return "Entrega incluída: " + nf.format(this.serPrecoEntrega);
+	    return "Entrega incluída: " + nf.format(this.serPrecoServicoExtra);
 	}
 	
 	public String getPrecoTotalFormat() {

@@ -80,7 +80,7 @@ public class AgendamentoBean extends BaseCrud<Agendamento> implements Serializab
 		agendamentos = agendamentoService.filtrar(new HashMap<>());
 	}
 
-	public void selecionarServico(Agendamento agendamento) {
+	public void selecionarAgendamento(Agendamento agendamento) {
 		this.crudObj = agendamento;
 		this.alterando = true;
 		JsfUtil.info("Agendamento selecionado.");

@@ -50,7 +50,6 @@ public class ServicoBean extends BaseCrud<Servico> implements Serializable {
 	private List<Responsavel> responsaveis;
 	private List<Servico> servicos;
 	private List<TipoServico> tiposServico;
-	private boolean possuiEntrega = false;
 
 	@PostConstruct
 	public void montaRegistros() {
@@ -79,8 +78,8 @@ public class ServicoBean extends BaseCrud<Servico> implements Serializable {
 	@Override
 	public void salvar() {
 		Double valorTotal = 0.0;
-		if (crudObj.getSerPrecoEntrega() != null) {
-			valorTotal = crudObj.getSerTipoServico().getTsPreco() + crudObj.getSerPrecoEntrega();
+		if (crudObj.getSerPrecoServicoExtra() != null) {
+			valorTotal = crudObj.getSerTipoServico().getTsPreco() + crudObj.getSerPrecoServicoExtra();
 		} else {
 			valorTotal = crudObj.getSerTipoServico().getTsPreco();
 		}
@@ -168,13 +167,5 @@ public class ServicoBean extends BaseCrud<Servico> implements Serializable {
 
 	public void setTiposServico(List<TipoServico> tiposServico) {
 		this.tiposServico = tiposServico;
-	}
-
-	public boolean isPossuiEntrega() {
-		return possuiEntrega;
-	}
-
-	public void setPossuiEntrega(boolean possuiEntrega) {
-		this.possuiEntrega = possuiEntrega;
 	}
 }

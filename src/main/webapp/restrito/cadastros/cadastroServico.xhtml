@@ -15,9 +15,7 @@
 			<p:panel header="Cadastro de Serviço" id="painelServico"
 				styleClass="painel-custom-header">
 				<p:panelGrid columns="2" layout="grid">
-
 					<p:panelGrid columns="1" layout="grid">
-
 						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
 							<h:panelGroup>
 								<p:outputLabel value="Código" for="codigo" />
@@ -26,14 +24,15 @@
 									value="#{servicoBean.crudObj.serIdServico}" disabled="true" />
 							</h:panelGroup>
 						</p:panelGrid>
-						
+
 						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
 							<h:panelGroup>
 								<p:outputLabel value="Data do Serviço" for="data" />
 								<br />
 								<p:datePicker id="data" value="#{servicoBean.crudObj.serData}"
-									showIcon="true" required="true" styleClass="datePicker" style="width: 200px"
-									pattern="dd/MM/yyyy" showTime="false" showOnFocus="false" 
+									showIcon="true" required="true" styleClass="datePicker"
+									style="width: 200px" pattern="dd/MM/yyyy" showTime="false"
+									showOnFocus="false"
 									requiredMessage="O campo Data é obrigatório."
 									widgetVar="dataPickerWidget" />
 							</h:panelGroup>
@@ -43,19 +42,20 @@
 
 						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
 							<h:panelGroup>
-							<p:outputLabel value="Tipo de Serviço" for="tipoServico" />
-							<br />
-							<p:selectOneMenu id="tipoServico" filter="true"
-								filterMatchMode="contains" required="true"
-								requiredMessage="O campo Tipo de Serviço é obrigatório."
-								value="#{servicoBean.crudObj.serTipoServico}" style="width:100%">
-								<f:selectItem itemLabel="Selecione um tipo" itemValue="#{null}"
-									noSelectionOption="true" />
-								<f:selectItems value="#{servicoBean.tiposServico}" var="t"
-									itemLabel="#{t.tsNome}" itemValue="#{t}" />
-							</p:selectOneMenu>
+								<p:outputLabel value="Tipo de Serviço" for="tipoServico" />
+								<br />
+								<p:selectOneMenu id="tipoServico" filter="true"
+									filterMatchMode="contains" required="true"
+									requiredMessage="O campo Tipo de Serviço é obrigatório."
+									value="#{servicoBean.crudObj.serTipoServico}"
+									style="width:100%">
+									<f:selectItem itemLabel="Selecione um tipo" itemValue="#{null}"
+										noSelectionOption="true" />
+									<f:selectItems value="#{servicoBean.tiposServico}" var="t"
+										itemLabel="#{t.tsNome}" itemValue="#{t}" />
+								</p:selectOneMenu>
 							</h:panelGroup>
-							
+
 							<h:panelGroup>
 								<p:outputLabel value="Responsável" for="responsavel" />
 								<p:selectOneMenu id="responsavel" filter="true"
@@ -81,7 +81,8 @@
 									<f:selectItem itemLabel="Selecione um veículo"
 										itemValue="#{null}" noSelectionOption="true" />
 									<f:selectItems value="#{servicoBean.veiculos}" var="v"
-										itemLabel="#{v.veiModelo} - #{v.veiPlaca}" itemValue="#{v}" />
+										itemLabel="#{v.veiModelo} - #{v.veiPlaca} - #{v.veiCliente.cliNome}"
+										itemValue="#{v}" />
 								</p:selectOneMenu>
 							</h:panelGroup>
 						</p:panelGrid>
@@ -89,21 +90,30 @@
 						<p:divider style="width: 99%;" />
 
 						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
-							<p:selectBooleanCheckbox value="#{servicoBean.possuiEntrega}"
-								itemLabel="Incluir entrega do veículo ao cliente">
+							<p:selectBooleanCheckbox id="possuiBusca"
+								itemLabel="Possui Busca do Veículo"
+								value="#{servicoBean.crudObj.serPossuiBuscaVeiculo}">
+								<p:ajax process="@this" update="@this :form1:panelPreco" />
+							</p:selectBooleanCheckbox>
+						</p:panelGrid>
+
+						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
+							<p:selectBooleanCheckbox id="possuiEntrega"
+								itemLabel="Possui Entrega do Veículo"
+								value="#{servicoBean.crudObj.serPossuiEntregaVeiculo}">
 								<p:ajax process="@this" update="@this :form1:panelPreco" />
 							</p:selectBooleanCheckbox>
 						</p:panelGrid>
 
 						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
 							<h:panelGroup id="panelPreco">
-								<p:outputLabel value="Preço da Entrega (R$)" for="preco" />
+								<p:outputLabel value="Preço da Busca/Entrega" for="preco" />
 								<p:inputNumber id="preco"
-									disabled="#{not servicoBean.possuiEntrega}"
-									value="#{servicoBean.crudObj.serPrecoEntrega}" required="true"
-									requiredMessage="O campo Preço é obrigatório." symbol="R$ "
-									decimalPlaces="2" thousandSeparator="." decimalSeparator=","
-									style="width:100%" />
+									disabled="#{not servicoBean.crudObj.serPossuiBuscaVeiculo and not servicoBean.crudObj.serPossuiEntregaVeiculo}"
+									value="#{servicoBean.crudObj.serPrecoServicoExtra}"
+									required="true" requiredMessage="O campo Preço é obrigatório."
+									symbol="R$ " decimalPlaces="2" thousandSeparator="."
+									decimalSeparator="," style="width:100%" />
 							</h:panelGroup>
 						</p:panelGrid>
 
@@ -170,7 +180,7 @@
 					</p:column>
 
 					<p:column headerText="Preço Total (R$)"
-						sortBy="#{servico.serPrecoEntrega}">
+						sortBy="#{servico.serPrecoTotal}">
 						<h:outputText value="#{servico.serPrecoTotal}">
 							<f:convertNumber type="currency" currencySymbol="R$ " />
 						</h:outputText>

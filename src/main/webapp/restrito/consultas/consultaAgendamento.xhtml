@@ -1,0 +1,63 @@
+<ui:composition template="/templates/pagina.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<ui:define name="title">
+        Consulta de Agendamento
+    </ui:define>
+
+	<ui:define name="content">
+	
+		<h:form id="form1">
+			<p:panel header="Controle de Agendamentos"
+				styleClass="painel-custom-header">
+				<p:schedule id="agenda"
+					value="#{consultaAgendamentoBean.eventModel}"
+					widgetVar="agendaWidget" timeZone="America/Sao_Paulo" locale="pt"
+					showWeekends="true" slotDuration="00:30:00" draggable="false"
+					resizable="false" showHeader="true" minTime="07:00:00"
+					maxTime="20:00:00" aspectRatio="2.5">
+
+					<p:ajax event="eventSelect"
+						listener="#{consultaAgendamentoBean.onEventSelect}"
+						update=":form1:dlgDetalhes" oncomplete="PF('dlgDetalhes').show()" />
+				</p:schedule>
+			</p:panel>
+
+			<p:dialog id="dlgDetalhes" widgetVar="dlgDetalhes"
+				header="Detalhes do Agendamento" modal="true" resizable="false"
+				width="400">
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputText value="Data:" />
+					<h:outputText
+						value="#{consultaAgendamentoBean.agendamentoSelecionado.agData}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+
+					<h:outputText value="Hora:" />
+					<h:outputText
+						value="#{consultaAgendamentoBean.agendamentoSelecionado.agHora}">
+						<f:convertDateTime pattern="HH:mm" timeZone="America/Sao_Paulo" />
+					</h:outputText>
+
+					<h:outputText value="Veículo:" />
+					<h:outputText
+						value="#{consultaAgendamentoBean.agendamentoSelecionado.agVeiculo.veiModelo} - #{consultaAgendamentoBean.agendamentoSelecionado.agVeiculo.veiPlaca}" />
+
+					<h:outputText value="Serviço:" />
+					<h:outputText
+						value="#{consultaAgendamentoBean.agendamentoSelecionado.agTipoServico.tsNome}" />
+
+					<h:outputText value="Status:" />
+					<h:outputText
+						value="#{consultaAgendamentoBean.agendamentoSelecionado.agStatus}" />
+				</h:panelGrid>
+			</p:dialog>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

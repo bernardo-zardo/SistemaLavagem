@@ -36,7 +36,16 @@ public class Agendamento implements Serializable {
     @ManyToOne(optional = false)
     @JoinColumn(name = "AG_ID_TIPO_SERVICO", referencedColumnName = "TS_ID_TIPO_SERVICO", nullable = false)
     private TipoServico agTipoServico;
+    
+    @Column(name = "AG_POSSUI_BUSCA_VEICULO", nullable = false)
+    private boolean agPossuiBuscaVeiculo;
 
+    @Column(name = "AG_POSSUI_ENTREGA_VEICULO", nullable = false)
+    private boolean agPossuiEntregaVeiculo;
+    
+    @Column(name = "AG_PRECO_SERVICO_EXTRA")
+    private Double agPrecoServicoExtra;
+    
     @Column(name = "AG_STATUS", nullable = false, length = 1)
     private String agStatus = "P"; // P = Pendente, C = Concluído, X = Cancelado
 
@@ -82,8 +91,32 @@ public class Agendamento implements Serializable {
     public void setAgTipoServico(TipoServico agTipoServico) {
         this.agTipoServico = agTipoServico;
     }
+    
+	public boolean isAgPossuiBuscaVeiculo() {
+		return agPossuiBuscaVeiculo;
+	}
 
-    public String getAgStatus() {
+	public void setAgPossuiBuscaVeiculo(boolean agPossuiBuscaVeiculo) {
+		this.agPossuiBuscaVeiculo = agPossuiBuscaVeiculo;
+	}
+
+	public boolean isAgPossuiEntregaVeiculo() {
+		return agPossuiEntregaVeiculo;
+	}
+
+	public void setAgPossuiEntregaVeiculo(boolean agPossuiEntregaVeiculo) {
+		this.agPossuiEntregaVeiculo = agPossuiEntregaVeiculo;
+	}
+
+	public Double getAgPrecoServicoExtra() {
+		return agPrecoServicoExtra;
+	}
+
+	public void setAgPrecoServicoExtra(Double agPrecoServicoExtra) {
+		this.agPrecoServicoExtra = agPrecoServicoExtra;
+	}
+
+	public String getAgStatus() {
         return agStatus;
     }
 

@@ -110,7 +110,7 @@
 				<p:panel styleClass="card-total">
 					<i class="pi pi-wallet icone-total" />
 					<h:outputText value="Receita Total" styleClass="titulo-total" />
-					<h:outputText value="R$ #{consultaServicoBean.receitaTotalFormat()}"
+					<h:outputText value="#{consultaServicoBean.receitaTotalFormat()}"
 						styleClass="valor-total" />
 				</p:panel>
 
@@ -124,14 +124,13 @@
 				<p:panel styleClass="card-total">
 					<i class="pi pi-chart-line icone-total" />
 					<h:outputText value="Preço Médio" styleClass="titulo-total" />
-					<h:outputText value="R$ #{consultaServicoBean.precoMedioFormat()}"
+					<h:outputText value="#{consultaServicoBean.precoMedioFormat()}"
 						styleClass="valor-total" />
 				</p:panel>
 			</p:panelGrid>
 
 			<p:panel id="panelRegistros" styleClass="painel-custom-header"
 				header="Serviços Filtrados">
-
 				<p:dataGrid id="gridServicos" layout="grid"
 					value="#{consultaServicoBean.servicosFiltrados}" var="s"
 					columns="4" paginator="true" rows="16" paginatorPosition="bottom"
@@ -140,10 +139,8 @@
 
 					<p:panel styleClass="card-servico">
 						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
-
 							<p:panelGrid layout="grid" columns="2"
 								columnClasses="ui-grid-col-11,ui-grid-col-1">
-
 								<p:panelGrid layout="grid" columns="1" style="margin-left:-20px">
 									<h:outputText value="#{s.serData}"
 										style="font-weight: bold; font-size: 19px; margin-left: -3px">
@@ -160,7 +157,6 @@
 									</p:button>
 								</p:panelGrid>
 							</p:panelGrid>
-
 
 							<p:panelGrid layout="grid" columns="1"
 								style="margin-left: -10px; margin-top: -10px">
@@ -182,10 +178,8 @@
 							</p:panelGrid>
 						</p:panelGrid>
 					</p:panel>
-
 				</p:dataGrid>
 			</p:panel>
-
 		</h:form>
 
 		<script type="text/javascript">
@@ -211,7 +205,5 @@
 			    });
 			//]]>
 		</script>
-
-
 	</ui:define>
 </ui:composition>

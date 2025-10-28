@@ -47,9 +47,17 @@
 						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
 							<h:panelGroup>
 								<p:outputLabel value="Marca" for="marca" />
-								<p:inputText id="marca" value="#{veiculoBean.crudObj.veiMarca}"
-									maxlength="45" style="width:100%" required="true" />
+								<p:selectOneMenu id="marca"
+									value="#{veiculoBean.crudObj.veiMarca}" style="width:100%"
+									required="true" filterMatchMode="contains" filter="true"
+									requiredMessage="O campo Marca é obrigatório.">
+									<f:selectItem itemLabel="Selecione a marca do Veículo" itemValue=""
+										noSelectionOption="true" />
+									<f:selectItems value="#{veiculoBean.listaMarcas}" var="marca"
+										itemLabel="#{marca}" itemValue="#{marca}" />
+								</p:selectOneMenu>
 							</h:panelGroup>
+
 
 							<h:panelGroup>
 								<p:outputLabel value="Modelo" for="modelo" />
@@ -65,7 +73,7 @@
 								<p:inputText id="cor" value="#{veiculoBean.crudObj.veiCor}"
 									maxlength="45" style="width:100%" required="true" />
 							</h:panelGroup>
-							
+
 							<h:panelGroup>
 								<p:outputLabel value="Placa" for="placa" />
 								<p:inputText id="placa" value="#{veiculoBean.crudObj.veiPlaca}"

@@ -12,13 +12,10 @@
 	<ui:define name="content">
 		<h:form id="form1">
 			<p:growl id="mensagem" />
-
 			<p:panel header="Cadastro de Agendamento" id="painelAgendamento"
 				styleClass="painel-custom-header">
 				<p:panelGrid columns="2" layout="grid">
-
 					<p:panelGrid columns="1" layout="grid">
-
 						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
 							<h:panelGroup>
 								<p:outputLabel value="Código" for="codigo" />
@@ -43,6 +40,8 @@
 								</p:datePicker>
 							</h:panelGroup>
 						</p:panelGrid>
+						
+						<p:divider style="width: 99%" />
 
 						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
 							<h:panelGroup>
@@ -54,7 +53,8 @@
 									converter="horaConverter">
 									<f:selectItem itemLabel="Selecione..." itemValue="#{null}" />
 									<f:selectItems value="#{agendamentoBean.horariosDisponiveis}"
-										var="hora" itemLabel="#{agendamentoBean.formatarHora(hora)}" itemValue="#{hora}" />
+										var="hora" itemLabel="#{agendamentoBean.formatarHora(hora)}"
+										itemValue="#{hora}" />
 								</p:selectOneMenu>
 							</h:panelGroup>
 						</p:panelGrid>
@@ -85,10 +85,44 @@
 									<f:selectItem itemLabel="Selecione um veículo"
 										itemValue="#{null}" noSelectionOption="true" />
 									<f:selectItems value="#{agendamentoBean.veiculos}" var="v"
-										itemLabel="#{v.veiModelo} - #{v.veiPlaca}" itemValue="#{v}" />
+										itemLabel="#{v.veiModelo} - #{v.veiPlaca} - #{v.veiCliente.cliNome}"
+										itemValue="#{v}" />
 								</p:selectOneMenu>
 							</h:panelGroup>
 						</p:panelGrid>
+
+						<p:divider style="width: 99%" />					
+					
+						<p:panelGrid columns="1" layout="grid"
+							style="margin-left:-10px">
+							<p:selectBooleanCheckbox id="possuiBusca"
+								itemLabel="Possui Busca do Veículo"
+								value="#{agendamentoBean.crudObj.agPossuiBuscaVeiculo}">
+								<p:ajax process="@this" update="@this :form1:pnBuscaEntrega" />
+							</p:selectBooleanCheckbox>
+							
+							<p:selectBooleanCheckbox id="possuiEntrega"
+								itemLabel="Possui Entrega do Veículo"
+								value="#{agendamentoBean.crudObj.agPossuiEntregaVeiculo}">
+								<p:ajax process="@this" update="@this :form1:pnBuscaEntrega" />
+							</p:selectBooleanCheckbox>
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" layout="grid"
+							style="margin-left:-10px">
+							<h:panelGroup id="pnBuscaEntrega">
+								<p:outputLabel value="Preço do Serviço de Busca/Entrega"
+									for="preco" />
+								<p:inputNumber id="preco"
+									disabled="#{not agendamentoBean.crudObj.agPossuiBuscaVeiculo and not agendamentoBean.crudObj.agPossuiEntregaVeiculo}"
+									value="#{agendamentoBean.crudObj.agPrecoServicoExtra}"
+									required="true" requiredMessage="O campo Preço é obrigatório."
+									symbol="R$ " decimalPlaces="2" thousandSeparator="."
+									decimalSeparator="," style="width:100%" />
+							</h:panelGroup>
+						</p:panelGrid>
+						
+						<p:divider style="width: 99%" />
 
 						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
 							<h:panelGroup>
@@ -104,7 +138,6 @@
 								</p:selectOneMenu>
 							</h:panelGroup>
 						</p:panelGrid>
-
 					</p:panelGrid>
 				</p:panelGrid>
 			</p:panel>
@@ -152,7 +185,7 @@
 
 					<p:column headerText="Horário" sortBy="#{agendamento.agHora}">
 						<h:outputText value="#{agendamento.agHora}">
-							<f:convertDateTime pattern="HH:mm" />
+							<f:convertDateTime pattern="HH:mm" timeZone="America/Sao_Paulo" />
 						</h:outputText>
 					</p:column>
 
@@ -166,7 +199,7 @@
 						<h:outputText
 							value="#{agendamento.agVeiculo.veiModelo} - #{agendamento.agVeiculo.veiPlaca}" />
 					</p:column>
-
+					
 					<p:column headerText="Status" sortBy="#{agendamento.agStatus}">
 						<h:outputText
 							value="#{agendamento.agStatus eq 'P' ? 'Pendente' : (agendamento.agStatus eq 'C' ? 'Concluído' : 'Cancelado')}" />
