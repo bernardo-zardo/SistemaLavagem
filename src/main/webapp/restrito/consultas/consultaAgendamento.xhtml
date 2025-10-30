@@ -10,51 +10,91 @@
     </ui:define>
 
 	<ui:define name="content">
-	
+
+		<style>
+			.fc .fc-scrollgrid, .fc .fc-scrollgrid table, .fc-daygrid-body {
+				width: 100% !important;
+			}
+			
+			.fc-event.evento-pendente {
+			    background-color: #6299DE !important;
+			    border-color: #6299DE !important;
+			    color: #fff !important;
+			}
+			
+			.fc-event.evento-concluido {
+			    background-color: #1E3A8A !important;
+			    border-color: #1E3A8A !important;
+			    color: #fff !important;
+			}
+			
+			.fc-event.evento-outro {
+			    background-color: #9CA3AF !important;
+			    border-color: #9CA3AF !important;
+			    color: #fff !important;
+			}
+</style>
+
 		<h:form id="form1">
 			<p:panel header="Controle de Agendamentos"
 				styleClass="painel-custom-header">
-				<p:schedule id="agenda"
-					value="#{consultaAgendamentoBean.eventModel}"
-					widgetVar="agendaWidget" timeZone="America/Sao_Paulo" locale="pt"
-					showWeekends="true" slotDuration="00:30:00" draggable="false"
-					resizable="false" showHeader="true" minTime="07:00:00"
-					maxTime="20:00:00" aspectRatio="2.5">
+				<p:panelGrid columns="3" layout="grid"
+					columnClasses="ui-grid-col-2,ui-grid-col-8,ui-grid-col-2">
+					<h:panelGroup />
 
-					<p:ajax event="eventSelect"
-						listener="#{consultaAgendamentoBean.onEventSelect}"
-						update=":form1:dlgDetalhes" oncomplete="PF('dlgDetalhes').show()" />
-				</p:schedule>
+					<f:view encoding="UTF-8">
+						<p:schedule id="agenda" rightHeaderTemplate="dayGridMonth"
+							value="#{consultaAgendamentoBean.eventModel}"
+							widgetVar="agendaWidget" showWeekends="true"
+							slotDuration="00:20:00" draggable="false" resizable="false"
+							showHeader="true" height="auto" minTime="07:00:00"
+							maxTime="20:00:00" locale="pt_BR" timeZone="America/Sao_Paulo"
+							clientTimeZone="America/Sao_Paulo">
+							<p:ajax event="eventSelect"
+								listener="#{consultaAgendamentoBean.onEventSelect}"
+								update=":form1:dlgDetalhes"
+								oncomplete="PF('dlgDetalhes').show()" />
+						</p:schedule>
+					</f:view>
+				</p:panelGrid>
 			</p:panel>
 
 			<p:dialog id="dlgDetalhes" widgetVar="dlgDetalhes"
 				header="Detalhes do Agendamento" modal="true" resizable="false"
-				width="400">
-				<h:panelGrid columns="2" cellpadding="5">
-					<h:outputText value="Data:" />
-					<h:outputText
-						value="#{consultaAgendamentoBean.agendamentoSelecionado.agData}">
+				width="450">
+				<p:panelGrid columns="1" layout="grid">
+					<h:outputText style="font-weight: bold; font-size: 18px"
+						value="#{consultaAgendamentoBean.agendamentoSelecionado.dataFormatada}">
 						<f:convertDateTime pattern="dd/MM/yyyy" />
 					</h:outputText>
+					<br />
 
-					<h:outputText value="Hora:" />
-					<h:outputText
-						value="#{consultaAgendamentoBean.agendamentoSelecionado.agHora}">
-						<f:convertDateTime pattern="HH:mm" timeZone="America/Sao_Paulo" />
-					</h:outputText>
+					<p:panelGrid columns="1" layout="grid">
+						<h:outputText value="Horário:" style="font-weight: bold" />
+						<h:outputText
+							value="#{consultaAgendamentoBean.agendamentoSelecionado.agHora}">
+							<f:convertDateTime pattern="HH:mm" timeZone="America/Sao_Paulo" />
+						</h:outputText>
 
-					<h:outputText value="Veículo:" />
-					<h:outputText
-						value="#{consultaAgendamentoBean.agendamentoSelecionado.agVeiculo.veiModelo} - #{consultaAgendamentoBean.agendamentoSelecionado.agVeiculo.veiPlaca}" />
+						<h:outputText value="Cliente:" style="font-weight: bold" />
+						<h:outputText
+							value="#{consultaAgendamentoBean.agendamentoSelecionado.agVeiculo.veiCliente.cliNome}" />
 
-					<h:outputText value="Serviço:" />
-					<h:outputText
-						value="#{consultaAgendamentoBean.agendamentoSelecionado.agTipoServico.tsNome}" />
+						<h:outputText value="Veículo:" style="font-weight: bold" />
+						<h:outputText
+							value="#{consultaAgendamentoBean.agendamentoSelecionado.agVeiculo.veiModelo} - #{consultaAgendamentoBean.agendamentoSelecionado.agVeiculo.veiPlaca}" />
 
-					<h:outputText value="Status:" />
-					<h:outputText
-						value="#{consultaAgendamentoBean.agendamentoSelecionado.agStatus}" />
-				</h:panelGrid>
+						<h:outputText value="Serviço:" style="font-weight: bold" />
+						<h:outputText
+							value="#{consultaAgendamentoBean.agendamentoSelecionado.agTipoServico.tsNome}" />
+
+						<h:outputText value="Status:" style="font-weight: bold" />
+						<h:outputText
+							value="#{consultaAgendamentoBean.agendamentoSelecionado.statusDescricao}" />
+
+					</p:panelGrid>
+				</p:panelGrid>
+
 			</p:dialog>
 
 		</h:form>

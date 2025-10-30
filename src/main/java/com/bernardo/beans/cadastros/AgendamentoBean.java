@@ -124,13 +124,10 @@ public class AgendamentoBean extends BaseCrud<Agendamento> implements Serializab
 	        return;
 	    }
 
-	    // Lista de horários padrão como java.sql.Time (subclasse de Date)
-	    List<Date> horariosPadrao = gerarHorariosPadrao(); // gera java.sql.Time
+	    List<Date> horariosPadrao = gerarHorariosPadrao();
 
-	    // Busca horários já ocupados para a data
 	    List<Date> horariosOcupados = agendamentoService.buscarHorariosOcupadosPorData(crudObj.getAgData());
 
-	    // Remove horários ocupados
 	    horariosDisponiveis = horariosPadrao.stream()
 	            .filter(h -> horariosOcupados.stream().noneMatch(o -> o.equals(h)))
 	            .collect(Collectors.toList());

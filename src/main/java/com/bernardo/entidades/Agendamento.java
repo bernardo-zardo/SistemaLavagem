@@ -1,10 +1,22 @@
 package com.bernardo.entidades;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
 *
@@ -134,6 +146,20 @@ public class Agendamento implements Serializable {
         } else {
         	return "Desconhecido";
         }
+    }
+	
+	public String getDataFormatada() {
+        if (agData == null) return "";
+
+        String[] diasSemana = {"Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira",
+                               "Quinta-feira", "Sexta-feira", "Sábado"};
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(agData);
+        int diaSemana = cal.get(Calendar.DAY_OF_WEEK);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", new Locale("pt", "BR"));
+        return diasSemana[diaSemana - 1] + " - " + sdf.format(agData);
     }
 
     @Override

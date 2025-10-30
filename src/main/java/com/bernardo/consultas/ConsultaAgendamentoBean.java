@@ -8,6 +8,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -43,15 +44,40 @@ public class ConsultaAgendamentoBean implements Serializable {
 	public void init() {
 		eventModel = new DefaultScheduleModel();
 
-		List<Agendamento> agendamentos = agendamentoService.filtrar(new HashMap<>());
+		Map<String, Object> filtros = new HashMap<>();
+		filtros.put("agNaoCancelado", true);
+		List<Agendamento> agendamentos = agendamentoService.filtrar(filtros);
 
 		for (Agendamento a : agendamentos) {
 			LocalDateTime inicio = combinarDataHora(a.getAgData(), a.getAgHora());
-			LocalDateTime fim = inicio.plusMinutes(30);
+			LocalDateTime fim = inicio.plusMinutes(40);
 
-			DefaultScheduleEvent<?> event = DefaultScheduleEvent.builder()
-					.title(a.getAgVeiculo().getVeiModelo() + " - " + a.getAgVeiculo().getVeiCliente().getCliNome()).startDate(inicio)
-					.endDate(fim).data(a).build();
+			    String classeCor;
+			    String corFundo;
+		        String corBorda;
+		        if ("C".equalsIgnoreCase(a.getAgStatus())) {
+		        	classeCor = "evento-concluido";
+		            corFundo = "#1E3A8A"; 
+		            corBorda = "#1E3A8A";
+		        } else if ("P".equalsIgnoreCase(a.getAgStatus())) {
+		        	classeCor = "evento-pendente";
+		            corFundo = "#6299DE"; 
+		            corBorda = "#6299DE";
+		        } else {
+		        	classeCor = "evento-outro";
+		            corFundo = "#9CA3AF"; 
+		            corBorda = "#9CA3AF";
+		        }
+
+		        DefaultScheduleEvent<?> event = DefaultScheduleEvent.builder()
+		            .title(a.getAgVeiculo().getVeiModelo() + " - " + a.getAgVeiculo().getVeiCliente().getCliNome())
+		            .startDate(inicio)
+		            .endDate(fim)
+		            .data(a)
+		            .styleClass(classeCor)
+		            .borderColor(corBorda)
+		            .backgroundColor(corFundo)
+		            .build();
 
 			eventModel.addEvent(event);
 		}

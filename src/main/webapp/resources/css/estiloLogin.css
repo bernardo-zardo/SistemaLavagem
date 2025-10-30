@@ -29,14 +29,6 @@ body {
     margin: 0 auto;
 }
 
-.logo {
-    max-width: 200px;
-    margin-bottom: 20px;
-    width: 100%; 
-    height: auto;
-}
-
-
 .tituloTexto {
     font-size: 25px !important;
     color: #333;

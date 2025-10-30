@@ -31,6 +31,7 @@ public class AgendamentoService extends BaseService<Agendamento> {
 	protected List<FiltrosPesquisa> getFiltros(Map<String, Object> filtros) {
 		List<FiltrosPesquisa> filtrosPesquisa = new ArrayList<>();
 		add(filtrosPesquisa, "a.agIdAgendamento = '?agIdAgendamento'", "agIdAgendamento", filtros.get("agIdAgendamento"));
+		add(filtrosPesquisa, "a.agStatus <> 'X'", "agNaoCancelado", filtros.get("agNaoCancelado"));
 		return filtrosPesquisa;
 	}
 
@@ -71,6 +72,4 @@ public class AgendamentoService extends BaseService<Agendamento> {
 	    }
 	    return horarios;
 	}
-
-
 }

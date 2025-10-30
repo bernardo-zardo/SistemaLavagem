@@ -39,7 +39,7 @@ body .ui-panelgrid .ui-panelgrid-cell {
 }
 
 .datePicker .ui-inputfield {
-	width: calc(100% - 2.5em); /* ou - 40px, depende do ícone */
+	width: calc(100% - 2.5em);
 }
 
 .inputCodigo {
