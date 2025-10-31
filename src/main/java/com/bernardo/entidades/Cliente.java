@@ -1,13 +1,18 @@
 package com.bernardo.entidades;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.bernardo.utils.StringUtil;
@@ -30,27 +35,6 @@ public class Cliente implements Serializable {
     @Column(name = "CLI_NOME", length = 50, nullable = false)
     private String cliNome;
 
-    @Column(name = "CLI_CEP", length = 8)
-    private String cliCep;
-
-    @Column(name = "CLI_RUA", length = 150)
-    private String cliRua;
-
-    @Column(name = "CLI_NUMERO", length = 10)
-    private String cliNumero;
-
-    @Column(name = "CLI_COMPLEMENTO", length = 50)
-    private String cliComplemento;
-
-    @Column(name = "CLI_BAIRRO", length = 100)
-    private String cliBairro;
-
-    @Column(name = "CLI_CIDADE", length = 100)
-    private String cliCidade;
-
-    @Column(name = "CLI_UF", length = 2)
-    private String cliUf;
-
     @Column(name = "CLI_TELEFONE", length = 20)
     private String cliTelefone;
 
@@ -59,12 +43,9 @@ public class Cliente implements Serializable {
 
     @Column(name = "CLI_CPF", length = 11, unique = true)
     private String cliCpf;
-
-    @Column(name = "CLI_LATITUDE", precision = 10, scale = 8)
-    private Double cliLatitude;
-
-    @Column(name = "CLI_LONGITUDE", precision = 11, scale = 8)
-    private Double cliLongitude;
+    
+    @OneToMany(mappedBy = "endCliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<EnderecoCliente> cliEnderecos = new ArrayList<>();
 
     public Cliente() {
     }
@@ -108,81 +89,27 @@ public class Cliente implements Serializable {
     public void setCliCpf(String cliCpf) {
         this.cliCpf = cliCpf;
     }
-
-	public String getCliCep() {
-		return cliCep;
+    
+	public List<EnderecoCliente> getCliEnderecos() {
+		return cliEnderecos;
 	}
 
-	public void setCliCep(String cliCep) {
-		this.cliCep = cliCep;
+	public void setCliEnderecos(List<EnderecoCliente> cliEnderecos) {
+		this.cliEnderecos = cliEnderecos;
 	}
 
-	public String getCliRua() {
-		return cliRua;
-	}
-
-	public void setCliRua(String cliRua) {
-		this.cliRua = cliRua;
-	}
-
-	public String getCliNumero() {
-		return cliNumero;
-	}
-
-	public void setCliNumero(String cliNumero) {
-		this.cliNumero = cliNumero;
-	}
-
-	public String getCliComplemento() {
-		return cliComplemento;
-	}
-
-	public void setCliComplemento(String cliComplemento) {
-		this.cliComplemento = cliComplemento;
-	}
-
-	public String getCliBairro() {
-		return cliBairro;
-	}
-
-	public void setCliBairro(String cliBairro) {
-		this.cliBairro = cliBairro;
-	}
-
-	public String getCliCidade() {
-		return cliCidade;
-	}
-
-	public void setCliCidade(String cliCidade) {
-		this.cliCidade = cliCidade;
-	}
-
-	public String getCliUf() {
-		return cliUf;
-	}
-
-	public void setCliUf(String cliUf) {
-		this.cliUf = cliUf;
-	}
-
-	public Double getCliLatitude() {
-		return cliLatitude;
-	}
-
-	public void setCliLatitude(Double cliLatitude) {
-		this.cliLatitude = cliLatitude;
-	}
-
-	public Double getCliLongitude() {
-		return cliLongitude;
-	}
-
-	public void setCliLongitude(Double cliLongitude) {
-		this.cliLongitude = cliLongitude;
-	}
-	
 	public String getCpfFormatado() {
 		return StringUtil.getCpfFormatado(cliCpf);
+	}
+	
+	public void adicionarEndereco(EnderecoCliente endereco) {
+	    endereco.setEndCliente(this);
+	    this.cliEnderecos.add(endereco);
+	}
+
+	public void removerEndereco(EnderecoCliente endereco) {
+	    this.cliEnderecos.remove(endereco);
+	    endereco.setEndCliente(null);
 	}
 
 	@Override

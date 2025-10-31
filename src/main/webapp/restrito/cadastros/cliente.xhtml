@@ -63,71 +63,58 @@
 
 						<p:divider style="width: 99%;" />
 
-						<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
-							<p:outputLabel value="CEP" for="cep" />
-							<br />
-							<p:inputMask id="cep" value="#{clienteBean.crudObj.cliCep}"
-								mask="99999-999" required="true" style="width:100%">
-								<p:ajax event="blur"
-									listener="#{clienteBean.preencherEnderecoPorCep}"
-									update=":form1:endereco" />
-							</p:inputMask>
-						</p:panelGrid>
-
 						<h:panelGroup id="endereco">
-							<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
-								<h:panelGroup>
-									<p:outputLabel value="Rua" for="rua" />
-									<p:inputText id="rua" value="#{clienteBean.crudObj.cliRua}"
-										style="width:100%" />
-								</h:panelGroup>
+							<p:dataTable id="enderecosTable" var="endereco"
+								value="#{clienteBean.crudObj.cliEnderecos}" reflow="true"
+								emptyMessage="Nenhum endereço adicionado">
 
-								<h:panelGroup>
-									<p:outputLabel value="Número" for="numero" />
-									<p:inputText id="numero"
-										value="#{clienteBean.crudObj.cliNumero}" style="width:100%" />
-								</h:panelGroup>
-							</p:panelGrid>
+								<p:column headerText="Descrição">
+									<h:outputText value="#{endereco.endDescricao}" />
+								</p:column>
 
-							<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
-								<h:panelGroup>
-									<p:outputLabel value="Complemento" for="complemento" />
-									<p:inputText id="complemento"
-										value="#{clienteBean.crudObj.cliComplemento}"
-										style="width:100%" />
-								</h:panelGroup>
+								<p:column headerText="Rua">
+									<h:outputText value="#{endereco.endRua}" />
+								</p:column>
 
-								<h:panelGroup>
-									<p:outputLabel value="Bairro" for="bairro" />
-									<p:inputText id="bairro"
-										value="#{clienteBean.crudObj.cliBairro}" style="width:100%" />
-								</h:panelGroup>
-							</p:panelGrid>
+								<p:column headerText="Número">
+									<h:outputText value="#{endereco.endNumero}" />
+								</p:column>
 
-							<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
-								<h:panelGroup>
-									<p:outputLabel value="Cidade" for="cidade" />
-									<p:inputText id="cidade"
-										value="#{clienteBean.crudObj.cliCidade}" style="width:100%" />
-								</h:panelGroup>
+								<p:column headerText="Cidade">
+									<h:outputText value="#{endereco.endCidade}" />
+								</p:column>
 
-								<h:panelGroup>
-									<p:outputLabel value="UF" for="uf" />
-									<p:inputText id="uf" value="#{clienteBean.crudObj.cliUf}"
-										size="2" style="width:100%" />
-								</h:panelGroup>
-							</p:panelGrid>
+								<p:column headerText="UF" width="50">
+									<h:outputText value="#{endereco.endUf}" />
+								</p:column>
+
+								<p:column headerText="Ações" width="150">
+									<p:commandButton icon="pi pi-pencil"
+										actionListener="#{clienteBean.editarEndereco(endereco)}"
+										oncomplete="PF('dlgEndereco').show()"
+										update=":form1:dialogEndereco" process="@this"
+										styleClass="ui-button-success" />
+
+									<p:commandButton icon="pi pi-trash"
+										styleClass="ui-button-danger"
+										actionListener="#{clienteBean.crudObj.removerEndereco(endereco)}"
+										update="enderecosTable" process="@this"
+										style="margin-left:10px;">
+										<p:confirm header="Atenção!" message="Excluir este endereço?"
+											icon="pi pi-exclamation-triangle" />
+									</p:commandButton>
+
+									<p:commandButton icon="pi pi-map-marker"
+										onclick="mostrarMapa('#{endereco.endLatitude}', '#{endereco.endLongitude}', '#{endereco.endRua}'); return false;"
+										type="button" style="margin-left:10px;" />
+								</p:column>
+							</p:dataTable>
+
+							<p:commandButton value="Cadastrar Endereço" icon="pi pi-plus"
+								oncomplete="PF('dlgEndereco').show()" process="@this"
+								actionListener="#{clienteBean.novoEndereco()}"
+								update=":form1:dialogEndereco" style="margin-top:10px;" />
 						</h:panelGroup>
-
-						<p:divider style="width: 99%;" />
-
-						<p:panelGrid layout="grid" columns="1" style="margin-left: -10px">
-							<p:commandButton icon="pi pi-map-marker"
-								value="Visualizar Localização"
-								onclick="mostrarMapa('#{clienteBean.crudObj.cliLatitude}', '#{clienteBean.crudObj.cliLongitude}', '#{clienteBean.crudObj.cliNome}'); return false;"
-								type="button" style="margin-right: 5px;"
-								disabled="#{clienteBean.crudObj.cliLatitude eq null}" />
-						</p:panelGrid>
 					</p:panelGrid>
 				</p:panelGrid>
 			</p:panel>
@@ -144,14 +131,13 @@
 						actionListener="#{clienteBean.criaObj()}" icon="pi pi-plus"
 						process="@this"
 						update=":form1:painelCliente :form1:painelCliente :form1:mensagem"
-						styleClass="btn-acoes ui-button-secondary"
-						style="margin-left:10px;" />
+						styleClass="btn-acoes ui-button-secondary" />
 
 					<p:commandButton value="Excluir"
 						actionListener="#{clienteBean.deletar()}" icon="pi pi-trash"
 						process="@this"
 						update=":form1:painelCliente :form1:clientesTable :form1:mensagem"
-						styleClass="btn-acoes ui-button-danger" style="margin-left:10px;" />
+						styleClass="btn-acoes ui-button-danger" />
 				</div>
 			</p:panel>
 
@@ -187,10 +173,6 @@
 					</p:column>
 
 					<p:column headerText="Ações" width="140">
-						<p:commandButton icon="pi pi-map-marker"
-							onclick="mostrarMapa('#{cliente.cliLatitude}', '#{cliente.cliLongitude}', '#{cliente.cliNome}'); return false;"
-							type="button" style="margin-right: 5px;" />
-
 						<p:commandButton icon="pi pi-user-edit"
 							actionListener="#{clienteBean.selecionarCliente(cliente)}"
 							process="@this"
@@ -222,6 +204,98 @@
 				height="600" responsive="true">
 				<div id="mapaCliente" style="width: 100%; height: 600px;"></div>
 			</p:dialog>
+
+			<p:dialog id="dialogEndereco" widgetVar="dlgEndereco" modal="true"
+				header="Cadastro de Endereço" width="700" closable="true"
+				resizable="false">
+
+				<p:panelGrid id="enderecoNovo" columns="1" layout="grid">
+					<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
+						<h:panelGroup>
+							<p:outputLabel value="Descrição" for="desc" />
+							<p:inputText id="desc"
+								value="#{clienteBean.novoEndereco.endDescricao}"
+								style="width:100%">
+								<p:ajax process="@this" />
+							</p:inputText>
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
+						<h:panelGroup>
+							<p:outputLabel value="CEP" for="cepEnd" />
+							<p:inputMask id="cepEnd" mask="99999-999"
+								value="#{clienteBean.novoEndereco.endCep}" style="width:100%">
+								<p:ajax event="blur"
+									listener="#{clienteBean.preencherEnderecoPorCep()}"
+									update="form1:enderecoNovo" />
+							</p:inputMask>
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
+						<h:panelGroup>
+							<p:outputLabel value="Rua" for="ruaEnd" />
+							<p:inputText id="ruaEnd"
+								value="#{clienteBean.novoEndereco.endRua}" style="width:100%" />
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
+						<h:panelGroup>
+							<p:outputLabel value="Número" for="numEnd" />
+							<p:inputText id="numEnd"
+								value="#{clienteBean.novoEndereco.endNumero}" style="width:100%" />
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
+						<h:panelGroup>
+							<p:outputLabel value="Complemento" for="compEnd" />
+							<p:inputText id="compEnd"
+								value="#{clienteBean.novoEndereco.endComplemento}"
+								style="width:100%" />
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
+						<h:panelGroup>
+							<p:outputLabel value="Bairro" for="bairroEnd" />
+							<p:inputText id="bairroEnd"
+								value="#{clienteBean.novoEndereco.endBairro}" style="width:100%" />
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
+						<h:panelGroup>
+							<p:outputLabel value="Cidade" for="cidadeEnd" />
+							<p:inputText id="cidadeEnd"
+								value="#{clienteBean.novoEndereco.endCidade}" style="width:100%" />
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
+						<h:panelGroup>
+							<p:outputLabel value="UF" for="ufEnd" />
+							<p:inputText id="ufEnd" value="#{clienteBean.novoEndereco.endUf}"
+								size="2" style="width:100%" />
+						</h:panelGroup>
+					</p:panelGrid>
+				</p:panelGrid>
+				<br />
+
+				<div align="right">
+					<p:commandButton value="Salvar" icon="pi pi-check"
+						actionListener="#{clienteBean.salvarEndereco()}"
+						update=":form1:enderecosTable" process="@form"
+						oncomplete="PF('dlgEndereco').hide()"
+						styleClass="ui-button-success btn-acoes" />
+					<p:commandButton value="Cancelar" icon="pi pi-times"
+						onclick="PF('dlgEndereco').hide()" type="button"
+						styleClass="ui-button-secondary btn-acoes" />
+				</div>
+			</p:dialog>
+
 		</h:form>
 
 		<script>

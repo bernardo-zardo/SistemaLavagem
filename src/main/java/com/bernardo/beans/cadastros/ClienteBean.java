@@ -1,17 +1,7 @@
 package com.bernardo.beans.cadastros;
 
-import com.bernardo.beans.BuscaBean;
-import com.bernardo.entidades.Cliente;
-import com.bernardo.entidades.Veiculo;
-import com.bernardo.services.BaseCrud;
-import com.bernardo.services.ClienteService;
-import com.bernardo.utils.CEPUtil;
-import com.bernardo.utils.GeocodingUtil;
-import com.bernardo.utils.JsfUtil;
-import com.bernardo.utils.LocalizacaoJson;
-import com.bernardo.utils.StringUtil;
-
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +10,16 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+
+import com.bernardo.entidades.Cliente;
+import com.bernardo.entidades.EnderecoCliente;
+import com.bernardo.services.BaseCrud;
+import com.bernardo.services.ClienteService;
+import com.bernardo.utils.CEPUtil;
+import com.bernardo.utils.GeocodingUtil;
+import com.bernardo.utils.JsfUtil;
+import com.bernardo.utils.LocalizacaoJson;
+import com.bernardo.utils.StringUtil;
 
 /**
 *
@@ -36,6 +36,9 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
 
     private boolean alterando;
     private List<Cliente> clientes;
+    
+    private EnderecoCliente novoEndereco = new EnderecoCliente();
+    private boolean editandoEndereco = false;
     
     @PostConstruct
     public void montaRegistros() {
@@ -57,15 +60,6 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
 
         crudObj.setCliCpf(StringUtil.getOnlyNumbers(crudObj.getCliCpf()));
         crudObj.setCliTelefone(StringUtil.getOnlyNumbers(crudObj.getCliTelefone()));
-        crudObj.setCliCep(StringUtil.getOnlyNumbers(crudObj.getCliCep()));
-        
-        String enderecoCompleto = crudObj.getCliRua() + ", " + crudObj.getCliCidade() + ", " + crudObj.getCliUf() + ", Brasil";
-
-        double[] coords = GeocodingUtil.buscarLatLong(enderecoCompleto);
-        if (coords != null) {
-        	crudObj.setCliLatitude(coords[0]);
-        	crudObj.setCliLongitude(coords[1]);
-        }
         
         if (alterando) {
             clienteService.salvar(crudObj);
@@ -115,18 +109,47 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
         criaObj();
     }
     
+    public void salvarEndereco() {
+        String enderecoCompleto = novoEndereco.getEndRua() + ", " + novoEndereco.getEndCidade() + ", " + novoEndereco.getEndUf() + ", Brasil";
+        double[] coords = GeocodingUtil.buscarLatLong(enderecoCompleto);
+        if (coords != null) {
+            novoEndereco.setEndLatitude(coords[0]);
+            novoEndereco.setEndLongitude(coords[1]);
+        }
+
+        if (!editandoEndereco) {
+        	novoEndereco.setEndCep(StringUtil.getOnlyNumbers(novoEndereco.getEndCep()));
+            crudObj.adicionarEndereco(novoEndereco);
+            JsfUtil.info("Endereço adicionado à lista.");
+        } else {
+        	JsfUtil.info("Endereço editado.");
+        }
+        
+        this.novoEndereco = new EnderecoCliente();
+    }
+    
     public void preencherEnderecoPorCep() {
-        if (crudObj.getCliCep() != null && !crudObj.getCliCep().isEmpty()) {
-            LocalizacaoJson local = CEPUtil.buscarLocalizacao(crudObj.getCliCep().replaceAll("\\D", ""));
+        if (novoEndereco.getEndCep() != null && !novoEndereco.getEndCep().isEmpty()) {
+            LocalizacaoJson local = CEPUtil.buscarLocalizacao(novoEndereco.getEndCep().replaceAll("\\D", ""));
             if (local != null) {
-                crudObj.setCliRua(local.getLogradouro());
-                crudObj.setCliBairro(local.getBairro());
-                crudObj.setCliCidade(local.getLocalidade());
-                crudObj.setCliUf(local.getUf());
+            	novoEndereco.setEndRua(local.getLogradouro());
+            	novoEndereco.setEndBairro(local.getBairro());
+            	novoEndereco.setEndCidade(local.getLocalidade());
+            	novoEndereco.setEndUf(local.getUf());
             }
         }
     }
+    
+    public void novoEndereco() {
+        this.novoEndereco = new EnderecoCliente();
+        this.editandoEndereco = false;
+    }
 
+    public void editarEndereco(EnderecoCliente end) {
+        this.novoEndereco = end;
+        this.editandoEndereco = true;
+    }
+    
     public Cliente getCrudObj() {
         return crudObj;
     }
@@ -145,5 +168,21 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
 
 	public void setClientes(List<Cliente> clientes) {
 		this.clientes = clientes;
+	}
+
+	public EnderecoCliente getNovoEndereco() {
+		return novoEndereco;
+	}
+
+	public void setNovoEndereco(EnderecoCliente novoEndereco) {
+		this.novoEndereco = novoEndereco;
+	}
+
+	public boolean isEditandoEndereco() {
+		return editandoEndereco;
+	}
+
+	public void setEditandoEndereco(boolean editandoEndereco) {
+		this.editandoEndereco = editandoEndereco;
 	}
 }
