@@ -5,6 +5,7 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import com.bernardo.entidades.Agendamento;
 import com.bernardo.entidades.Responsavel;
 import com.bernardo.entidades.Servico;
 import com.bernardo.entidades.TipoServico;
@@ -51,7 +53,6 @@ public class ConsultaServicoBean implements Serializable {
 
     private List<Veiculo> veiculos;
     private List<Responsavel> responsaveis;
-    private List<Servico> servicos;
     private List<TipoServico> tiposServico;
     
     private String filtroEntrega = "A";
@@ -77,7 +78,6 @@ public class ConsultaServicoBean implements Serializable {
     	
     	veiculos = veiculoService.filtrar(new HashMap<>());
     	responsaveis = responsavelService.filtrar(new HashMap<>());
-    	servicos = servicoService.filtrar(new HashMap<>());
     	tiposServico = tipoServicoService.filtrar(new HashMap<>());
     }
     
@@ -87,6 +87,7 @@ public class ConsultaServicoBean implements Serializable {
             return;
         }
     	servicosFiltrados = servicoService.consultarServicosFiltrados(filtroEntrega, filtroDataIni, filtroDataFim, filtroTiposServico, filtroVeiculos, filtroResponsaveis);
+    	servicosFiltrados.sort(Comparator.comparing(Servico::getSerIdServico).reversed());
     	atualizarTotais();
     }
     
@@ -232,14 +233,6 @@ public class ConsultaServicoBean implements Serializable {
 
 	public void setResponsaveis(List<Responsavel> responsaveis) {
 		this.responsaveis = responsaveis;
-	}
-
-	public List<Servico> getServicos() {
-		return servicos;
-	}
-
-	public void setServicos(List<Servico> servicos) {
-		this.servicos = servicos;
 	}
 
 	public List<TipoServico> getTiposServico() {

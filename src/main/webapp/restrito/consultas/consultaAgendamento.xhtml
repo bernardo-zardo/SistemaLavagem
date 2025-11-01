@@ -38,10 +38,7 @@
 		<h:form id="form1">
 			<p:panel header="Controle de Agendamentos"
 				styleClass="painel-custom-header">
-				<p:panelGrid columns="3" layout="grid"
-					columnClasses="ui-grid-col-2,ui-grid-col-8,ui-grid-col-2">
-					<h:panelGroup />
-
+				<p:panelGrid columns="1" layout="grid">
 					<f:view encoding="UTF-8">
 						<p:schedule id="agenda" rightHeaderTemplate="dayGridMonth"
 							value="#{consultaAgendamentoBean.eventModel}"

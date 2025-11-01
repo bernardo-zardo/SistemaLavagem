@@ -41,7 +41,7 @@ public class LoginFilter implements Filter {
         if (logado) {
             chain.doFilter(request, response);
         } else {
-            res.sendRedirect(req.getContextPath() + "/login.xhtml");
+            res.sendRedirect(req.getContextPath() + "/landingPage.xhtml");
         }
     }
 

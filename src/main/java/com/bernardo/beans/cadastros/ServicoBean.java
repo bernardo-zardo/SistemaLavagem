@@ -1,8 +1,10 @@
 package com.bernardo.beans.cadastros;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -54,18 +56,22 @@ public class ServicoBean extends BaseCrud<Servico> implements Serializable {
 	@PostConstruct
 	public void montaRegistros() {
 
-		String servicoIdParam = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("servicoId");
+		String servicoIdParam = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+				.get("servicoId");
 		if (servicoIdParam != null) {
-				Long servicoId = Long.valueOf(servicoIdParam);
-				List<Servico> servicoParam = servicoService.getServicoPorId(servicoId.toString());
-				this.crudObj = servicoParam.get(0);
-				this.alterando = true;
+			Long servicoId = Long.valueOf(servicoIdParam);
+			List<Servico> servicoParam = servicoService.getServicoPorId(servicoId.toString());
+			this.crudObj = servicoParam.get(0);
+			this.alterando = true;
 		}
 
 		veiculos = veiculoService.filtrar(new HashMap<>());
 		clientes = clienteService.filtrar(new HashMap<>());
 		responsaveis = responsavelService.filtrar(new HashMap<>());
 		servicos = servicoService.filtrar(new HashMap<>());
+
+		servicos.sort(Comparator.comparing(Servico::getSerIdServico).reversed());
+
 		tiposServico = tipoServicoService.filtrar(new HashMap<>());
 	}
 
@@ -92,6 +98,7 @@ public class ServicoBean extends BaseCrud<Servico> implements Serializable {
 			JsfUtil.info("Serviço salvo com sucesso!");
 		}
 		servicos = servicoService.filtrar(new HashMap<>());
+		servicos.sort(Comparator.comparing(Servico::getSerIdServico).reversed());
 		criaObj();
 	}
 
@@ -101,6 +108,7 @@ public class ServicoBean extends BaseCrud<Servico> implements Serializable {
 		criaObj();
 		JsfUtil.info("Serviço excluído com sucesso!");
 		servicos = servicoService.filtrar(new HashMap<>());
+		servicos.sort(Comparator.comparing(Servico::getSerIdServico).reversed());
 	}
 
 	public void selecionarServico(Servico servico) {
@@ -115,6 +123,7 @@ public class ServicoBean extends BaseCrud<Servico> implements Serializable {
 		criaObj();
 		JsfUtil.info("Serviço excluído com sucesso!");
 		servicos = servicoService.filtrar(new HashMap<>());
+		servicos.sort(Comparator.comparing(Servico::getSerIdServico).reversed());
 	}
 
 	public Servico getCrudObj() {

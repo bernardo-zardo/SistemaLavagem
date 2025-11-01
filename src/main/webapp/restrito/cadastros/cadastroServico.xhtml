@@ -83,39 +83,84 @@
 									<f:selectItems value="#{servicoBean.veiculos}" var="v"
 										itemLabel="#{v.veiModelo} - #{v.veiPlaca} - #{v.veiCliente.cliNome}"
 										itemValue="#{v}" />
+									<p:ajax update=":form1:pnBuscaEntrega" />
 								</p:selectOneMenu>
 							</h:panelGroup>
 						</p:panelGrid>
 
 						<p:divider style="width: 99%;" />
 
-						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
-							<p:selectBooleanCheckbox id="possuiBusca"
-								itemLabel="Possui Busca do Veículo"
-								value="#{servicoBean.crudObj.serPossuiBuscaVeiculo}">
-								<p:ajax process="@this" update="@this :form1:panelPreco" />
-							</p:selectBooleanCheckbox>
-						</p:panelGrid>
+						<h:panelGroup id="pnBuscaEntrega">
+							<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
+								<p:selectBooleanCheckbox id="possuiBusca"
+									itemLabel="Possui Busca do Veículo"
+									value="#{servicoBean.crudObj.serPossuiBuscaVeiculo}">
+									<p:ajax process="@this" update="@this :form1:pnBuscaEntrega" />
+								</p:selectBooleanCheckbox>
+							</p:panelGrid>
 
-						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
-							<p:selectBooleanCheckbox id="possuiEntrega"
-								itemLabel="Possui Entrega do Veículo"
-								value="#{servicoBean.crudObj.serPossuiEntregaVeiculo}">
-								<p:ajax process="@this" update="@this :form1:panelPreco" />
-							</p:selectBooleanCheckbox>
-						</p:panelGrid>
+							<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
+								<h:panelGroup>
+									<p:outputLabel value="Endereço de Busca" for="endBusca" />
+									<p:selectOneMenu id="endBusca" filter="true" converter="enderecoClienteConverter"
+										disabled="#{not servicoBean.crudObj.serPossuiBuscaVeiculo}"
+										filterMatchMode="contains" required="true"
+										requiredMessage="O campo Veículo é obrigatório."
+										value="#{servicoBean.crudObj.serEnderecoBusca}"
+										style="width:100%">
+										<f:selectItem itemLabel="Selecione um endereço"
+											itemValue="#{null}" noSelectionOption="true" />
+										<f:selectItems
+											value="#{servicoBean.crudObj.serVeiculo.veiCliente.cliEnderecos}"
+											var="e"
+											itemLabel="#{e.endDescricao} - #{e.endRua}, #{e.endNumero} - #{e.endBairro}"
+											itemValue="#{e}" />
+									</p:selectOneMenu>
+								</h:panelGroup>
+							</p:panelGrid>
+							<br />
 
-						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
-							<h:panelGroup id="panelPreco">
-								<p:outputLabel value="Preço da Busca/Entrega" for="preco" />
-								<p:inputNumber id="preco"
-									disabled="#{not servicoBean.crudObj.serPossuiBuscaVeiculo and not servicoBean.crudObj.serPossuiEntregaVeiculo}"
-									value="#{servicoBean.crudObj.serPrecoServicoExtra}"
-									required="true" requiredMessage="O campo Preço é obrigatório."
-									symbol="R$ " decimalPlaces="2" thousandSeparator="."
-									decimalSeparator="," style="width:100%" />
-							</h:panelGroup>
-						</p:panelGrid>
+							<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
+								<p:selectBooleanCheckbox id="possuiEntrega"
+									itemLabel="Possui Entrega do Veículo"
+									value="#{servicoBean.crudObj.serPossuiEntregaVeiculo}">
+									<p:ajax process="@this" update="@this :form1:pnBuscaEntrega" />
+								</p:selectBooleanCheckbox>
+							</p:panelGrid>
+
+							<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
+								<h:panelGroup>
+									<p:outputLabel value="Endereço de Entrega" for="endEntrega" />
+									<p:selectOneMenu id="endEntrega" filter="true" converter="enderecoClienteConverter"
+										disabled="#{not servicoBean.crudObj.serPossuiEntregaVeiculo}"
+										filterMatchMode="contains" required="true"
+										requiredMessage="O campo Veículo é obrigatório."
+										value="#{servicoBean.crudObj.serEnderecoEntrega}"
+										style="width:100%">
+										<f:selectItem itemLabel="Selecione um endereço"
+											itemValue="#{null}" noSelectionOption="true" />
+										<f:selectItems
+											value="#{servicoBean.crudObj.serVeiculo.veiCliente.cliEnderecos}"
+											var="e"
+											itemLabel="#{e.endDescricao} - #{e.endRua}, #{e.endNumero} - #{e.endBairro}"
+											itemValue="#{e}" />
+									</p:selectOneMenu>
+								</h:panelGroup>
+							</p:panelGrid>
+							<br />
+
+							<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+								<h:panelGroup>
+									<p:outputLabel value="Preço da Busca/Entrega" for="preco" />
+									<p:inputNumber id="preco"
+										disabled="#{not servicoBean.crudObj.serPossuiBuscaVeiculo and not servicoBean.crudObj.serPossuiEntregaVeiculo}"
+										value="#{servicoBean.crudObj.serPrecoServicoExtra}"
+										required="true" requiredMessage="O campo Preço é obrigatório."
+										symbol="R$ " decimalPlaces="2" thousandSeparator="."
+										decimalSeparator="," style="width:100%" />
+								</h:panelGroup>
+							</p:panelGrid>
+						</h:panelGroup>
 
 					</p:panelGrid>
 				</p:panelGrid>
@@ -146,7 +191,7 @@
 			<p:panel styleClass="painel-custom-header"
 				header="Serviços Cadastrados">
 				<p:dataTable id="servicosTable" var="servico" reflow="true"
-					sortBy="#{servico.serIdServico}" sortOrder="ascending"
+					sortBy="#{servico.serIdServico}" sortOrder="descending"
 					value="#{servicoBean.servicos}" paginator="true" rows="10"
 					paginatorPosition="bottom" style="margin-top:10px;"
 					emptyMessage="Nenhum serviço encontrado" filterEvent="keyup">

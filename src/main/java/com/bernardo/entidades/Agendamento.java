@@ -60,6 +60,14 @@ public class Agendamento implements Serializable {
     
     @Column(name = "AG_STATUS", nullable = false, length = 1)
     private String agStatus = "P"; // P = Pendente, C = Concluído, X = Cancelado
+    
+    @ManyToOne
+    @JoinColumn(name = "AG_ID_ENDERECO_BUSCA")
+    private EnderecoCliente agEnderecoBusca;
+
+    @ManyToOne
+    @JoinColumn(name = "AG_ID_ENDERECO_ENTREGA")
+    private EnderecoCliente agEnderecoEntrega;
 
     public Agendamento() {
     }
@@ -135,6 +143,22 @@ public class Agendamento implements Serializable {
     public void setAgStatus(String agStatus) {
         this.agStatus = agStatus;
     }
+    
+	public EnderecoCliente getAgEnderecoBusca() {
+		return agEnderecoBusca;
+	}
+
+	public void setAgEnderecoBusca(EnderecoCliente agEnderecoBusca) {
+		this.agEnderecoBusca = agEnderecoBusca;
+	}
+
+	public EnderecoCliente getAgEnderecoEntrega() {
+		return agEnderecoEntrega;
+	}
+
+	public void setAgEnderecoEntrega(EnderecoCliente agEnderecoEntrega) {
+		this.agEnderecoEntrega = agEnderecoEntrega;
+	}
 
 	public String getStatusDescricao() {
         if (this.agStatus.equals("P")) {

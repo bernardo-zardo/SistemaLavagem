@@ -59,6 +59,14 @@ public class Servico implements Serializable {
 
     @Column(name = "SER_POSSUI_ENTREGA_VEICULO", nullable = false)
     private boolean serPossuiEntregaVeiculo;
+    
+    @ManyToOne
+    @JoinColumn(name = "SER_ID_ENDERECO_BUSCA", referencedColumnName = "END_ID_ENDERECO")
+    private EnderecoCliente serEnderecoBusca;
+
+    @ManyToOne
+    @JoinColumn(name = "SER_ID_ENDERECO_ENTREGA", referencedColumnName = "END_ID_ENDERECO")
+    private EnderecoCliente serEnderecoEntrega;
 
 	public Servico() {
 	}
@@ -102,6 +110,22 @@ public class Servico implements Serializable {
 	public void setSerPossuiEntregaVeiculo(boolean serPossuiEntregaVeiculo) {
 		this.serPossuiEntregaVeiculo = serPossuiEntregaVeiculo;
 	}
+	
+	public EnderecoCliente getSerEnderecoBusca() {
+		return serEnderecoBusca;
+	}
+
+	public void setSerEnderecoBusca(EnderecoCliente serEnderecoBusca) {
+		this.serEnderecoBusca = serEnderecoBusca;
+	}
+
+	public EnderecoCliente getSerEnderecoEntrega() {
+		return serEnderecoEntrega;
+	}
+
+	public void setSerEnderecoEntrega(EnderecoCliente serEnderecoEntrega) {
+		this.serEnderecoEntrega = serEnderecoEntrega;
+	}
 
 	public Double getSerPrecoTotal() {
 		return serPrecoTotal;
@@ -141,11 +165,11 @@ public class Servico implements Serializable {
 	
 	public String getDescEntrega() {
 	    if (this.serPrecoServicoExtra == null) {
-	        return "Sem Entrega";
+	        return "Sem Busca/Entrega";
 	    }
 
 	    NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
-	    return "Entrega incluída: " + nf.format(this.serPrecoServicoExtra);
+	    return "Serviço de Busca/Entrega incluída: " + nf.format(this.serPrecoServicoExtra);
 	}
 	
 	public String getPrecoTotalFormat() {

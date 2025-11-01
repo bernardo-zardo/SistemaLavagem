@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import com.bernardo.entidades.Agendamento;
+import com.bernardo.entidades.Servico;
 import com.bernardo.entidades.TipoServico;
 import com.bernardo.entidades.Veiculo;
 import com.bernardo.services.AgendamentoService;
@@ -49,6 +51,8 @@ public class AgendamentoBean extends BaseCrud<Agendamento> implements Serializab
 	@PostConstruct
 	public void montaRegistros() {
 		agendamentos = agendamentoService.filtrar(new HashMap<>());
+		agendamentos.sort(Comparator.comparing(Agendamento::getAgIdAgendamento).reversed());
+		
 		veiculos = veiculoService.filtrar(new HashMap<>());
 		tiposServico = tipoServicoService.filtrar(new HashMap<>());
 	}
@@ -78,11 +82,13 @@ public class AgendamentoBean extends BaseCrud<Agendamento> implements Serializab
 		criaObj();
 		JsfUtil.info("Agendamento excluído com sucesso!");
 		agendamentos = agendamentoService.filtrar(new HashMap<>());
+		agendamentos.sort(Comparator.comparing(Agendamento::getAgIdAgendamento).reversed());
 	}
 
 	public void selecionarAgendamento(Agendamento agendamento) {
 		this.crudObj = agendamento;
 		this.alterando = true;
+		carregarHorariosDisponiveis();
 		JsfUtil.info("Agendamento selecionado.");
 	}
 
@@ -92,6 +98,7 @@ public class AgendamentoBean extends BaseCrud<Agendamento> implements Serializab
 		criaObj();
 		JsfUtil.info("Agendamento excluído com sucesso!");
 		agendamentos = agendamentoService.filtrar(new HashMap<>());
+		agendamentos.sort(Comparator.comparing(Agendamento::getAgIdAgendamento).reversed());
 	}
 	
 	public List<Date> gerarHorariosPadrao() {

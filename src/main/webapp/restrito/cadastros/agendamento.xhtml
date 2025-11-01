@@ -40,7 +40,7 @@
 								</p:datePicker>
 							</h:panelGroup>
 						</p:panelGrid>
-						
+
 						<p:divider style="width: 99%" />
 
 						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
@@ -87,41 +87,88 @@
 									<f:selectItems value="#{agendamentoBean.veiculos}" var="v"
 										itemLabel="#{v.veiModelo} - #{v.veiPlaca} - #{v.veiCliente.cliNome}"
 										itemValue="#{v}" />
+									<p:ajax update=":form1:pnBuscaEntrega" />	
 								</p:selectOneMenu>
 							</h:panelGroup>
 						</p:panelGrid>
 
-						<p:divider style="width: 99%" />					
-					
-						<p:panelGrid columns="1" layout="grid"
-							style="margin-left:-10px">
-							<p:selectBooleanCheckbox id="possuiBusca"
-								itemLabel="Possui Busca do Veículo"
-								value="#{agendamentoBean.crudObj.agPossuiBuscaVeiculo}">
-								<p:ajax process="@this" update="@this :form1:pnBuscaEntrega" />
-							</p:selectBooleanCheckbox>
-							
-							<p:selectBooleanCheckbox id="possuiEntrega"
-								itemLabel="Possui Entrega do Veículo"
-								value="#{agendamentoBean.crudObj.agPossuiEntregaVeiculo}">
-								<p:ajax process="@this" update="@this :form1:pnBuscaEntrega" />
-							</p:selectBooleanCheckbox>
-						</p:panelGrid>
+						<p:divider style="width: 99%" />
 
-						<p:panelGrid columns="2" layout="grid"
-							style="margin-left:-10px">
-							<h:panelGroup id="pnBuscaEntrega">
-								<p:outputLabel value="Preço do Serviço de Busca/Entrega"
-									for="preco" />
-								<p:inputNumber id="preco"
-									disabled="#{not agendamentoBean.crudObj.agPossuiBuscaVeiculo and not agendamentoBean.crudObj.agPossuiEntregaVeiculo}"
-									value="#{agendamentoBean.crudObj.agPrecoServicoExtra}"
-									required="true" requiredMessage="O campo Preço é obrigatório."
-									symbol="R$ " decimalPlaces="2" thousandSeparator="."
-									decimalSeparator="," style="width:100%" />
-							</h:panelGroup>
-						</p:panelGrid>
-						
+						<h:panelGroup id="pnBuscaEntrega">
+							<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
+								<p:selectBooleanCheckbox id="possuiBusca"
+									itemLabel="Possui Busca do Veículo"
+									value="#{agendamentoBean.crudObj.agPossuiBuscaVeiculo}">
+									<p:ajax process="@this" update="@this :form1:pnBuscaEntrega" />
+								</p:selectBooleanCheckbox>
+							</p:panelGrid>
+
+							<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
+								<h:panelGroup>
+									<p:outputLabel value="Endereço de Busca" for="endBusca" />
+									<p:selectOneMenu id="endBusca" filter="true"
+										converter="enderecoClienteConverter"
+										disabled="#{not agendamentoBean.crudObj.agPossuiBuscaVeiculo}"
+										filterMatchMode="contains" required="true"
+										requiredMessage="O campo Veículo é obrigatório."
+										value="#{agendamentoBean.crudObj.agEnderecoBusca}"
+										style="width:100%">
+										<f:selectItem itemLabel="Selecione um endereço"
+											itemValue="#{null}" noSelectionOption="true" />
+										<f:selectItems
+											value="#{agendamentoBean.crudObj.agVeiculo.veiCliente.cliEnderecos}"
+											var="e"
+											itemLabel="#{e.endDescricao} - #{e.endRua}, #{e.endNumero} - #{e.endBairro}"
+											itemValue="#{e}" />
+									</p:selectOneMenu>
+								</h:panelGroup>
+							</p:panelGrid>
+							<br />
+
+							<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
+								<p:selectBooleanCheckbox id="possuiEntrega"
+									itemLabel="Possui Entrega do Veículo"
+									value="#{agendamentoBean.crudObj.agPossuiEntregaVeiculo}">
+									<p:ajax process="@this" update="@this :form1:pnBuscaEntrega" />
+								</p:selectBooleanCheckbox>
+							</p:panelGrid>
+
+							<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
+								<h:panelGroup>
+									<p:outputLabel value="Endereço de Entrega" for="endEntrega" />
+									<p:selectOneMenu id="endEntrega" filter="true"
+										converter="enderecoClienteConverter"
+										disabled="#{not agendamentoBean.crudObj.agPossuiEntregaVeiculo}"
+										filterMatchMode="contains" required="true"
+										requiredMessage="O campo Veículo é obrigatório."
+										value="#{agendamentoBean.crudObj.agEnderecoEntrega}"
+										style="width:100%">
+										<f:selectItem itemLabel="Selecione um endereço"
+											itemValue="#{null}" noSelectionOption="true" />
+										<f:selectItems
+											value="#{agendamentoBean.crudObj.agVeiculo.veiCliente.cliEnderecos}"
+											var="e"
+											itemLabel="#{e.endDescricao} - #{e.endRua}, #{e.endNumero} - #{e.endBairro}"
+											itemValue="#{e}" />
+									</p:selectOneMenu>
+								</h:panelGroup>
+							</p:panelGrid>
+							<br />
+
+							<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+								<h:panelGroup>
+									<p:outputLabel value="Preço do Serviço de Busca/Entrega"
+										for="preco" />
+									<p:inputNumber id="preco"
+										disabled="#{not agendamentoBean.crudObj.agPossuiBuscaVeiculo and not agendamentoBean.crudObj.agPossuiEntregaVeiculo}"
+										value="#{agendamentoBean.crudObj.agPrecoServicoExtra}"
+										required="true" requiredMessage="O campo Preço é obrigatório."
+										symbol="R$ " decimalPlaces="2" thousandSeparator="."
+										decimalSeparator="," style="width:100%" />
+								</h:panelGroup>
+							</p:panelGrid>
+						</h:panelGroup>
+
 						<p:divider style="width: 99%" />
 
 						<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
@@ -166,7 +213,7 @@
 			<p:panel styleClass="painel-custom-header"
 				header="Agendamentos Cadastrados">
 				<p:dataTable id="agendamentosTable" var="agendamento" reflow="true"
-					sortBy="#{agendamento.agIdAgendamento}" sortOrder="ascending"
+					sortBy="#{agendamento.agIdAgendamento}" sortOrder="descending"
 					value="#{agendamentoBean.agendamentos}" paginator="true" rows="10"
 					paginatorPosition="bottom" style="margin-top:10px;"
 					emptyMessage="Nenhum agendamento encontrado" filterEvent="keyup">
@@ -199,7 +246,7 @@
 						<h:outputText
 							value="#{agendamento.agVeiculo.veiModelo} - #{agendamento.agVeiculo.veiPlaca}" />
 					</p:column>
-					
+
 					<p:column headerText="Status" sortBy="#{agendamento.agStatus}">
 						<h:outputText
 							value="#{agendamento.agStatus eq 'P' ? 'Pendente' : (agendamento.agStatus eq 'C' ? 'Concluído' : 'Cancelado')}" />
