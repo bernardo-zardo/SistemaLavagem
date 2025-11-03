@@ -12,53 +12,202 @@
 	<ui:define name="content">
 
 		<style>
-			.fc .fc-scrollgrid, .fc .fc-scrollgrid table, .fc-daygrid-body {
-				width: 100% !important;
-			}
-			
-			.fc-event.evento-pendente {
-			    background-color: #6299DE !important;
-			    border-color: #6299DE !important;
-			    color: #fff !important;
-			}
-			
-			.fc-event.evento-concluido {
-			    background-color: #1E3A8A !important;
-			    border-color: #1E3A8A !important;
-			    color: #fff !important;
-			}
-			
-			.fc-event.evento-outro {
-			    background-color: #9CA3AF !important;
-			    border-color: #9CA3AF !important;
-			    color: #fff !important;
-			}
+.fc .fc-scrollgrid, .fc .fc-scrollgrid table, .fc-daygrid-body {
+	width: 100% !important;
+}
+
+.fc-event.evento-pendente {
+	background-color: #6299DE !important;
+	border-color: #6299DE !important;
+	color: #fff !important;
+}
+
+.fc-event.evento-concluido {
+	background-color: #1E3A8A !important;
+	border-color: #1E3A8A !important;
+	color: #fff !important;
+}
+
+.fc-event.evento-outro {
+	background-color: #9CA3AF !important;
+	border-color: #9CA3AF !important;
+	color: #fff !important;
+}
 </style>
 
 		<h:form id="form1">
 			<p:panel header="Controle de Agendamentos"
 				styleClass="painel-custom-header">
-				<p:panelGrid columns="1" layout="grid">
-					<f:view encoding="UTF-8">
-						<p:schedule id="agenda" rightHeaderTemplate="dayGridMonth"
-							value="#{consultaAgendamentoBean.eventModel}"
-							widgetVar="agendaWidget" showWeekends="true"
-							slotDuration="00:20:00" draggable="false" resizable="false"
-							showHeader="true" height="auto" minTime="07:00:00"
-							maxTime="20:00:00" locale="pt_BR" timeZone="America/Sao_Paulo"
-							clientTimeZone="America/Sao_Paulo">
-							<p:ajax event="eventSelect"
-								listener="#{consultaAgendamentoBean.onEventSelect}"
-								update=":form1:dlgDetalhes"
-								oncomplete="PF('dlgDetalhes').show()" />
-						</p:schedule>
-					</f:view>
-				</p:panelGrid>
+
+				<p:tabView id="tabsAgendamento" dynamic="true" cache="false">
+					<p:tab title="Agenda">
+						<p:panelGrid columns="1" layout="grid">
+							<f:view encoding="UTF-8">
+								<p:schedule id="agenda" rightHeaderTemplate="dayGridMonth"
+									value="#{consultaAgendamentoBean.eventModel}"
+									widgetVar="agendaWidget" showWeekends="true"
+									slotDuration="00:60:00" draggable="false" resizable="false"
+									showHeader="true" height="auto" minTime="07:00:00"
+									maxTime="20:00:00" locale="pt_BR" timeZone="America/Sao_Paulo"
+									clientTimeZone="America/Sao_Paulo">
+									<p:ajax event="eventSelect"
+										listener="#{consultaAgendamentoBean.onEventSelect}"
+										update=":form1:dlgDetalhes"
+										oncomplete="PF('dlgDetalhes').show()" />
+								</p:schedule>
+							</f:view>
+						</p:panelGrid>
+					</p:tab>
+
+					<p:tab title="Agendamentos">
+
+						<p:panel header="Filtros de Agendamento"
+							id="panelFiltrosAgendamento" styleClass="painel-custom-header">
+
+							<p:panelGrid columns="2" layout="grid">
+								<p:panelGrid columns="1" layout="grid">
+
+									<p:panelGrid columns="2" layout="grid"
+										columnClasses="ui-g-nopad, ui-g-nopad"
+										style="margin-left:-10px">
+										<h:panelGroup>
+											<p:outputLabel value="Data Inicial" for="dataIniAg" />
+											<br />
+											<p:datePicker id="dataIniAg" showOnFocus="false"
+												widgetVar="dataIniAgWidget"
+												value="#{consultaAgendamentoBean.filtroDataIni}"
+												showIcon="true" pattern="dd/MM/yyyy" styleClass="datePicker"
+												style="width:200px" />
+										</h:panelGroup>
+
+										<h:panelGroup>
+											<p:outputLabel value="Data Final" for="dataFimAg" />
+											<br />
+											<p:datePicker id="dataFimAg" showOnFocus="false"
+												widgetVar="dataFimAgWidget"
+												value="#{consultaAgendamentoBean.filtroDataFim}"
+												showIcon="true" pattern="dd/MM/yyyy" styleClass="datePicker"
+												style="width:200px" />
+										</h:panelGroup>
+									</p:panelGrid>
+
+									<p:panelGrid columns="2" layout="grid"
+										style="margin-left:-10px">
+										<p:selectCheckboxMenu id="tiposServicoAg"
+											value="#{consultaAgendamentoBean.filtroTiposServico}"
+											label="Tipos de Serviço" filter="true"
+											filterMatchMode="contains" style="width: 100%"
+											converter="tipoServicoConsultaConverter">
+											<f:selectItems
+												value="#{consultaAgendamentoBean.tiposServico}"
+												var="t" itemLabel="#{t.tsNome}" itemValue="#{t}" />
+										</p:selectCheckboxMenu>
+									</p:panelGrid>
+
+									<p:panelGrid columns="2" layout="grid"
+										style="margin-left:-10px">
+										<p:selectCheckboxMenu id="veiculosAg"
+											value="#{consultaAgendamentoBean.filtroVeiculos}"
+											label="Veículos" filter="true" filterMatchMode="contains"
+											style="width: 100%" converter="veiculoConsultaConverter">
+											<f:selectItems
+												value="#{consultaAgendamentoBean.veiculos}" var="v"
+												itemLabel="#{v.veiModelo} - #{v.veiPlaca}" itemValue="#{v}" />
+										</p:selectCheckboxMenu>
+									</p:panelGrid>
+
+									<p:panelGrid columns="1" layout="grid"
+										style="margin-left:-10px">
+										<p:outputLabel value="Status" />
+										<p:selectOneRadio id="statusAg"
+											value="#{consultaAgendamentoBean.filtroStatus}"
+											layout="lineDirection">
+											<f:selectItem itemLabel="Todos" itemValue="T" />
+											<f:selectItem itemLabel="Pendentes" itemValue="P" />
+											<f:selectItem itemLabel="Concluídos" itemValue="C" />
+											<f:selectItem itemLabel="Cancelados" itemValue="X" />
+										</p:selectOneRadio>
+									</p:panelGrid>
+								</p:panelGrid>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel styleClass="painel-custom">
+							<div align="right">
+								<p:commandButton value="Limpar Filtros" icon="pi pi-eraser"
+									actionListener="#{consultaAgendamentoBean.limparFiltros}"
+									update=":form1:tabsAgendamento:panelAgendamentos"
+									styleClass="btn-acoes-auto" />
+
+								<p:commandButton value="Pesquisar" icon="pi pi-search"
+									actionListener="#{consultaAgendamentoBean.filtrarAgendamentos}"
+									styleClass="btn-acoes ui-button-success"
+									update=":form1:tabsAgendamento:panelAgendamentos" />
+							</div>
+						</p:panel>
+
+						<p:panel id="panelAgendamentos" styleClass="painel-custom-header"
+							header="Agendamentos Filtrados">
+
+							<p:dataGrid id="gridAgendamentos" layout="grid"
+								value="#{consultaAgendamentoBean.agendamentosFiltrados}" var="a"
+								columns="3" paginator="true" rows="16"
+								paginatorPosition="bottom" styleClass="dataGrid-servicos"
+								emptyMessage="Nenhum agendamento encontrado.">
+
+								<p:panel styleClass="card-servico">
+									<p:panelGrid columns="1" layout="grid"
+										style="margin-left:-10px">
+
+										<p:panelGrid layout="grid" columns="2"
+											columnClasses="ui-grid-col-11,ui-grid-col-1">
+											<p:panelGrid layout="grid" columns="1"
+												style="margin-left:-20px">
+												<h:outputText value="#{a.agData}"
+													style="font-weight: bold; font-size: 19px; margin-left: -3px">
+													<f:convertDateTime pattern="dd/MM/yyyy" />
+												</h:outputText>
+											</p:panelGrid>
+
+											<p:panelGrid layout="grid" columns="1">
+												<p:button icon="pi pi-pencil"
+													outcome="/restrito/cadastros/agendamento.xhtml"
+													styleClass="ui-button-success" style="margin-right: 5px;"
+													target="_blank">
+													<f:param name="agendamentoId" value="#{a.agIdAgendamento}" />
+												</p:button>
+											</p:panelGrid>
+										</p:panelGrid>
+
+										<p:panelGrid layout="grid" columns="1"
+											style="margin-left: -10px; margin-top: -10px">
+											<h:outputText value="#{a.agTipoServico.tsNome}"
+												style="font-weight: bold; color: #1976d2" />
+
+											<h:outputText
+												value="Cliente: #{a.agVeiculo.veiCliente.cliNome}" />
+
+											<h:outputText
+												value="Veículo: #{a.agVeiculo.veiModelo} - #{a.agVeiculo.veiPlaca}" />
+
+											<h:outputText value="Horário: #{a.horaFormatada}" />
+
+											<h:outputText value="Status: #{a.statusDescricao}" style="#{a.statusStyle}" />
+										</p:panelGrid>
+									</p:panelGrid>
+								</p:panel>
+							</p:dataGrid>
+						</p:panel>
+
+					</p:tab>
+				</p:tabView>
+
 			</p:panel>
 
 			<p:dialog id="dlgDetalhes" widgetVar="dlgDetalhes"
 				header="Detalhes do Agendamento" modal="true" resizable="false"
 				width="450">
+
 				<p:panelGrid columns="1" layout="grid">
 					<h:outputText style="font-weight: bold; font-size: 18px"
 						value="#{consultaAgendamentoBean.agendamentoSelecionado.dataFormatada}">
@@ -88,10 +237,8 @@
 						<h:outputText value="Status:" style="font-weight: bold" />
 						<h:outputText
 							value="#{consultaAgendamentoBean.agendamentoSelecionado.statusDescricao}" />
-
 					</p:panelGrid>
 				</p:panelGrid>
-
 			</p:dialog>
 
 		</h:form>

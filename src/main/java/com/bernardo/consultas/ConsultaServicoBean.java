@@ -10,15 +10,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import com.bernardo.entidades.Agendamento;
 import com.bernardo.entidades.Responsavel;
 import com.bernardo.entidades.Servico;
 import com.bernardo.entidades.TipoServico;

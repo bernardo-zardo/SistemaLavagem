@@ -8,12 +8,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.Query;
 
 import com.bernardo.entidades.Agendamento;
+import com.bernardo.entidades.Responsavel;
+import com.bernardo.entidades.TipoServico;
+import com.bernardo.entidades.Veiculo;
 import com.bernardo.utils.FiltrosPesquisa;
 import com.bernardo.utils.StringUtil;
 
@@ -71,5 +75,35 @@ public class AgendamentoService extends BaseService<Agendamento> {
 	        }
 	    }
 	    return horarios;
+	}
+	
+	public List<Agendamento> consultarAgendamentosFiltrados(String filtroStatus, Date filtroDataIni, Date filtroDataFim,
+			List<TipoServico> filtroTiposServico, List<Veiculo> filtroVeiculos) {
+
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT a.* FROM AGENDAMENTO_SERVICO a ");
+
+		sql.append(" WHERE a.AG_DATA >= ").append(StringUtil.toMySQLDateTime(filtroDataIni));
+		sql.append(" AND a.AG_DATA <= ").append(StringUtil.toMySQLDateTime(filtroDataFim));
+
+		if (filtroStatus != null && !filtroStatus.equals("T")) {
+			sql.append(" AND a.AG_STATUS = '").append(filtroStatus).append("' ");
+		}
+
+		if (filtroTiposServico != null && !filtroTiposServico.isEmpty()) {
+			String ids = filtroTiposServico.stream().map(ts -> ts.getTsIdTipoServico().toString())
+					.collect(Collectors.joining(","));
+			sql.append(" AND a.AG_ID_TIPO_SERVICO IN (").append(ids).append(")");
+		}
+
+		if (filtroVeiculos != null && !filtroVeiculos.isEmpty()) {
+			String ids = filtroVeiculos.stream().map(v -> v.getVeiIdVeiculo().toString())
+					.collect(Collectors.joining(","));
+			sql.append(" AND a.AG_ID_VEICULO IN (").append(ids).append(")");
+		}
+
+		sql.append(" ORDER BY a.AG_DATA DESC ");
+
+		return customEntityManager.executeNativeQuery(Agendamento.class, sql.toString());
 	}
 }

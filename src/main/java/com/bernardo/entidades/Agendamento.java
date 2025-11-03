@@ -172,6 +172,23 @@ public class Agendamento implements Serializable {
         }
     }
 	
+	public String getStatusStyle() {
+	    if (this.agStatus == null) {
+	        return "";
+	    }
+
+	    if (this.agStatus.equals("P")) {
+	        return "color:#1976d2; font-weight:bold;"; 
+	    } else if (this.agStatus.equals("C")) {
+	        return "color:#2e7d32; font-weight:bold;"; 
+	    } else if (this.agStatus.equals("X")) {
+	        return "color:#d32f2f; font-weight:bold;";
+	    } else {
+	        return "";
+	    }
+	}
+
+	
 	public String getDataFormatada() {
         if (agData == null) return "";
 
@@ -184,6 +201,14 @@ public class Agendamento implements Serializable {
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", new Locale("pt", "BR"));
         return diasSemana[diaSemana - 1] + " - " + sdf.format(agData);
+    }
+	
+	public String getHoraFormatada() {
+        if (agHora == null) {
+            return "";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        return sdf.format(agHora);
     }
 
     @Override
