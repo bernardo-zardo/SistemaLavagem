@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -50,6 +51,15 @@ public class AgendamentoBean extends BaseCrud<Agendamento> implements Serializab
 	
 	@PostConstruct
 	public void montaRegistros() {
+		String agendamentoIdParam = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+				.get("agendamentoId");
+		if (agendamentoIdParam != null) {
+			Long agendamentoId = Long.valueOf(agendamentoIdParam);
+			List<Agendamento> agendamentoParam = agendamentoService.getAgendamentoPorId(agendamentoId.toString());
+			this.crudObj = agendamentoParam.get(0);
+			this.alterando = true;
+		}
+		
 		agendamentos = agendamentoService.filtrar(new HashMap<>());
 		agendamentos.sort(Comparator.comparing(Agendamento::getAgIdAgendamento).reversed());
 		

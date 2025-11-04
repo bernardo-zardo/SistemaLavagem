@@ -139,7 +139,7 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
 			return;
 		}
 
-		String enderecoCompleto = novoEndereco.getEndRua() + " " + novoEndereco.getEndNumero() + ", "
+		String enderecoCompleto = novoEndereco.getEndRua() + ", " + novoEndereco.getEndNumero() + ", "
 				+ novoEndereco.getEndBairro() + ", " + novoEndereco.getEndCidade() + ", " + novoEndereco.getEndUf()
 				+ ", Brasil";
 
@@ -150,13 +150,13 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
 		}
 
 		if (!editandoEndereco) {
-			novoEndereco.setEndCep(StringUtil.getOnlyNumbers(novoEndereco.getEndCep()));
 			crudObj.adicionarEndereco(novoEndereco);
 			JsfUtil.info("Endereço adicionado à lista.");
 		} else {
 			JsfUtil.info("Endereço editado.");
 		}
 
+		novoEndereco.setEndCep(StringUtil.getOnlyNumbers(novoEndereco.getEndCep()));
 		this.novoEndereco = new EnderecoCliente();
 		JsfUtil.pfHideDialog("dlgEndereco");
 	}

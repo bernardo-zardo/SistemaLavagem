@@ -1,6 +1,7 @@
 package com.bernardo.entidades;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,99 +20,99 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
-*
-* @author Bernardo Zardo Mergen
-*/
+ *
+ * @author Bernardo Zardo Mergen
+ */
 @Entity
 @Table(name = "AGENDAMENTO_SERVICO")
 public class Agendamento implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "AG_ID_AGENDAMENTO")
-    private Integer agIdAgendamento;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "AG_ID_AGENDAMENTO")
+	private Integer agIdAgendamento;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "AG_DATA", nullable = false)
-    private Date agData;
+	@Temporal(TemporalType.DATE)
+	@Column(name = "AG_DATA", nullable = false)
+	private Date agData;
 
-    @Temporal(TemporalType.TIME)
-    @Column(name = "AG_HORA", nullable = false)
-    private Date agHora;
+	@Temporal(TemporalType.TIME)
+	@Column(name = "AG_HORA", nullable = false)
+	private Date agHora;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "AG_ID_VEICULO", referencedColumnName = "VEI_ID_VEICULO", nullable = false)
-    private Veiculo agVeiculo;
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "AG_ID_VEICULO", referencedColumnName = "VEI_ID_VEICULO", nullable = false)
+	private Veiculo agVeiculo;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "AG_ID_TIPO_SERVICO", referencedColumnName = "TS_ID_TIPO_SERVICO", nullable = false)
-    private TipoServico agTipoServico;
-    
-    @Column(name = "AG_POSSUI_BUSCA_VEICULO", nullable = false)
-    private boolean agPossuiBuscaVeiculo;
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "AG_ID_TIPO_SERVICO", referencedColumnName = "TS_ID_TIPO_SERVICO", nullable = false)
+	private TipoServico agTipoServico;
 
-    @Column(name = "AG_POSSUI_ENTREGA_VEICULO", nullable = false)
-    private boolean agPossuiEntregaVeiculo;
-    
-    @Column(name = "AG_PRECO_SERVICO_EXTRA")
-    private Double agPrecoServicoExtra;
-    
-    @Column(name = "AG_STATUS", nullable = false, length = 1)
-    private String agStatus = "P"; // P = Pendente, C = Concluído, X = Cancelado
-    
-    @ManyToOne
-    @JoinColumn(name = "AG_ID_ENDERECO_BUSCA")
-    private EnderecoCliente agEnderecoBusca;
+	@Column(name = "AG_POSSUI_BUSCA_VEICULO", nullable = false)
+	private boolean agPossuiBuscaVeiculo;
 
-    @ManyToOne
-    @JoinColumn(name = "AG_ID_ENDERECO_ENTREGA")
-    private EnderecoCliente agEnderecoEntrega;
+	@Column(name = "AG_POSSUI_ENTREGA_VEICULO", nullable = false)
+	private boolean agPossuiEntregaVeiculo;
 
-    public Agendamento() {
-    }
+	@Column(name = "AG_PRECO_SERVICO_EXTRA")
+	private Double agPrecoServicoExtra;
 
-    public Integer getAgIdAgendamento() {
-        return agIdAgendamento;
-    }
+	@Column(name = "AG_STATUS", nullable = false, length = 1)
+	private String agStatus = "P"; // P = Pendente, C = Concluído, X = Cancelado
 
-    public void setAgIdAgendamento(Integer agIdAgendamento) {
-        this.agIdAgendamento = agIdAgendamento;
-    }
+	@ManyToOne
+	@JoinColumn(name = "AG_ID_ENDERECO_BUSCA")
+	private EnderecoCliente agEnderecoBusca;
 
-    public Date getAgData() {
-        return agData;
-    }
+	@ManyToOne
+	@JoinColumn(name = "AG_ID_ENDERECO_ENTREGA")
+	private EnderecoCliente agEnderecoEntrega;
 
-    public void setAgData(Date agData) {
-        this.agData = agData;
-    }
+	public Agendamento() {
+	}
 
-    public Date getAgHora() {
-        return agHora;
-    }
+	public Integer getAgIdAgendamento() {
+		return agIdAgendamento;
+	}
 
-    public void setAgHora(Date agHora) {
-        this.agHora = agHora;
-    }
+	public void setAgIdAgendamento(Integer agIdAgendamento) {
+		this.agIdAgendamento = agIdAgendamento;
+	}
 
-    public Veiculo getAgVeiculo() {
-        return agVeiculo;
-    }
+	public Date getAgData() {
+		return agData;
+	}
 
-    public void setAgVeiculo(Veiculo agVeiculo) {
-        this.agVeiculo = agVeiculo;
-    }
+	public void setAgData(Date agData) {
+		this.agData = agData;
+	}
 
-    public TipoServico getAgTipoServico() {
-        return agTipoServico;
-    }
+	public Date getAgHora() {
+		return agHora;
+	}
 
-    public void setAgTipoServico(TipoServico agTipoServico) {
-        this.agTipoServico = agTipoServico;
-    }
-    
+	public void setAgHora(Date agHora) {
+		this.agHora = agHora;
+	}
+
+	public Veiculo getAgVeiculo() {
+		return agVeiculo;
+	}
+
+	public void setAgVeiculo(Veiculo agVeiculo) {
+		this.agVeiculo = agVeiculo;
+	}
+
+	public TipoServico getAgTipoServico() {
+		return agTipoServico;
+	}
+
+	public void setAgTipoServico(TipoServico agTipoServico) {
+		this.agTipoServico = agTipoServico;
+	}
+
 	public boolean isAgPossuiBuscaVeiculo() {
 		return agPossuiBuscaVeiculo;
 	}
@@ -137,13 +138,13 @@ public class Agendamento implements Serializable {
 	}
 
 	public String getAgStatus() {
-        return agStatus;
-    }
+		return agStatus;
+	}
 
-    public void setAgStatus(String agStatus) {
-        this.agStatus = agStatus;
-    }
-    
+	public void setAgStatus(String agStatus) {
+		this.agStatus = agStatus;
+	}
+
 	public EnderecoCliente getAgEnderecoBusca() {
 		return agEnderecoBusca;
 	}
@@ -161,70 +162,146 @@ public class Agendamento implements Serializable {
 	}
 
 	public String getStatusDescricao() {
-        if (this.agStatus.equals("P")) {
-        	return "Pendente";
-        } else if (this.agStatus.equals("C")) {
-        	return "Concluído";
-        } else if (this.agStatus.equals("X")) {
-        	return "Cancelado";
-        } else {
-        	return "Desconhecido";
-        }
-    }
-	
-	public String getStatusStyle() {
-	    if (this.agStatus == null) {
-	        return "";
-	    }
-
-	    if (this.agStatus.equals("P")) {
-	        return "color:#1976d2; font-weight:bold;"; 
-	    } else if (this.agStatus.equals("C")) {
-	        return "color:#2e7d32; font-weight:bold;"; 
-	    } else if (this.agStatus.equals("X")) {
-	        return "color:#d32f2f; font-weight:bold;";
-	    } else {
-	        return "";
-	    }
+		if (this.agStatus.equals("P")) {
+			return "Pendente";
+		} else if (this.agStatus.equals("C")) {
+			return "Concluído";
+		} else if (this.agStatus.equals("X")) {
+			return "Cancelado";
+		} else {
+			return "Desconhecido";
+		}
 	}
 
+	public String getStatusStyle() {
+		if (this.agStatus == null) {
+			return "";
+		}
+
+		if (this.agStatus.equals("P")) {
+			return "color:#1976d2; font-weight:bold;";
+		} else if (this.agStatus.equals("C")) {
+			return "color:#2e7d32; font-weight:bold;";
+		} else if (this.agStatus.equals("X")) {
+			return "color:#d32f2f; font-weight:bold;";
+		} else {
+			return "";
+		}
+	}
+
+	public String getStatusIcon() {
+		if ("P".equals(this.agStatus)) {
+			return "pi pi-clock";
+		} else if ("C".equals(this.agStatus)) {
+			return "pi pi-check-circle";
+		} else if ("X".equals(this.agStatus)) {
+			return "pi pi-times-circle";
+		} else {
+			return "pi pi-question-circle";
+		}
+	}
+
+	public String getStatusIconStyle() {
+		if ("P".equals(this.agStatus)) {
+			return "color: #1976d2;";
+		} else if ("C".equals(this.agStatus)) {
+			return "color: #2e7d32;";
+		} else if ("X".equals(this.agStatus)) {
+			return "color: #d32f2f;";
+		} else {
+			return "color: #757575;";
+		}
+	}
+
+	public boolean isStatusPendente() {
+		return this.agStatus.equals("P");
+	}
+
+	public String getDescEntrega() {
+		if (this.agPrecoServicoExtra == null) {
+			return "Sem Busca/Entrega";
+		}
+
+		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+		return "Serviço de Busca/Entrega incluída: " + nf.format(this.agPrecoServicoExtra);
+	}
 	
+	public String getPrecoTotalDesc() {
+		Double total;
+		if (this.agPrecoServicoExtra != null) {
+			total = this.getAgPrecoServicoExtra() + this.getAgTipoServico().getTsPreco();
+		} else {
+			total = this.getAgTipoServico().getTsPreco();
+		}
+		
+		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+		return nf.format(total);
+	}
+
 	public String getDataFormatada() {
-        if (agData == null) return "";
+		if (agData == null)
+			return "";
 
-        String[] diasSemana = {"Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira",
-                               "Quinta-feira", "Sexta-feira", "Sábado"};
+		String[] diasSemana = { "Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira",
+				"Sexta-feira", "Sábado" };
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(agData);
-        int diaSemana = cal.get(Calendar.DAY_OF_WEEK);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(agData);
+		int diaSemana = cal.get(Calendar.DAY_OF_WEEK);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", new Locale("pt", "BR"));
-        return diasSemana[diaSemana - 1] + " - " + sdf.format(agData);
-    }
-	
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", new Locale("pt", "BR"));
+		return diasSemana[diaSemana - 1] + " - " + sdf.format(agData);
+	}
+
+	public String getDataPadraoFormatada() {
+		if (agData == null)
+			return "";
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(agData);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", new Locale("pt", "BR"));
+		return sdf.format(agData);
+	}
+
 	public String getHoraFormatada() {
-        if (agHora == null) {
-            return "";
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        return sdf.format(agHora);
-    }
+		if (agHora == null) {
+			return "";
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+		return sdf.format(agHora);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(agIdAgendamento);
-    }
+	public Double latBusca() {
+		return (agEnderecoBusca != null) ? agEnderecoBusca.getEndLatitude() : null;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Agendamento other = (Agendamento) obj;
-        return Objects.equals(agIdAgendamento, other.agIdAgendamento);
-    }
+	public Double lngBusca() {
+		return (agEnderecoBusca != null) ? agEnderecoBusca.getEndLongitude() : null;
+	}
+
+	public Double latEntrega() {
+		return (agEnderecoEntrega != null) ? agEnderecoEntrega.getEndLatitude() : null;
+	}
+
+	public Double lngEntrega() {
+		return (agEnderecoEntrega != null) ? agEnderecoEntrega.getEndLongitude() : null;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(agIdAgendamento);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Agendamento other = (Agendamento) obj;
+		return Objects.equals(agIdAgendamento, other.agIdAgendamento);
+	}
 }

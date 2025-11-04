@@ -11,6 +11,10 @@
 
 	<ui:define name="content">
 
+		<link rel="stylesheet"
+			href="https://unpkg.com/leaflet/dist/leaflet.css" />
+		<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 		<style>
 .fc .fc-scrollgrid, .fc .fc-scrollgrid table, .fc-daygrid-body {
 	width: 100% !important;
@@ -36,6 +40,7 @@
 </style>
 
 		<h:form id="form1">
+			<p:growl id="mensagem" />
 			<p:panel header="Controle de Agendamentos"
 				styleClass="painel-custom-header">
 
@@ -43,18 +48,18 @@
 					<p:tab title="Agenda">
 						<p:panelGrid columns="1" layout="grid">
 							<f:view encoding="UTF-8">
-								<p:schedule id="agenda" rightHeaderTemplate="dayGridMonth"
-									value="#{consultaAgendamentoBean.eventModel}"
-									widgetVar="agendaWidget" showWeekends="true"
-									slotDuration="00:60:00" draggable="false" resizable="false"
-									showHeader="true" height="auto" minTime="07:00:00"
-									maxTime="20:00:00" locale="pt_BR" timeZone="America/Sao_Paulo"
+								<p:schedule id="agenda"
+									value="#{consultaAgendamentoBean.eventModel}" draggable="false"
+									selectable="false" widgetVar="agendaWidget" locale="pt_BR"
+									height="auto" timeZone="America/Sao_Paulo"
 									clientTimeZone="America/Sao_Paulo">
+
 									<p:ajax event="eventSelect"
 										listener="#{consultaAgendamentoBean.onEventSelect}"
 										update=":form1:dlgDetalhes"
-										oncomplete="PF('dlgDetalhes').show()" />
+										oncomplete="console.log('oncomplete args=', args); PF('dlgDetalhes').show(); carregarMapas(args.latBusca, args.lngBusca, args.latEntrega, args.lngEntrega);" />
 								</p:schedule>
+
 							</f:view>
 						</p:panelGrid>
 					</p:tab>
@@ -99,8 +104,8 @@
 											filterMatchMode="contains" style="width: 100%"
 											converter="tipoServicoConsultaConverter">
 											<f:selectItems
-												value="#{consultaAgendamentoBean.tiposServico}"
-												var="t" itemLabel="#{t.tsNome}" itemValue="#{t}" />
+												value="#{consultaAgendamentoBean.tiposServico}" var="t"
+												itemLabel="#{t.tsNome}" itemValue="#{t}" />
 										</p:selectCheckboxMenu>
 									</p:panelGrid>
 
@@ -110,9 +115,9 @@
 											value="#{consultaAgendamentoBean.filtroVeiculos}"
 											label="Veículos" filter="true" filterMatchMode="contains"
 											style="width: 100%" converter="veiculoConsultaConverter">
-											<f:selectItems
-												value="#{consultaAgendamentoBean.veiculos}" var="v"
-												itemLabel="#{v.veiModelo} - #{v.veiPlaca}" itemValue="#{v}" />
+											<f:selectItems value="#{consultaAgendamentoBean.veiculos}"
+												var="v" itemLabel="#{v.veiModelo} - #{v.veiPlaca}"
+												itemValue="#{v}" />
 										</p:selectCheckboxMenu>
 									</p:panelGrid>
 
@@ -161,13 +166,19 @@
 
 										<p:panelGrid layout="grid" columns="2"
 											columnClasses="ui-grid-col-11,ui-grid-col-1">
-											<p:panelGrid layout="grid" columns="1"
-												style="margin-left:-20px">
-												<h:outputText value="#{a.agData}"
-													style="font-weight: bold; font-size: 19px; margin-left: -3px">
-													<f:convertDateTime pattern="dd/MM/yyyy" />
-												</h:outputText>
+											<p:panelGrid layout="grid" columns="2"
+												columnClasses="ui-grid-col-1,ui-grid-col-11"
+												style="align-items: center; margin-left: -20px">
+												<h:panelGroup>
+													<i class="#{a.statusIcon}"
+														style="#{a.statusIconStyle}; font-size: 20px; vertical-align: middle;"></i>
+												</h:panelGroup>
+
+												<h:outputText
+													value="#{a.dataPadraoFormatada} - #{a.horaFormatada}"
+													style="font-weight: bold; font-size: 19px; margin-left: -3px" />
 											</p:panelGrid>
+
 
 											<p:panelGrid layout="grid" columns="1">
 												<p:button icon="pi pi-pencil"
@@ -182,7 +193,10 @@
 										<p:panelGrid layout="grid" columns="1"
 											style="margin-left: -10px; margin-top: -10px">
 											<h:outputText value="#{a.agTipoServico.tsNome}"
-												style="font-weight: bold; color: #1976d2" />
+												style="font-weight: bold;" />
+
+											<h:outputText value="Status: #{a.statusDescricao}"
+												style="#{a.statusStyle}" />
 
 											<h:outputText
 												value="Cliente: #{a.agVeiculo.veiCliente.cliNome}" />
@@ -190,24 +204,41 @@
 											<h:outputText
 												value="Veículo: #{a.agVeiculo.veiModelo} - #{a.agVeiculo.veiPlaca}" />
 
-											<h:outputText value="Horário: #{a.horaFormatada}" />
-
-											<h:outputText value="Status: #{a.statusDescricao}" style="#{a.statusStyle}" />
+											<h:outputText value="#{a.descEntrega}" />
+											
+											<h:outputText value="Preço total: #{a.precoTotalDesc}" style="font-weight: bold;" />
 										</p:panelGrid>
 									</p:panelGrid>
+									<br />
+
+									<h:panelGroup rendered="#{a.statusPendente}">
+										<div align="right">
+											<p:commandLink styleClass="link-cancelar"
+												actionListener="#{consultaAgendamentoBean.cancelarAgendamento(a)}"
+												update=":form1:mensagem :form1:tabsAgendamento:panelAgendamentos">
+												<i class="pi pi-times"></i>
+												<span>Cancelar</span>
+											</p:commandLink>
+
+											<p:commandLink styleClass="link-concluir"
+												actionListener="#{consultaAgendamentoBean.prepararConclusao(a)}"
+												oncomplete="PF('dlgConcluirServico').show()"
+												update=":form1:dialogConcluirServico">
+												<i class="pi pi-check"></i>
+												<span>Concluir Serviço</span>
+											</p:commandLink>
+										</div>
+									</h:panelGroup>
 								</p:panel>
 							</p:dataGrid>
 						</p:panel>
-
 					</p:tab>
 				</p:tabView>
-
 			</p:panel>
 
 			<p:dialog id="dlgDetalhes" widgetVar="dlgDetalhes"
 				header="Detalhes do Agendamento" modal="true" resizable="false"
-				width="450">
-
+				width="700">
 				<p:panelGrid columns="1" layout="grid">
 					<h:outputText style="font-weight: bold; font-size: 18px"
 						value="#{consultaAgendamentoBean.agendamentoSelecionado.dataFormatada}">
@@ -215,12 +246,11 @@
 					</h:outputText>
 					<br />
 
-					<p:panelGrid columns="1" layout="grid">
+					<p:panelGrid columns="2" columnClasses="label,value" layout="grid"
+						style="width:100%">
 						<h:outputText value="Horário:" style="font-weight: bold" />
 						<h:outputText
-							value="#{consultaAgendamentoBean.agendamentoSelecionado.agHora}">
-							<f:convertDateTime pattern="HH:mm" timeZone="America/Sao_Paulo" />
-						</h:outputText>
+							value="#{consultaAgendamentoBean.agendamentoSelecionado.horaFormatada}" />
 
 						<h:outputText value="Cliente:" style="font-weight: bold" />
 						<h:outputText
@@ -237,8 +267,141 @@
 						<h:outputText value="Status:" style="font-weight: bold" />
 						<h:outputText
 							value="#{consultaAgendamentoBean.agendamentoSelecionado.statusDescricao}" />
+						
+						<h:outputText value="Preço total:" style="font-weight: bold" />
+						<h:outputText value="#{consultaAgendamentoBean.agendamentoSelecionado.precoTotalDesc}" />	
+
+						<h:outputText value="Endereço de Busca:" style="font-weight: bold"
+							rendered="#{consultaAgendamentoBean.agendamentoSelecionado.agPossuiBuscaVeiculo}" />
+						<h:outputText
+							rendered="#{consultaAgendamentoBean.agendamentoSelecionado.agPossuiBuscaVeiculo}"
+							value="#{consultaAgendamentoBean.agendamentoSelecionado.agEnderecoBusca.endDescricao}" />
+
+						<h:outputText value="Endereço de Entrega:"
+							style="font-weight: bold"
+							rendered="#{consultaAgendamentoBean.agendamentoSelecionado.agPossuiEntregaVeiculo}" />
+						<h:outputText
+							rendered="#{consultaAgendamentoBean.agendamentoSelecionado.agPossuiEntregaVeiculo}"
+							value="#{consultaAgendamentoBean.agendamentoSelecionado.agEnderecoEntrega.endDescricao}" />
+
+						<h:outputText value="Taxa Adicional:" style="font-weight: bold"
+							rendered="#{consultaAgendamentoBean.agendamentoSelecionado.agPossuiEntregaVeiculo or consultaAgendamentoBean.agendamentoSelecionado.agPossuiBuscaVeiculo}" />
+						<h:outputText
+							rendered="#{consultaAgendamentoBean.agendamentoSelecionado.agPossuiEntregaVeiculo or consultaAgendamentoBean.agendamentoSelecionado.agPossuiBuscaVeiculo}"
+							value="#{consultaAgendamentoBean.agendamentoSelecionado.agPrecoServicoExtra}">
+							<f:convertNumber type="currency" currencySymbol="R$ "
+								locale="pt_BR" />
+						</h:outputText>
 					</p:panelGrid>
+
+					<br />
+					<h:panelGroup
+						rendered="#{consultaAgendamentoBean.agendamentoSelecionado.agPossuiBuscaVeiculo}">
+						<h:outputText value="Local de Busca:" style="font-weight:bold" />
+						<div id="mapaBusca"
+							style="width: 100%; height: 300px; margin-bottom: 12px;"></div>
+					</h:panelGroup>
+
+					<h:panelGroup
+						rendered="#{consultaAgendamentoBean.agendamentoSelecionado.agPossuiEntregaVeiculo}">
+						<h:outputText value="Local de Entrega:" style="font-weight:bold" />
+						<div id="mapaEntrega" style="width: 100%; height: 300px;"></div>
+					</h:panelGroup>
 				</p:panelGrid>
+
+				<script>
+    //<![CDATA[
+    function safeParse(v) {
+        if (v === null || v === undefined) return null;
+        if (typeof v === 'number') return v;
+        if (v === 'null') return null;
+        var n = parseFloat(String(v).replace(',', '.'));
+        return isNaN(n) ? null : n;
+    }
+
+    function elementExists(id) {
+        return document.getElementById(id) !== null;
+    }
+
+    function carregarMapas(latBusca, lngBusca, latEntrega, lngEntrega) {
+        console.log('carregarMapas called with:', latBusca, lngBusca, latEntrega, lngEntrega);
+
+        latBusca = safeParse(latBusca);
+        lngBusca = safeParse(lngBusca);
+        latEntrega = safeParse(latEntrega);
+        lngEntrega = safeParse(lngEntrega);
+
+        if (!latBusca && !latEntrega) {
+            console.warn('Nenhuma coordenada disponível (busca ou entrega).');
+            return;
+        }
+
+        if (elementExists('mapaBusca') && latBusca && lngBusca) {
+            if (window._mapaBuscaInstance) {
+                try { window._mapaBuscaInstance.remove(); } catch(e){console.warn(e); }
+                window._mapaBuscaInstance = null;
+            }
+
+            window._mapaBuscaInstance = L.map('mapaBusca', { scrollWheelZoom: false }).setView([latBusca, lngBusca], 14);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap contributors' }).addTo(window._mapaBuscaInstance);
+            L.marker([latBusca, lngBusca]).addTo(window._mapaBuscaInstance).bindPopup('Local de Busca').openPopup();
+        }
+
+        if (elementExists('mapaEntrega') && latEntrega && lngEntrega) {
+            if (window._mapaEntregaInstance) {
+                try { window._mapaEntregaInstance.remove(); } catch(e){console.warn(e); }
+                window._mapaEntregaInstance = null;
+            }
+
+            window._mapaEntregaInstance = L.map('mapaEntrega', { scrollWheelZoom: false }).setView([latEntrega, lngEntrega], 14);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap contributors' }).addTo(window._mapaEntregaInstance);
+            L.marker([latEntrega, lngEntrega]).addTo(window._mapaEntregaInstance).bindPopup('Local de Entrega').openPopup();
+        }
+    }
+    //]]>
+    </script>
+			</p:dialog>
+
+			<p:dialog id="dialogConcluirServico" header="Concluir Agendamento"
+				widgetVar="dlgConcluirServico" modal="true" closable="true"
+				resizable="false" width="450">
+
+				<p:panelGrid columns="1" layout="grid">
+					<h:outputText
+						value="Tipo de Serviço: #{consultaAgendamentoBean.agendamentoSelecionado.agTipoServico.tsNome}" />
+					<h:outputText
+						value="Cliente: #{consultaAgendamentoBean.agendamentoSelecionado.agVeiculo.veiCliente.cliNome}" />
+					<h:outputText
+						value="Veículo: #{consultaAgendamentoBean.agendamentoSelecionado.agVeiculo.veiModelo} - #{consultaAgendamentoBean.agendamentoSelecionado.agVeiculo.veiPlaca}" />
+					<h:outputText
+						value="Data: #{consultaAgendamentoBean.agendamentoSelecionado.dataPadraoFormatada}" />
+					<h:outputText
+						value="Horário: #{consultaAgendamentoBean.agendamentoSelecionado.horaFormatada}" />
+					<h:outputText
+						value="Preço total: #{consultaAgendamentoBean.agendamentoSelecionado.precoTotalDesc}" />	
+					
+					<br />
+					<h:outputLabel for="responsavel" value="Responsável pelo serviço" />
+					<p:selectOneMenu id="responsavel"
+						value="#{consultaAgendamentoBean.responsavelSelecionado}"
+						style="width:100%">
+						<f:selectItem itemLabel="Selecione..." itemValue="#{null}"
+							noSelectionOption="true" />
+						<f:selectItems value="#{consultaAgendamentoBean.responsaveis}"
+							var="r" itemLabel="#{r.resNome}" itemValue="#{r}" />
+					</p:selectOneMenu>
+				</p:panelGrid>
+
+				<f:facet name="footer">
+					<p:commandButton value="Salvar" icon="pi pi-check"
+						actionListener="#{consultaAgendamentoBean.concluirServico()}"
+						update=":form1:mensagem :form1:tabsAgendamento:panelAgendamentos"
+						oncomplete="PF('dlgConcluirServico').hide()"
+						styleClass="ui-button-success" />
+					<p:commandButton value="Fechar" icon="pi pi-times"
+						onclick="PF('dlgConcluirServico').hide();return false;"
+						styleClass="ui-button-secondary" />
+				</f:facet>
 			</p:dialog>
 
 		</h:form>
