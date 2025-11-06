@@ -166,6 +166,10 @@ public class EnderecoCliente implements Serializable {
 		return serialVersionUID;
 	}
 	
+	public String getItemLabel() {
+		return this.endDescricao + " - " + this.endRua + ", " + this.endNumero + " - " + this.endBairro;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(endIdEndereco);

@@ -81,7 +81,7 @@ public class LoginBean implements Serializable {
                 .getExternalContext().getSession(true);
         session.setAttribute("responsavelLogadoBean", responsavelLogadoBean);
 
-        JsfUtil.redirect("/SistemaLavagem/index.xhtml");
+        JsfUtil.redirect("/SistemaLavagem/restrito/indexAdmin.xhtml");
     }
 
     public void redirecionarParaLogin() {

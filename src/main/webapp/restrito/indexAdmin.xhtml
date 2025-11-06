@@ -1,0 +1,76 @@
+<ui:composition template="/templates/paginaDashboard.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:components="http://xmlns.jcp.org/jsf/composite/components">
+
+	<ui:define name="title">
+        Lavagem Daniel
+    </ui:define>
+
+	<ui:define name="content">
+		<h:form>
+			<p:panel styleClass="painel-custom">
+				<br />
+				<p:panelGrid layout="grid" columns="1">
+					<p:outputLabel
+						value="Bem-vindo, #{responsavelLogadoBean.responsavelLogado.resNome}!"
+						style="font-weight: bold; font-size: 25px" />
+				</p:panelGrid>
+				<br />
+
+				<p:panelGrid id="panelTotais" layout="grid" columns="4"
+					styleClass="panelgrid-transparente" style="padding: 5px;">
+					<p:panel styleClass="card-total">
+						<i class="pi pi-briefcase icone-total" />
+						<h:outputText value="Serviços Realizados"
+							styleClass="titulo-total" />
+						<h:outputText value="#{consultaServicoBean.totalServicos}"
+							styleClass="valor-total" />
+					</p:panel>
+
+					<p:panel styleClass="card-total">
+						<i class="pi pi-wallet icone-total" />
+						<h:outputText value="Receita Total" styleClass="titulo-total" />
+						<h:outputText value="#{consultaServicoBean.receitaTotalFormat()}"
+							styleClass="valor-total" />
+					</p:panel>
+
+					<p:panel styleClass="card-total">
+						<i class="pi pi-car icone-total" />
+						<h:outputText value="Buscas/Entregas Realizadas"
+							styleClass="titulo-total" />
+						<h:outputText value="#{consultaServicoBean.totalComEntrega}"
+							styleClass="valor-total" />
+					</p:panel>
+
+					<p:panel styleClass="card-total">
+						<i class="pi pi-chart-line icone-total" />
+						<h:outputText value="Preço Médio" styleClass="titulo-total" />
+						<h:outputText value="#{consultaServicoBean.precoMedioFormat()}"
+							styleClass="valor-total" />
+					</p:panel>
+				</p:panelGrid>
+				<br />
+
+				<p:panelGrid layout="grid" columns="1">
+					<p:panelGrid layout="grid" columns="2" columnClasses="ui-grid-col-8,ui-grid-col-4">
+						<p:panel styleClass="card-total-fixo">
+							<p:panelGrid layout="grid" columns="1">
+								<p:barChart model="#{dashboardBean.barModel}" />
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel styleClass="card-total-fixo">
+							<p:panelGrid layout="grid" columns="1">
+								<p:donutChart model="#{dashboardBean.donutModel}" />
+							</p:panelGrid>
+						</p:panel>
+					</p:panelGrid>
+				</p:panelGrid>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

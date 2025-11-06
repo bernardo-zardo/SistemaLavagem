@@ -26,57 +26,36 @@ a {
 	text-decoration: none;
 }
 
-.link-cancelar, .link-concluir {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-weight: 600;
-    text-decoration: none;
-    padding: 4px 8px;
-    border-radius: 6px;
-    transition: 0.2s;
+.link-cancelar, .link-concluir, .link-cancelar:enabled, .link-concluir:enabled,
+	.link-cancelar:active, .link-concluir:active, .link-cancelar:hover,
+	.link-concluir:hover, .link-cancelar:focus, .link-concluir:focus {
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 3px !important;
+	font-weight: 600 !important;
+	text-decoration: none !important;
+	padding: 4px 8px !important;
+	border-radius: 6px !important;
+	transition: 0.2s !important;
+	background: transparent !important;
+	border: none !important;
+	box-shadow: none !important;
+	cursor: pointer !important;
+	outline: none !important;
 }
 
-.link-cancelar, 
-.link-cancelar span,
-.link-cancelar i,
-.link-cancelar.ui-commandlink {
-    color: #d93025 !important;
+.link-cancelar, .link-cancelar span, .link-cancelar i {
+	color: #d93025 !important;
 }
 
-.link-concluir, 
-.link-concluir span,
-.link-concluir i,
-.link-concluir.ui-commandlink {
-    color: #093e80 !important;
+.link-concluir, .link-concluir span, .link-concluir i {
+	color: #093e80 !important;
 }
 
-
-.link-cancelar {
-    color: #d93025 !important;
+.link-cancelar:hover, .link-concluir:hover {
+	text-decoration: underline !important;
+	background: transparent !important;
 }
-
-.link-cancelar i {
-    color: #d93025;
-}
-
-.link-cancelar:hover {
-    text-decoration: underline;
-}
-
-.link-concluir {
-    color: #093e80;
-}
-
-.link-concluir i {
-    color: #093e80;
-}
-
-.link-concluir:hover {
-    text-decoration: underline;
-}
-
-
 
 .ui-state-disabled {
 	background: lightgrey !important;
@@ -123,16 +102,16 @@ body .ui-panelgrid .ui-panelgrid-cell {
 }
 
 .ui-button {
-    background-color: #1a96cc !important;
-    border: none !important;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease !important;
-    color: #fff;
+	background-color: #1a96cc !important;
+	border: none !important;
+	transition: background-color 0.2s ease, box-shadow 0.2s ease !important;
+	color: #fff;
 }
 
 .ui-button:hover {
-    filter: brightness(0.85);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    cursor: pointer;
+	filter: brightness(0.85);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	cursor: pointer;
 }
 
 .ui-panel {
@@ -179,7 +158,7 @@ body .ui-tabs .ui-tabs-nav {
 	background: #0e5695 !important;
 	border: #0e5695 !important;
 	width: 110px;
-    border-radius: 12px !important;
+	border-radius: 12px !important;
 }
 
 .ui-chkbox .ui-chkbox-label {
@@ -444,6 +423,19 @@ body .ui-chkbox .ui-chkbox-box.ui-state-active {
 }
 
 .card-total>.ui-panel-content {
+	border: none !important;
+}
+
+.card-total-fixo {
+	position: relative;
+	border-radius: 10px;
+	padding: 18px;
+	background-color: #ffffff;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+	text-align: left;
+}
+
+.card-total-fixo > .ui-panel-content {
 	border: none !important;
 }
 
