@@ -56,17 +56,25 @@
 				<br />
 
 				<p:panelGrid layout="grid" columns="1">
-					<p:panelGrid layout="grid" columns="2" columnClasses="ui-grid-col-8,ui-grid-col-4">
+					<p:panelGrid layout="grid" columns="2"
+						columnClasses="ui-grid-col-8,ui-grid-col-4" style="width:100%;">
+
 						<p:panel styleClass="card-total-fixo">
 							<p:panelGrid layout="grid" columns="1">
-								<p:barChart model="#{dashboardBean.barModel}" />
+								<p:barChart model="#{dashboardBean.barModel}"
+									style="width:100%; height:400px;" />
 							</p:panelGrid>
 						</p:panel>
 
 						<p:panel styleClass="card-total-fixo">
-							<p:panelGrid layout="grid" columns="1">
-								<p:donutChart model="#{dashboardBean.donutModel}" />
-							</p:panelGrid>
+
+							<div
+								style="max-width: 400px; margin: 0 auto; position: relative;">
+
+								<p:donutChart model="#{dashboardBean.donutModel}"
+									style="width: 100%; height: 100%;" />
+
+							</div>
 						</p:panel>
 					</p:panelGrid>
 				</p:panelGrid>
