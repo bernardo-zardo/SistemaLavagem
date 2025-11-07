@@ -104,8 +104,8 @@ public class ConsultaAgendamentoBean implements Serializable {
 				corBorda = "#1E3A8A";
 			} else if ("P".equalsIgnoreCase(a.getAgStatus())) {
 				classeCor = "evento-pendente";
-				corFundo = "#6299DE";
-				corBorda = "#6299DE";
+				corFundo = "#1a96cc";
+				corBorda = "#1a96cc";
 			} else {
 				classeCor = "evento-outro";
 				corFundo = "#9CA3AF";

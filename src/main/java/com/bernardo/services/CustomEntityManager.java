@@ -48,4 +48,10 @@ public class CustomEntityManager implements Serializable {
         Query q = entityManager.createNativeQuery(query, classe);
         return q.getResultList();
     }
+    
+    public List<Object[]> executeNativeQueryArray(String sql) {
+        Query query = entityManager.createNativeQuery(sql);
+        return query.getResultList();
+    }
+
 }

@@ -22,10 +22,10 @@
 				<br />
 
 				<p:panelGrid id="panelTotais" layout="grid" columns="4"
-					styleClass="panelgrid-transparente" style="padding: 5px;">
+					styleClass="panelgrid-transparente">
 					<p:panel styleClass="card-total">
 						<i class="pi pi-briefcase icone-total" />
-						<h:outputText value="Serviços Realizados"
+						<h:outputText value="Serviços Realizados no Mês"
 							styleClass="titulo-total" />
 						<h:outputText value="#{consultaServicoBean.totalServicos}"
 							styleClass="valor-total" />
@@ -33,14 +33,15 @@
 
 					<p:panel styleClass="card-total">
 						<i class="pi pi-wallet icone-total" />
-						<h:outputText value="Receita Total" styleClass="titulo-total" />
+						<h:outputText value="Receita Total no Mês"
+							styleClass="titulo-total" />
 						<h:outputText value="#{consultaServicoBean.receitaTotalFormat()}"
 							styleClass="valor-total" />
 					</p:panel>
 
 					<p:panel styleClass="card-total">
 						<i class="pi pi-car icone-total" />
-						<h:outputText value="Buscas/Entregas Realizadas"
+						<h:outputText value="Veículos Cadastrados"
 							styleClass="titulo-total" />
 						<h:outputText value="#{consultaServicoBean.totalComEntrega}"
 							styleClass="valor-total" />
@@ -55,28 +56,50 @@
 				</p:panelGrid>
 				<br />
 
-				<p:panelGrid layout="grid" columns="1">
-					<p:panelGrid layout="grid" columns="2"
-						columnClasses="ui-grid-col-8,ui-grid-col-4" style="width:100%;">
+				<p:panelGrid layout="grid" columns="2"
+					columnClasses="ui-grid-col-8,ui-grid-col-4">
 
-						<p:panel styleClass="card-total-fixo">
-							<p:panelGrid layout="grid" columns="1">
-								<p:barChart model="#{dashboardBean.barModel}"
-									style="width:100%; height:400px;" />
-							</p:panelGrid>
-						</p:panel>
+					<p:panel styleClass="card-total-fixo" style="height:305px;">
+						<h:outputText value="Faturamento Diário - Últimos 15 Dias"
+								styleClass="titulo-total" />
+					
+						<p:barChart model="#{dashboardBean.faturamentoDiarioModel}"
+							style="width:100%; height:245px;" />
+					</p:panel>
 
-						<p:panel styleClass="card-total-fixo">
+					<p:panel styleClass="card-total-fixo" style="height: 305px;">
+						<p:panelGrid columns="1" layout="grid" style="margin-left: -25px">
+							<h:outputText value="Próximos Agendamentos"
+								styleClass="titulo-total" />
+							<p:dataGrid id="enderecosTable" var="endereco" layout="grid"
+								columns="1" value="#{clienteBean.crudObj.cliEnderecos}"
+								styleClass="dataGrid-servicos"
+								emptyMessage="Nenhum endereço adicionado">
+								<p:panel styleClass="card-servico">
+									<!-- Conteúdo -->
+								</p:panel>
+							</p:dataGrid>
+						</p:panelGrid>
+					</p:panel>
+				</p:panelGrid>
+				<br />
 
-							<div
-								style="max-width: 400px; margin: 0 auto; position: relative;">
+				<p:panelGrid layout="grid" columns="2"
+					columnClasses="ui-grid-col-4,ui-grid-col-8">
 
-								<p:donutChart model="#{dashboardBean.donutModel}"
-									style="width: 100%; height: 100%;" />
+					<p:panel styleClass="card-total-fixo" style="height: 305px;">
+						<div style="max-width: 260px; margin: 0 auto; position: relative;">
+							<p:donutChart model="#{dashboardBean.donutModel}"
+								style="width: 100%; height: 100%;" />
+						</div>
+					</p:panel>
 
-							</div>
-						</p:panel>
-					</p:panelGrid>
+					<p:panel styleClass="card-total-fixo" style="height: 305px;">
+					<h:outputText value="Faturamento Mensal e Volume de Serviços"
+								styleClass="titulo-total" />
+						<p:barChart model="#{dashboardBean.barModel}"
+							style="width:100%; height:245px;" />
+					</p:panel>
 				</p:panelGrid>
 			</p:panel>
 		</h:form>

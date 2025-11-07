@@ -21,8 +21,8 @@
 }
 
 .fc-event.evento-pendente {
-	background-color: #6299DE !important;
-	border-color: #6299DE !important;
+	background-color: #1a96cc !important;
+	border-color: #1a96cc !important;
 	color: #fff !important;
 }
 
@@ -59,8 +59,27 @@
 										update=":form1:dlgDetalhes"
 										oncomplete="console.log('oncomplete args=', args); PF('dlgDetalhes').show(); carregarMapas(args.latBusca, args.lngBusca, args.latEntrega, args.lngEntrega);" />
 								</p:schedule>
-
 							</f:view>
+
+								<p:panelGrid layout="grid" columns="1">
+									<p:outputLabel value="Legenda" style="font-weight: bold; margin-left: -5px" />
+								
+									<h:panelGroup layout="block"
+										style="display:flex; align-items:center;">
+										<div
+											style="width: 20px; height: 20px; background-color: #1a96cc; border-radius: 4px; margin-right: 8px;"></div>
+										<h:outputText value="Agendamento Pendente"
+											style="font-size:14px;" />
+									</h:panelGroup>
+
+									<h:panelGroup layout="block"
+										style="display:flex; align-items:center;">
+										<div
+											style="width: 20px; height: 20px; background-color: #1E3A8A; border-radius: 4px; margin-right: 8px;"></div>
+										<h:outputText value="Agendamento Concluído"
+											style="font-size:14px;" />
+									</h:panelGroup>
+								</p:panelGrid>
 						</p:panelGrid>
 					</p:tab>
 

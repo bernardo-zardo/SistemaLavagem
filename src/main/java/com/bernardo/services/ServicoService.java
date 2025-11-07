@@ -1,5 +1,6 @@
 package com.bernardo.services;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -89,6 +90,86 @@ public class ServicoService extends BaseService<Servico> {
 		sql.append(" ORDER BY s.SER_DATA DESC ");
 
 		return customEntityManager.executeNativeQuery(Servico.class, sql.toString());
+	}
+
+	public List<Object[]> consultarTotaisUltimos12Meses() {
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT ");
+		sql.append("    YEAR(s.SER_DATA) AS ano, ");
+		sql.append("    MONTH(s.SER_DATA) AS mes, ");
+		sql.append("    COUNT(*) AS total_servicos, ");
+		sql.append("    SUM(s.SER_PRECO_TOTAL) AS total_ganhos ");
+		sql.append("FROM SERVICO s ");
+		sql.append("WHERE s.SER_DATA >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH) ");
+		sql.append("GROUP BY YEAR(s.SER_DATA), MONTH(s.SER_DATA) ");
+		sql.append("ORDER BY ano, mes;");
+
+		return customEntityManager.executeNativeQueryArray(sql.toString());
+	}
+
+	public List<Object[]> buscarFaturamentoDiarioMesAtual() {
+		String sql = """
+			    WITH RECURSIVE ultimos_dias AS (
+			        SELECT DATE_SUB(CURDATE(), INTERVAL 14 DAY) AS dia
+			        UNION ALL
+			        SELECT DATE_ADD(dia, INTERVAL 1 DAY)
+			        FROM ultimos_dias
+			        WHERE dia < CURDATE()
+			    )
+			    SELECT
+			        DATE_FORMAT(d.dia, '%d/%m') AS DIA,
+			        COALESCE(SUM(s.SER_PRECO_TOTAL), 0) AS FATURAMENTO
+			    FROM ultimos_dias d
+			    LEFT JOIN SERVICO s ON DATE(s.SER_DATA) = d.dia
+			    GROUP BY d.dia
+			    ORDER BY d.dia
+			    """;
+
+	    return customEntityManager.executeNativeQueryArray(sql);
+	}
+
+	public BigDecimal consultarFaturamentoMesAtual() {
+		String sql = """
+				    SELECT COALESCE(SUM(s.SER_PRECO_TOTAL), 0) AS FATURAMENTO
+				    FROM SERVICO s
+				    WHERE EXTRACT(MONTH FROM s.SER_DATA) = EXTRACT(MONTH FROM CURRENT_DATE)
+				      AND EXTRACT(YEAR FROM s.SER_DATA) = EXTRACT(YEAR FROM CURRENT_DATE)
+				""";
+
+		List<Object[]> resultado = customEntityManager.executeNativeQueryArray(sql);
+
+		if (resultado != null && !resultado.isEmpty()) {
+			Object valor = resultado.get(0);
+			if (valor instanceof Number) {
+				return BigDecimal.valueOf(((Number) valor).doubleValue());
+			} else if (valor instanceof Object[] arr && arr.length > 0 && arr[0] instanceof Number) {
+				return BigDecimal.valueOf(((Number) arr[0]).doubleValue());
+			}
+		}
+
+		return BigDecimal.ZERO;
+	}
+
+	public BigDecimal consultarFaturamentoMesAnterior() {
+		String sql = """
+				    SELECT COALESCE(SUM(s.SER_PRECO_TOTAL), 0) AS FATURAMENTO
+				    FROM SERVICO s
+				    WHERE EXTRACT(MONTH FROM s.SER_DATA) = EXTRACT(MONTH FROM DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH))
+				      AND EXTRACT(YEAR FROM s.SER_DATA) = EXTRACT(YEAR FROM DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH))
+				""";
+
+		List<Object[]> resultado = customEntityManager.executeNativeQueryArray(sql);
+
+		if (resultado != null && !resultado.isEmpty()) {
+			Object valor = resultado.get(0);
+			if (valor instanceof Number) {
+				return BigDecimal.valueOf(((Number) valor).doubleValue());
+			} else if (valor instanceof Object[] arr && arr.length > 0 && arr[0] instanceof Number) {
+				return BigDecimal.valueOf(((Number) arr[0]).doubleValue());
+			}
+		}
+
+		return BigDecimal.ZERO;
 	}
 
 }
