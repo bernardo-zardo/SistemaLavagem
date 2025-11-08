@@ -18,6 +18,7 @@ import com.bernardo.entidades.Agendamento;
 import com.bernardo.entidades.Responsavel;
 import com.bernardo.entidades.TipoServico;
 import com.bernardo.entidades.Veiculo;
+import com.bernardo.utils.AgendamentoResumoAux;
 import com.bernardo.utils.FiltrosPesquisa;
 import com.bernardo.utils.StringUtil;
 
@@ -34,7 +35,8 @@ public class AgendamentoService extends BaseService<Agendamento> {
 	@Override
 	protected List<FiltrosPesquisa> getFiltros(Map<String, Object> filtros) {
 		List<FiltrosPesquisa> filtrosPesquisa = new ArrayList<>();
-		add(filtrosPesquisa, "a.agIdAgendamento = '?agIdAgendamento'", "agIdAgendamento", filtros.get("agIdAgendamento"));
+		add(filtrosPesquisa, "a.agIdAgendamento = '?agIdAgendamento'", "agIdAgendamento",
+				filtros.get("agIdAgendamento"));
 		add(filtrosPesquisa, "a.agStatus <> 'X'", "agNaoCancelado", filtros.get("agNaoCancelado"));
 		return filtrosPesquisa;
 	}
@@ -53,30 +55,30 @@ public class AgendamentoService extends BaseService<Agendamento> {
 		String sql = "SELECT * FROM AGENDAMENTO_SERVICO a " + "WHERE a.AG_ID_AGENDAMENTO = '" + idAgendamento + "'";
 		return customEntityManager.executeNativeQuery(Agendamento.class, sql);
 	}
-	
+
 	public List<Date> buscarHorariosOcupadosPorData(Date dataSelecionada) {
-	    StringBuilder sql = new StringBuilder();
-	    sql.append("SELECT a.AG_HORA ");
-	    sql.append("FROM AGENDAMENTO_SERVICO a ");
-	    sql.append("WHERE a.AG_DATA = ").append(StringUtil.toMySQLDateTime(dataSelecionada));
-	    sql.append(" AND a.AG_STATUS <> 'X' "); // ignora cancelados
-	    sql.append(" ORDER BY a.AG_HORA ");
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT a.AG_HORA ");
+		sql.append("FROM AGENDAMENTO_SERVICO a ");
+		sql.append("WHERE a.AG_DATA = ").append(StringUtil.toMySQLDateTime(dataSelecionada));
+		sql.append(" AND a.AG_STATUS <> 'X' "); // ignora cancelados
+		sql.append(" ORDER BY a.AG_HORA ");
 
-	    List<Object> resultados = customEntityManager.executeNativeQuery(sql.toString());
+		List<Object> resultados = customEntityManager.executeNativeQuery(sql.toString());
 
-	    List<Date> horarios = new ArrayList<>();
-	    for (Object obj : resultados) {
-	        if (obj != null) {
-	            if (obj instanceof Time) {
-	                horarios.add(new Date(((Time) obj).getTime()));
-	            } else if (obj instanceof Date) {
-	                horarios.add((Date) obj);
-	            }
-	        }
-	    }
-	    return horarios;
+		List<Date> horarios = new ArrayList<>();
+		for (Object obj : resultados) {
+			if (obj != null) {
+				if (obj instanceof Time) {
+					horarios.add(new Date(((Time) obj).getTime()));
+				} else if (obj instanceof Date) {
+					horarios.add((Date) obj);
+				}
+			}
+		}
+		return horarios;
 	}
-	
+
 	public List<Agendamento> consultarAgendamentosFiltrados(String filtroStatus, Date filtroDataIni, Date filtroDataFim,
 			List<TipoServico> filtroTiposServico, List<Veiculo> filtroVeiculos) {
 
@@ -106,4 +108,40 @@ public class AgendamentoService extends BaseService<Agendamento> {
 
 		return customEntityManager.executeNativeQuery(Agendamento.class, sql.toString());
 	}
+
+	public List<AgendamentoResumoAux> buscarProximosAgendamentos() {
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT ");
+		sql.append(" a.AG_ID_AGENDAMENTO AS id, ");
+		sql.append(" c.CLI_NOME AS cliente, ");
+		sql.append(" CONCAT(v.VEI_MODELO, ' - ', v.VEI_PLACA) AS veiculo, ");
+		sql.append(" a.AG_DATA AS data, ");
+		sql.append(" DATE_FORMAT(a.AG_HORA, '%H:%i') AS hora, ");
+		sql.append(" ts.TS_NOME AS servico ");
+		sql.append("FROM agendamento_servico a ");
+		sql.append("JOIN veiculo v ON v.VEI_ID_VEICULO = a.AG_ID_VEICULO ");
+		sql.append("JOIN cliente c ON c.CLI_ID_CLIENTE = v.VEI_ID_CLIENTE ");
+		sql.append("JOIN tipo_servico ts ON ts.TS_ID_TIPO_SERVICO = a.AG_ID_TIPO_SERVICO ");
+		sql.append("WHERE a.AG_DATA >= CURDATE() ");
+		sql.append("AND a.AG_STATUS = 'P' ");
+		sql.append("ORDER BY a.AG_DATA ASC, a.AG_HORA ASC ");
+		sql.append("LIMIT 4");
+
+		List<Object[]> resultados = customEntityManager.executeNativeQueryArray(sql.toString());
+		List<AgendamentoResumoAux> lista = new ArrayList<>();
+
+		for (Object[] r : resultados) {
+		    AgendamentoResumoAux aux = new AgendamentoResumoAux();
+		    aux.setId(((Number) r[0]).intValue());
+		    aux.setCliente((String) r[1]);
+		    aux.setVeiculo((String) r[2]);
+		    aux.setData((Date) r[3]);
+		    aux.setHora((String) r[4]);
+		    aux.setServico((String) r[5]);
+		    lista.add(aux);
+		}
+		
+		return lista;
+	}
+
 }

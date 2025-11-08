@@ -3,6 +3,8 @@ package com.bernardo.services;
 import com.bernardo.entidades.TipoServico;
 import com.bernardo.entidades.Veiculo;
 import com.bernardo.utils.FiltrosPesquisa;
+import com.bernardo.utils.ServicoResumoAux;
+
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.Query;
@@ -45,4 +47,28 @@ public class TipoServicoService extends BaseService<TipoServico> {
                 + "WHERE t.TS_ID_TIPO_SERVICO = '" + idTipoServico + "'";
         return customEntityManager.executeNativeQuery(TipoServico.class, sql);
     }
+    public List<ServicoResumoAux> buscarServicosPorTipoNoMes() {
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT ts.TS_NOME AS tipoServico, COUNT(s.SER_ID_SERVICO) AS total ");
+        sql.append("FROM servico s ");
+        sql.append("JOIN tipo_servico ts ON ts.TS_ID_TIPO_SERVICO = s.SER_ID_TIPO_SERVICO ");
+        sql.append("WHERE MONTH(s.SER_DATA) = MONTH(CURDATE()) ");
+        sql.append("AND YEAR(s.SER_DATA) = YEAR(CURDATE()) ");
+        sql.append("GROUP BY ts.TS_NOME ");
+        sql.append("ORDER BY total DESC");
+
+        @SuppressWarnings("unchecked")
+        List<Object[]> resultList = customEntityManager.executeNativeQueryArray(sql.toString());
+
+        List<ServicoResumoAux> lista = new ArrayList<>();
+        for (Object[] row : resultList) {
+            lista.add(new ServicoResumoAux(
+                (String) row[0],
+                ((Number) row[1]).longValue()
+            ));
+        }
+
+        return lista;
+    }
+
 }

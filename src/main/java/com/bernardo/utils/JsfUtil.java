@@ -16,7 +16,8 @@ import org.primefaces.PrimeFaces;
  */
 public class JsfUtil implements Serializable {
 
-    private static PrimeFaces pf = PrimeFaces.current();
+    private static final long serialVersionUID = 1L;
+	private static PrimeFaces pf = PrimeFaces.current();
 
     public static Map<String, Object> getSessionMap() {
         return FacesContext.getCurrentInstance().getExternalContext().getSessionMap();

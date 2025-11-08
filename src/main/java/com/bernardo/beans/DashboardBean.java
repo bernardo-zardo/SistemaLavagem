@@ -3,12 +3,15 @@ package com.bernardo.beans;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -28,7 +31,12 @@ import org.primefaces.model.charts.donut.DonutChartOptions;
 import org.primefaces.model.charts.optionconfig.legend.Legend;
 import org.primefaces.model.charts.optionconfig.title.Title;
 
+import com.bernardo.services.AgendamentoService;
 import com.bernardo.services.ServicoService;
+import com.bernardo.services.TipoServicoService;
+import com.bernardo.services.VeiculoService;
+import com.bernardo.utils.AgendamentoResumoAux;
+import com.bernardo.utils.ServicoResumoAux;
 
 @Named
 @ViewScoped
@@ -38,40 +46,73 @@ public class DashboardBean implements Serializable {
 
 	@EJB
 	private ServicoService servicoService;
+	@EJB
+	private VeiculoService veiculoService;
+	@EJB
+	private AgendamentoService agendamentoService;
+	@EJB
+	private TipoServicoService tipoServicoService;
 
 	private DonutChartModel donutModel;
 	private BarChartModel barModel;
 	private BarChartModel faturamentoDiarioModel;
 
-	private String crescimentoMensalCor;
+	private int totalServicos;
+	private double totalFinanceiro;
+	private int totalVeiculos;
+	private double crescimentoMes;
+	
+	private List<AgendamentoResumoAux> proximosAgendamentos = new ArrayList<>();
 
 	@PostConstruct
 	public void init() {
 		createDonutModel();
 		createBarModel();
 		createFaturamentoDiarioModel();
+		atualizarTotaisDashboard();
+		proximosAgendamentos = agendamentoService.buscarProximosAgendamentos();
 	}
 
 	private void createDonutModel() {
-		donutModel = new DonutChartModel();
-		ChartData data = new ChartData();
+	    List<ServicoResumoAux> servicos = tipoServicoService.buscarServicosPorTipoNoMes();
 
-		DonutChartDataSet dataSet = new DonutChartDataSet();
-		dataSet.setData(Arrays.asList(120, 90, 50));
-		dataSet.setBackgroundColor(Arrays.asList("#42A5F5", "#66BB6A", "#FFA726"));
-		data.addChartDataSet(dataSet);
+	    donutModel = new DonutChartModel();
+	    ChartData data = new ChartData();
 
-		data.setLabels(Arrays.asList("Lavagem simples", "Lavagem completa", "Polimento"));
-		donutModel.setData(data);
+	    DonutChartDataSet dataSet = new DonutChartDataSet();
 
-		DonutChartOptions options = new DonutChartOptions();
+	    List<Number> valores = servicos.stream()
+	        .map(ServicoResumoAux::getTotal)
+	        .collect(Collectors.toList());
 
-		Title title = new Title();
-		title.setDisplay(true);
-		title.setText("Serviços por Tipo");
-		options.setTitle(title);
+	    List<String> labels = servicos.stream()
+	        .map(ServicoResumoAux::getTipoServico)
+	        .collect(Collectors.toList());
 
-		donutModel.setOptions(options);
+	    List<String> cores = Arrays.asList(
+	    	    "#007BFF", 
+	    	    "#093e80", 
+	    	    "#1a96cc", 
+	    	    "#42D3F2", 
+	    	    "#74D4FF", 
+	    	    "#1447E6",
+	    	    "#21BCFF", 
+	    	    "#2984D1", 
+	    	    "#015F78", 
+	    	    "#4169E1", 
+	    	    "#162456", 
+	    	    "#2C92B8",
+	    	    "#155DFC", 
+	    	    "#A2F4FD", 
+	    	    "#A2F4FD"  
+	    	);
+
+	    dataSet.setData(valores);
+	    dataSet.setBackgroundColor(cores.subList(0, Math.min(cores.size(), valores.size())));
+	    data.addChartDataSet(dataSet);
+	    data.setLabels(labels);
+
+	    donutModel.setData(data);
 	}
 
 	private void createBarModel() {
@@ -156,6 +197,39 @@ public class DashboardBean implements Serializable {
 
 		barModel.setOptions(options);
 	}
+	
+	public void atualizarTotaisDashboard() {
+	    try {
+	        Long totalServicosMes = servicoService.contarServicosMesAtual();
+	        totalServicos = totalServicosMes != null ? totalServicosMes.intValue() : 0;
+
+	        BigDecimal receitaMesAtual = servicoService.consultarFaturamentoMesAtual();
+	        totalFinanceiro = receitaMesAtual != null ? receitaMesAtual.doubleValue() : 0;
+
+	        Long totalVeiculosCadastrados = veiculoService.contarVeiculosCadastrados();
+	        totalVeiculos = totalVeiculosCadastrados != null ? totalVeiculosCadastrados.intValue() : 0;
+
+	        BigDecimal receitaMesAnterior = servicoService.consultarFaturamentoMesAnterior();
+
+	        if (receitaMesAnterior != null && receitaMesAnterior.compareTo(BigDecimal.ZERO) > 0) {
+	            BigDecimal diferenca = receitaMesAtual.subtract(receitaMesAnterior);
+	            BigDecimal crescimentoPercentual = diferenca
+	                    .divide(receitaMesAnterior, 4, RoundingMode.HALF_UP)
+	                    .multiply(BigDecimal.valueOf(100));
+
+	            crescimentoMes = crescimentoPercentual.doubleValue();
+	        } else {
+	            crescimentoMes = 0.0;
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        totalServicos = 0;
+	        totalFinanceiro = 0;
+	        totalVeiculos = 0;
+	        crescimentoMes = 0;
+	    }
+	}
 
 	private void createFaturamentoDiarioModel() {
 	    faturamentoDiarioModel = new BarChartModel();
@@ -192,7 +266,7 @@ public class DashboardBean implements Serializable {
 	        valores.add(0);
 	    }
 
-	    dataSet.setLabel("Faturamento Diário");
+	    dataSet.setLabel("Faturamento Diário (R$)");
 	    dataSet.setBackgroundColor("#093e80");
 
 	    dataSet.setData(valores);
@@ -226,15 +300,56 @@ public class DashboardBean implements Serializable {
 		return faturamentoDiarioModel;
 	}
 
-	public String getCrescimentoMensalCor() {
-		return crescimentoMensalCor;
-	}
-
 	public DonutChartModel getDonutModel() {
 		return donutModel;
 	}
 
 	public BarChartModel getBarModel() {
 		return barModel;
+	}
+
+	public int getTotalServicos() {
+		return totalServicos;
+	}
+
+	public void setTotalServicos(int totalServicos) {
+		this.totalServicos = totalServicos;
+	}
+
+	public double getTotalFinanceiro() {
+		return totalFinanceiro;
+	}
+
+	public void setTotalFinanceiro(double totalFinanceiro) {
+		this.totalFinanceiro = totalFinanceiro;
+	}
+	
+	public String getTotalFinanceiroFormat() {
+    	NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+	    return nf.format(this.totalFinanceiro);
+    }
+	
+	public int getTotalVeiculos() {
+		return totalVeiculos;
+	}
+
+	public void setTotalVeiculos(int totalVeiculos) {
+		this.totalVeiculos = totalVeiculos;
+	}
+
+	public double getCrescimentoMes() {
+		return crescimentoMes;
+	}
+
+	public void setCrescimentoMes(double crescimentoMes) {
+		this.crescimentoMes = crescimentoMes;
+	}
+
+	public List<AgendamentoResumoAux> getProximosAgendamentos() {
+		return proximosAgendamentos;
+	}
+
+	public void setProximosAgendamentos(List<AgendamentoResumoAux> proximosAgendamentos) {
+		this.proximosAgendamentos = proximosAgendamentos;
 	}
 }

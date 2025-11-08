@@ -209,6 +209,25 @@ body .ui-chkbox .ui-chkbox-box.ui-state-active {
 }
 
 /* Topbar */
+.topbar-brand-login {
+	position: fixed;
+	top: 15px;
+	left: 20px;
+	color: #ffffff;
+	text-decoration: none;
+	font-size: 1.8rem;
+	font-weight: bold;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.topbar-brand-login i {
+	font-size: 1.4em;
+	color: #ffff;
+}
+
+
 .topbar {
 	background: linear-gradient(90deg, rgba(6, 43, 112, 1) 0%,
 		rgba(27, 156, 209, 1) 100%);

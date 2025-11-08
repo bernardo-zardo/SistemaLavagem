@@ -171,5 +171,15 @@ public class ServicoService extends BaseService<Servico> {
 
 		return BigDecimal.ZERO;
 	}
-
+	
+	public Long contarServicosMesAtual() {
+	    String sql = """
+	        SELECT COUNT(*) 
+	        FROM SERVICO s
+	        WHERE MONTH(s.SER_DATA) = MONTH(CURDATE())
+	          AND YEAR(s.SER_DATA) = YEAR(CURDATE())
+	    """;
+	    List<Object> result = customEntityManager.executeNativeQuery(sql);
+	    return result.isEmpty() ? 0L : ((Number) result.get(0)).longValue();
+	}
 }

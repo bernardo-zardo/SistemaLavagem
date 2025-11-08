@@ -45,4 +45,14 @@ public class VeiculoService extends BaseService<Veiculo> {
                 + "WHERE v.VEI_ID_VEICULO = '" + idVeiculo + "'";
         return customEntityManager.executeNativeQuery(Veiculo.class, sql);
     }
+    
+    public Long contarVeiculosCadastrados() {
+        String sql = """
+            SELECT COUNT(*) 
+            FROM VEICULO v
+        """;
+
+        List<Object> result = customEntityManager.executeNativeQuery(sql);
+        return result.isEmpty() ? 0L : ((Number) result.get(0)).longValue();
+    }
 }
