@@ -1,5 +1,7 @@
 package com.bernardo.beans;
 
+import java.io.IOException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,8 @@ public class LoginBean implements Serializable {
     private String cpf;
     private String telefone;
     private List<Responsavel> usuariosEncontrados = new ArrayList<>();
+    
+    private String tipoLogin = "cliente";
     
     @PostConstruct
     private void init() {
@@ -82,6 +86,11 @@ public class LoginBean implements Serializable {
         session.setAttribute("responsavelLogadoBean", responsavelLogadoBean);
 
         JsfUtil.redirect("/SistemaLavagem/restrito/indexAdmin.xhtml");
+    }
+    
+    public void irParaCadastroCliente() throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext()
+            .redirect(FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/cadastroCliente.xhtml");
     }
 
     public void redirecionarParaLogin() {
@@ -134,5 +143,13 @@ public class LoginBean implements Serializable {
 
 	public void setUsuariosEncontrados(List<Responsavel> usuariosEncontrados) {
 		this.usuariosEncontrados = usuariosEncontrados;
+	}
+
+	public String getTipoLogin() {
+		return tipoLogin;
+	}
+
+	public void setTipoLogin(String tipoLogin) {
+		this.tipoLogin = tipoLogin;
 	}
 }

@@ -18,6 +18,20 @@ public class StringUtil {
 	
 	private static final SimpleDateFormat MYSQL_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
+	public static String gerarHashSHA256(String senha) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = md.digest(senha.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashBytes) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Erro ao gerar hash da senha", e);
+        }
+    }
+	
 	public static String toMySQLDateTime(Date date) {
         if (date == null) return null;
         return "'" + MYSQL_FORMAT.format(date) + "'";

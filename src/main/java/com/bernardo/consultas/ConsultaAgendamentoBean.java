@@ -202,8 +202,12 @@ public class ConsultaAgendamentoBean implements Serializable {
 		s.setSerPossuiBuscaVeiculo(agendamentoSelecionado.isAgPossuiBuscaVeiculo());
 		s.setSerPossuiEntregaVeiculo(agendamentoSelecionado.isAgPossuiEntregaVeiculo());
 		s.setSerPrecoServicoExtra(agendamentoSelecionado.getAgPrecoServicoExtra());
-		s.setSerPrecoTotal(agendamentoSelecionado.getAgTipoServico().getTsPreco()
-				+ agendamentoSelecionado.getAgPrecoServicoExtra());
+		if (agendamentoSelecionado.getAgPrecoServicoExtra() != null) {
+			s.setSerPrecoTotal(agendamentoSelecionado.getAgTipoServico().getTsPreco()
+					+ agendamentoSelecionado.getAgPrecoServicoExtra());
+		} else {
+			s.setSerPrecoTotal(agendamentoSelecionado.getAgTipoServico().getTsPreco());
+		}
 
 		servicoService.salvar(s);
 

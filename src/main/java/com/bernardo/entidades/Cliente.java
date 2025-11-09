@@ -44,6 +44,9 @@ public class Cliente implements Serializable {
     @Column(name = "CLI_CPF", length = 11, unique = true)
     private String cliCpf;
     
+    @Column(name = "CLI_SENHA", length = 255)
+    private String cliSenha;
+    
     @OneToMany(mappedBy = "endCliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<EnderecoCliente> cliEnderecos = new ArrayList<>();
 
@@ -96,6 +99,14 @@ public class Cliente implements Serializable {
 
 	public void setCliEnderecos(List<EnderecoCliente> cliEnderecos) {
 		this.cliEnderecos = cliEnderecos;
+	}
+	
+	public String getCliSenha() {
+		return cliSenha;
+	}
+
+	public void setCliSenha(String cliSenha) {
+		this.cliSenha = cliSenha;
 	}
 
 	public String getCpfFormatado() {

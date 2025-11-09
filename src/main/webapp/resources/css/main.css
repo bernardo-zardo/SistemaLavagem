@@ -131,6 +131,19 @@ body .ui-tabs .ui-tabs-nav {
 	text-align: center;
 }
 
+.ui-selectonebutton .ui-button {
+    background: white !important;
+    color: #333 !important;
+    border: 1px solid #ccc !important;
+    transition: all 0.2s ease;
+}
+
+.ui-selectonebutton .ui-button.ui-state-active {
+    background: #1a96cc !important;
+    color: white !important;
+    border-color: #1a96cc !important;
+}
+
 .ui-inputgroup>tbody>tr>td {
 	padding: 2px !important;
 }

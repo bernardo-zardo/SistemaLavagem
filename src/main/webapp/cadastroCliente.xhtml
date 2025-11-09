@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	template="/templates/paginaLogin.xhtml">
+
+	<ui:define name="title">
+        Cadastros - Lavagem Daniel
+    </ui:define>
+
+	<ui:define name="content">
+
+		<h:outputStylesheet library="css" name="estiloLogin.css" />
+
+		<h:form id="form1">
+			<p:growl id="mensagem" />
+			<p:panel styleClass="painel-custom"
+				rendered="#{cadastroClienteBean.exibirPainelCPF}">
+				<p:panelGrid layout="grid" columns="1">
+					<br />
+					<p:outputLabel
+						value="Para iniciar seu cadastro, por favor, informe seu CPF."
+						style="font-weight: bold; font-size: 25px" />
+					<br />
+
+					<p:panelGrid layout="grid" columns="1"
+						style="display: flex; justify-content: center">
+						<p:outputLabel value="Informe seu CPF:" for="cpf" />
+						<p:inputMask id="cpf" mask="999.999.999-99" style="width:200px"
+							value="#{cadastroClienteBean.cpfDigitado}" />
+					</p:panelGrid>
+
+
+					<br />
+					<p:commandButton value="Continuar" icon="pi pi-arrow-right"
+						actionListener="#{cadastroClienteBean.verificarCpf}"
+						update="form1" style="float: right" />
+					<br />
+				</p:panelGrid>
+			</p:panel>
+
+			<!-- Painel Cadastro Novo -->
+			<p:panel styleClass="painel-custom"
+				rendered="#{cadastroClienteBean.exibirPainelCadastro}">
+				<p:panelGrid columns="1" layout="grid">
+					<br />
+					<p:outputLabel value="Por favor, insira seus dados."
+						style="font-weight: bold; font-size: 25px" />
+					<br />
+
+					<p:outputLabel value="Nome Completo *" />
+					<p:inputText value="#{cadastroClienteBean.crudObj.cliNome}"
+						required="true" requiredMessage="O campo Nome Completo é obrigatório" />
+
+					<p:outputLabel value="E-mail *" />
+					<p:inputText value="#{cadastroClienteBean.crudObj.cliEmail}"
+						required="true" requiredMessage="O campo E-mail é obrigatório" />
+
+					<p:outputLabel value="Telefone *" />
+					<p:inputMask mask="(99) 99999-9999"
+						value="#{cadastroClienteBean.crudObj.cliTelefone}"
+						required="true" requiredMessage="O campo Telefone é obrigatório" />
+
+					<p:outputLabel value="Senha *" />
+					<p:password value="#{cadastroClienteBean.crudObj.cliSenha}"
+						feedback="true" required="true" requiredMessage="O campo Senha é obrigatório" />
+
+					<br />
+					<p:commandButton value="Salvar Cadastro" icon="pi pi-check"
+						actionListener="#{cadastroClienteBean.salvarNovoCliente}"
+						update="form1" style="float: right" />
+				</p:panelGrid>
+			</p:panel>
+
+			<!-- Painel Criar Senha -->
+			<p:panel styleClass="painel-custom"
+				rendered="#{cadastroClienteBean.exibirPainelSenha}">
+				<p:panelGrid layout="grid" columns="1">
+					<br />
+					<h:panelGroup layout="block"
+						style="font-size: 25px; font-weight: bold; text-align: center;">
+
+						<h:outputText value="Olá, você confirma que é " />
+
+						<h:outputText value="#{cadastroClienteBean.crudObj.cliNome}"
+							style="color: #007bff;" />
+
+						<h:outputText value="?" />
+
+						<br />
+						<h:outputText value="Confirme e crie sua senha abaixo:" />
+					</h:panelGroup>
+					<br />
+
+					<p:panelGrid layout="grid" columns="1"
+						style="display: flex; justify-content: center">
+						<p:outputLabel value="Nova Senha" />
+						<p:password value="#{cadastroClienteBean.crudObj.cliSenha}"
+							feedback="true" style="width:350px" />
+					</p:panelGrid>
+
+					<br />
+
+					<p:commandButton value="Salvar Senha" icon="pi pi-check"
+						actionListener="#{cadastroClienteBean.criarSenhaParaCliente}"
+						update="form1" style="float: right" />
+					<br />
+				</p:panelGrid>
+			</p:panel>
+
+			<!-- Painel CPF já cadastrado -->
+			<p:panel styleClass="painel-custom"
+				rendered="#{cadastroClienteBean.cpfJaCadastradoComSenha}">
+				<p:panelGrid columns="1" layout="grid">
+					<br />
+					<h:outputText value="Este CPF já possui cadastro no sistema."
+						style="font-size: 25px; font-weight: bold" />
+					<br />
+
+					<p:commandButton value="Voltar" icon="pi pi-arrow-left"
+						actionListener="#{cadastroClienteBean.resetarFluxo}"
+						update="form1" />
+					<br />
+				</p:panelGrid>
+			</p:panel>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
