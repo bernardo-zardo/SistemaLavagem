@@ -2,7 +2,7 @@ package com.bernardo.services;
 
 import com.bernardo.beans.BuscaBean;
 import com.bernardo.beans.GerBean;
-import com.bernardo.beans.ResponsavelLogadoBean;
+import com.bernardo.beans.UsuarioLogadoBean;
 import com.bernardo.utils.JsfUtil;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -25,7 +25,7 @@ public abstract class BaseCrud<T> implements Serializable {
     @Inject
     private BuscaBean buscaBean;
     @Inject
-    private ResponsavelLogadoBean usuarioLogadoBean;
+    private UsuarioLogadoBean usuarioLogadoBean;
 
     protected T crudObj;
 
@@ -73,11 +73,11 @@ public abstract class BaseCrud<T> implements Serializable {
         this.buscaBean = buscaBean;
     }
 
-    public ResponsavelLogadoBean getUsuarioLogadoBean() {
+    public UsuarioLogadoBean getUsuarioLogadoBean() {
         return usuarioLogadoBean;
     }
 
-    public void setUsuarioLogadoBean(ResponsavelLogadoBean usuarioLogadoBean) {
+    public void setUsuarioLogadoBean(UsuarioLogadoBean usuarioLogadoBean) {
         this.usuarioLogadoBean = usuarioLogadoBean;
     }
 }

@@ -16,7 +16,7 @@ public class GerBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 	@Inject
-    private ResponsavelLogadoBean usuarioLogadoBean;
+    private UsuarioLogadoBean usuarioLogadoBean;
 
     public String getStyleMenu() {
         return usuarioLogadoBean.getResponsavelLogado() != null ? "" : "display: none;";
@@ -27,7 +27,11 @@ public class GerBean implements Serializable {
     	JsfUtil.redirect("/SistemaLavagem/landingPage.xhtml");
     }
 
-    public boolean isUsuarioLogado() {
+    public boolean isResponsavelLogado() {
         return usuarioLogadoBean.getResponsavelLogado() != null;
+    }
+    
+    public boolean isClienteLogado() {
+        return usuarioLogadoBean.getClienteLogado() != null;
     }
 }

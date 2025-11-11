@@ -1,7 +1,7 @@
 package com.bernardo.services;
 
 import com.bernardo.beans.BuscaBean;
-import com.bernardo.beans.ResponsavelLogadoBean;
+import com.bernardo.beans.UsuarioLogadoBean;
 import com.bernardo.utils.JsfUtil;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -21,7 +21,7 @@ public abstract class BasePesquisa<T> implements Serializable {
     protected BuscaBean buscaBean;
 
     @Inject
-    private ResponsavelLogadoBean usuarioLogadoBean;
+    private UsuarioLogadoBean usuarioLogadoBean;
 
     protected List<T> registros = new ArrayList<>();
 
@@ -82,11 +82,11 @@ public abstract class BasePesquisa<T> implements Serializable {
         return rowsPadraoDataTable;
     }
 
-    public ResponsavelLogadoBean getUsuarioLogadoBean() {
+    public UsuarioLogadoBean getUsuarioLogadoBean() {
         return usuarioLogadoBean;
     }
 
-    public void setUsuarioLogadoBean(ResponsavelLogadoBean usuarioLogadoBean) {
+    public void setUsuarioLogadoBean(UsuarioLogadoBean usuarioLogadoBean) {
         this.usuarioLogadoBean = usuarioLogadoBean;
     }
 }

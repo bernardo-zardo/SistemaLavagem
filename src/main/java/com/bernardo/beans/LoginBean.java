@@ -10,11 +10,14 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 
+import com.bernardo.entidades.Cliente;
 import com.bernardo.entidades.Responsavel;
+import com.bernardo.services.ClienteService;
 import com.bernardo.services.ResponsavelService;
 import com.bernardo.utils.JsfUtil;
 import com.bernardo.utils.StringUtil;
@@ -23,19 +26,19 @@ import com.bernardo.utils.StringUtil;
  * @author Bernardo Zardo Mergen
  */
 @Named
-@RequestScoped
+@ViewScoped
 public class LoginBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 	@EJB
     private ResponsavelService responsavelService;
+	@EJB
+    private ClienteService clienteService;
     @Inject
-    private ResponsavelLogadoBean responsavelLogadoBean;
+    private UsuarioLogadoBean usuarioLogadoBean;
 
-    private String nome;
     private String senha;
     private String cpf;
-    private String telefone;
     private List<Responsavel> usuariosEncontrados = new ArrayList<>();
     
     private String tipoLogin = "cliente";
@@ -45,7 +48,6 @@ public class LoginBean implements Serializable {
     }
 
     public void doLogin() {
-
         if (StringUtil.isNullOrEmpty(cpf)) {
             JsfUtil.warn("É necessário informar seu CPF");
             return;
@@ -63,30 +65,49 @@ public class LoginBean implements Serializable {
 
         String cpfOnlyNumbers = StringUtil.getOnlyNumbers(cpf);
 
-        List<Responsavel> responsavelList = responsavelService.getPessoaPorCpf(cpfOnlyNumbers);
-        
-        if (responsavelList.isEmpty()) {
-            JsfUtil.warn("Nenhum usuário encontrado com o CPF informado");
-            return;
+        if ("admin".equalsIgnoreCase(tipoLogin)) {
+            List<Responsavel> responsavelList = responsavelService.getPessoaPorCpf(cpfOnlyNumbers);
+
+            if (responsavelList.isEmpty()) {
+                JsfUtil.warn("Nenhum responsável encontrado com o CPF informado");
+                return;
+            }
+
+            Responsavel usuario = responsavelList.get(0);
+            if (!senha.equals(usuario.getResSenha())) {
+                JsfUtil.warn("Senha inválida");
+                return;
+            }
+
+            usuarioLogadoBean.setResponsavelLogado(usuario);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+                    .put("usuarioLogadoBean", usuarioLogadoBean);
+
+            JsfUtil.redirect("/SistemaLavagem/restrito/indexAdmin.xhtml");
+        } else {
+            List<Cliente> clienteList = clienteService.getPessoaPorCpf(cpfOnlyNumbers);
+
+            if (clienteList.isEmpty()) {
+                JsfUtil.warn("Nenhum cliente encontrado com o CPF informado");
+                return;
+            }
+
+            Cliente cliente = clienteList.get(0);
+            String senhaCriptografada = StringUtil.gerarHashSHA256(senha);
+
+            if (!senhaCriptografada.equals(cliente.getCliSenha())) {
+                JsfUtil.warn("Senha inválida");
+                return;
+            }
+
+            usuarioLogadoBean.setClienteLogado(cliente);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+                    .put("usuarioLogadoBean", usuarioLogadoBean);
+
+            JsfUtil.redirect("/SistemaLavagem/restritoCliente/indexCliente.xhtml");
         }
-
-        Responsavel usuario = responsavelList.get(0);
-
-        boolean mesmaSenha = senha.equals(usuario.getResSenha());
-
-        if (!mesmaSenha) {
-            JsfUtil.warn("Senha inválida");
-            return;
-        }
-
-        responsavelLogadoBean.setResponsavelLogado(usuario);
-        
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
-                .getExternalContext().getSession(true);
-        session.setAttribute("responsavelLogadoBean", responsavelLogadoBean);
-
-        JsfUtil.redirect("/SistemaLavagem/restrito/indexAdmin.xhtml");
     }
+
     
     public void irParaCadastroCliente() throws IOException {
         FacesContext.getCurrentInstance().getExternalContext()
@@ -95,22 +116,6 @@ public class LoginBean implements Serializable {
 
     public void redirecionarParaLogin() {
         JsfUtil.redirect("/SistemaLavagem/login.xhtml");
-    }
-
-    public void abrirDialogEsqueciMinhaSenha() {
-        JsfUtil.pfShowDialog("wvDlgEsqueciMinhaSenha");
-    }
-    
-    public void redirecionarParaCriarConta(){
-    	JsfUtil.redirect("/SistemaLavagem/publico/cadastros/usuario.xhtml");
-    }
-    
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
     }
 
     public String getSenha() {
@@ -127,14 +132,6 @@ public class LoginBean implements Serializable {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
     }
 
 	public List<Responsavel> getUsuariosEncontrados() {

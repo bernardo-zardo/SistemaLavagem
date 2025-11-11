@@ -1,6 +1,6 @@
 package com.bernardo.filters;
 
-import com.bernardo.beans.ResponsavelLogadoBean;
+import com.bernardo.beans.UsuarioLogadoBean;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -31,8 +31,8 @@ public class LoginFilter implements Filter {
         boolean logado = false;
 
         if (session != null) {
-            ResponsavelLogadoBean responsavelBean = 
-                (ResponsavelLogadoBean) session.getAttribute("responsavelLogadoBean");
+            UsuarioLogadoBean responsavelBean = 
+                (UsuarioLogadoBean) session.getAttribute("usuarioLogadoBean");
             if (responsavelBean != null && responsavelBean.getResponsavelLogado() != null) {
                 logado = true;
             }

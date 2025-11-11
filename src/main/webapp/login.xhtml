@@ -19,7 +19,7 @@ div ~ a {
 }
 
 .ui-panelgrid-cell, .ui-inputtext, .ui-inputtextarea, .ui-panelgrid,
-	.ui-panelgrid tbody, .ui-password, .ui-inputfield {
+	.ui-panelgrid tbody {
 	width: 100%;
 }
 </style>
@@ -32,38 +32,47 @@ div ~ a {
 					<p:panelGrid columns="1" styleClass="padPg pgWidth pnTitulo">
 						<p:outputLabel value="Realize o Login!" styleClass="tituloTexto" />
 					</p:panelGrid>
-					
-					<p:panelGrid columns="1" styleClass="padPg pgWidth">
+
+					<p:panelGrid columns="1" layout="grid">
 						<p:outputLabel value="Entrar como:" />
-						<p:selectOneButton value="#{loginBean.tipoLogin}" unselectable="false">
-							<f:selectItem itemLabel="Cliente" itemValue="cliente" />
-							<f:selectItem itemLabel="Administrador" itemValue="admin" />
-						</p:selectOneButton>
-					</p:panelGrid>
-					<br />
-					
-					<p:panelGrid columns="1" styleClass="padPg pgWidth">
-						<p:outputLabel value="Informe o CPF" for="usuario" />
-						<p:inputText id="usuario" value="#{loginBean.cpf}"
-							placeholder="Informe seu CPF" maxlength="14" />
+						<h:panelGroup layout="block" styleClass="tipo-login-botoes padPg">
+							<p:commandButton value="Cliente"
+								actionListener="#{loginBean.setTipoLogin('cliente')}"
+								styleClass="#{loginBean.tipoLogin eq 'cliente' ? 'btn-login-selecionado' : 'btn-login-opcao'}"
+								ajax="true" update="@form" />
+
+							<p:commandButton value="Administrador"
+								actionListener="#{loginBean.setTipoLogin('admin')}"
+								styleClass="#{loginBean.tipoLogin eq 'admin' ? 'btn-login-selecionado' : 'btn-login-opcao'}"
+								ajax="true" update="@form" />
+						</h:panelGroup>
 					</p:panelGrid>
 
-					<p:panelGrid columns="1" styleClass="padPg pgWidth">
-						<p:outputLabel value="Informe a Senha" for="senha" />
-						<p:password id="senha" value="#{loginBean.senha}"
-							toggleMask="true"
-							placeholder="Informe sua senha" />
+					<p:panelGrid columns="1" layout="grid">
+						<p:panelGrid columns="1" styleClass="padPg">
+							<p:outputLabel value="Informe o CPF" for="usuario" />
+							<p:inputText id="usuario" value="#{loginBean.cpf}"
+								placeholder="Informe seu CPF" maxlength="14" style="width: 280px" />
+						</p:panelGrid>
+
+						<p:panelGrid columns="1" styleClass="padPg">
+							<p:outputLabel value="Informe a Senha" for="senha" />
+							<p:password id="senha" value="#{loginBean.senha}" style="width: 280px"
+								toggleMask="true" placeholder="Informe sua senha" />
+						</p:panelGrid>
 					</p:panelGrid>
 					<br />
 
-					<p:panelGrid columns="1" styleClass="padPg pgWidth">
-						<p:commandButton value="Login"
-							actionListener="#{loginBean.doLogin()}" style="width: 230px; height: 60px; border-radius: 9px"
+					<p:panelGrid columns="1" styleClass="padPg">
+						<p:commandButton value="Login" id="btnLogin"
+							actionListener="#{loginBean.doLogin()}"
+							style="width: 230px; height: 60px; border-radius: 9px"
 							process=":form1" update=":form1" icon="pi pi-sign-in"
 							ajax="false" />
+							<p:defaultCommand target="btnLogin" />
 					</p:panelGrid>
 
-					<p:panelGrid columns="1" styleClass="padPg pgWidth"
+					<p:panelGrid columns="1" styleClass="padPg"
 						style="text-align:center;">
 						<p:commandLink value="Cadastre-se aqui"
 							action="#{loginBean.irParaCadastroCliente}"

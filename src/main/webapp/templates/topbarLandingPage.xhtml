@@ -38,21 +38,31 @@
 						</div>
 
 						<div class="topbar-nav-user">
-							<h:panelGroup rendered="#{not gerBean.usuarioLogado}">
-								<p:commandButton value="Login" icon="pi pi-fw pi-sign-in"
-									action="#{loginBean.redirecionarParaLogin}" ajax="false"
-									styleClass="user-button ui-button-login" />
-							</h:panelGroup>
+							<h:panelGroup rendered="#{not gerBean.responsavelLogado and not gerBean.clienteLogado}">
+							<p:commandButton value="Login" icon="pi pi-fw pi-sign-in"
+								action="#{loginBean.redirecionarParaLogin}" ajax="false"
+								styleClass="user-button ui-button-login" />
+						</h:panelGroup>
 
-							<h:panelGroup rendered="#{gerBean.usuarioLogado}"
-								styleClass="user-info-group">
-								<span class="user-name"> <i class="pi pi-user"></i> <p:outputLabel
-										value="#{responsavelLogadoBean.responsavelLogado.resNome}" />
-								</span>
-								<p:commandButton value="Sair" icon="pi pi-fw pi-sign-out"
-									action="#{gerBean.logout}" ajax="false"
-									styleClass="user-button ui-button-login" />
-							</h:panelGroup>
+						<h:panelGroup rendered="#{gerBean.responsavelLogado}"
+							styleClass="user-info-group">
+							<span class="user-name"> <i class="pi pi-user"></i> <p:outputLabel
+									value="#{responsavelLogadoBean.responsavelLogado.resNome}" />
+							</span>
+							<p:commandButton value="Sair" icon="pi pi-fw pi-sign-out"
+								action="#{gerBean.logout}" ajax="false"
+								styleClass="user-button ui-button-login" />
+						</h:panelGroup>
+						
+						<h:panelGroup rendered="#{gerBean.clienteLogado}"
+							styleClass="user-info-group">
+							<span class="user-name"> <i class="pi pi-user"></i> <p:outputLabel
+									value="#{responsavelLogadoBean.clienteLogado.cliNome}" />
+							</span>
+							<p:commandButton value="Sair" icon="pi pi-fw pi-sign-out"
+								action="#{gerBean.logout}" ajax="false"
+								styleClass="user-button ui-button-login" />
+						</h:panelGroup>
 						</div>
 
 					</h:panelGroup>

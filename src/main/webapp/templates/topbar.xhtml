@@ -17,7 +17,7 @@
 				</button>
 
 				<div class="topbar-menu" id="topbar-menu">
-					<h:panelGroup rendered="#{gerBean.usuarioLogado}" layout="block"
+					<h:panelGroup rendered="#{gerBean.responsavelLogado}" layout="block"
 						styleClass="topbar-nav-main">
 						<ul class="topbar-nav-list">
 							<li class="nav-item">
@@ -62,18 +62,45 @@
 								</div></li>
 						</ul>
 					</h:panelGroup>
+					
+					<h:panelGroup rendered="#{gerBean.clienteLogado}" layout="block"
+						styleClass="topbar-nav-main">
+						<ul class="topbar-nav-list">
+							<li class="nav-item">
+								<h:link outcome="/restritoCliente/indexCliente" styleClass="nav-link">
+									<i class="pi pi-calendar"></i> Agendamentos
+								</h:link>
+							</li>
+							
+							<li class="nav-item">
+								<h:link outcome="/restritoCliente/indexCliente" styleClass="nav-link">
+									<i class="pi pi-user"></i> Minha Conta
+								</h:link>
+							</li>
+						</ul>
+					</h:panelGroup>
 
 					<div class="topbar-nav-user">
-						<h:panelGroup rendered="#{not gerBean.usuarioLogado}">
+						<h:panelGroup rendered="#{not gerBean.responsavelLogado and not gerBean.clienteLogado}">
 							<p:commandButton value="Login" icon="pi pi-fw pi-sign-in"
 								action="#{loginBean.redirecionarParaLogin}" ajax="false"
 								styleClass="user-button ui-button-login" />
 						</h:panelGroup>
 
-						<h:panelGroup rendered="#{gerBean.usuarioLogado}"
+						<h:panelGroup rendered="#{gerBean.responsavelLogado}"
 							styleClass="user-info-group">
 							<span class="user-name"> <i class="pi pi-user"></i> <p:outputLabel
-									value="#{responsavelLogadoBean.responsavelLogado.resNome}" />
+									value="#{usuarioLogadoBean.responsavelLogado.resNome}" />
+							</span>
+							<p:commandButton value="Sair" icon="pi pi-fw pi-sign-out"
+								action="#{gerBean.logout}" ajax="false"
+								styleClass="user-button ui-button-login" />
+						</h:panelGroup>
+						
+						<h:panelGroup rendered="#{gerBean.clienteLogado}"
+							styleClass="user-info-group">
+							<span class="user-name"> <i class="pi pi-user"></i> <p:outputLabel
+									value="#{usuarioLogadoBean.clienteLogado.cliNome}" />
 							</span>
 							<p:commandButton value="Sair" icon="pi pi-fw pi-sign-out"
 								action="#{gerBean.logout}" ajax="false"

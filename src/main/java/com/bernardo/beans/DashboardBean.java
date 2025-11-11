@@ -78,7 +78,6 @@ public class DashboardBean implements Serializable {
 
 	    donutModel = new DonutChartModel();
 	    ChartData data = new ChartData();
-
 	    DonutChartDataSet dataSet = new DonutChartDataSet();
 
 	    List<Number> valores = servicos.stream()
@@ -90,30 +89,25 @@ public class DashboardBean implements Serializable {
 	        .collect(Collectors.toList());
 
 	    List<String> cores = Arrays.asList(
-	    	    "#007BFF", 
-	    	    "#093e80", 
-	    	    "#1a96cc", 
-	    	    "#42D3F2", 
-	    	    "#74D4FF", 
-	    	    "#1447E6",
-	    	    "#21BCFF", 
-	    	    "#2984D1", 
-	    	    "#015F78", 
-	    	    "#4169E1", 
-	    	    "#162456", 
-	    	    "#2C92B8",
-	    	    "#155DFC", 
-	    	    "#A2F4FD", 
-	    	    "#A2F4FD"  
-	    	);
+	        "#007BFF", "#093e80", "#1a96cc", "#42D3F2", "#74D4FF", "#1447E6",
+	        "#21BCFF", "#2984D1", "#015F78", "#4169E1", "#162456", "#2C92B8",
+	        "#155DFC", "#A2F4FD", "#0096C7"
+	    );
 
 	    dataSet.setData(valores);
 	    dataSet.setBackgroundColor(cores.subList(0, Math.min(cores.size(), valores.size())));
 	    data.addChartDataSet(dataSet);
 	    data.setLabels(labels);
-
 	    donutModel.setData(data);
+
+	    DonutChartOptions options = new DonutChartOptions();
+	    Legend legend = new Legend();
+	    legend.setDisplay(false);
+
+	    options.setLegend(legend);
+	    donutModel.setOptions(options);
 	}
+
 
 	private void createBarModel() {
 		barModel = new BarChartModel();

@@ -16,7 +16,7 @@
 				<br />
 				<p:panelGrid layout="grid" columns="1">
 					<p:outputLabel
-						value="Bem-vindo, #{responsavelLogadoBean.responsavelLogado.resNome}!"
+						value="Bem-vindo, #{usuarioLogadoBean.responsavelLogado.resNome}!"
 						style="font-weight: bold; font-size: 25px;" />
 				</p:panelGrid>
 
@@ -112,7 +112,8 @@
 						<h:outputText value="Serviços por Tipo"
 							styleClass="titulo-total" />
 					
-						<div style="max-width: 350px; margin: 0 auto; position: relative;">
+						<div style="max-width: 310px; margin: 0 auto; position: relative;">
+							<br />
 							<p:donutChart model="#{dashboardBean.donutModel}"
 								style="width: 100%; height: 100%;" />
 						</div>

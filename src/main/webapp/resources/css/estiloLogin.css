@@ -32,7 +32,6 @@ body {
 .tituloTexto {
     font-size: 25px !important;
     color: #333;
-    margin-bottom: 20px;
     font-weight: bold;
 }
 
@@ -49,10 +48,6 @@ body {
     margin-bottom: 10px;
 }
 
-.pnWidth {
-    width: 100%;
-}
-
 .padPg {
     padding: 0 20px;
 }
@@ -66,5 +61,70 @@ p:commandLink {
 }
 
 p:commandLink:hover {
+    text-decoration: underline;
+}
+
+.login-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.labelLogin {
+    font-weight: bold;
+    display: block;
+}
+
+.tipo-login-botoes {
+    display: flex;
+    flex-direction: row; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 10px; 
+    margin-top: 10px;
+}
+
+.btn-login-opcao {
+    width: 180px;
+    height: 40px;
+    border-radius: 9px;
+    background-color: #f5f5f5 !important;
+    color: #333 !important;
+    border: 1px solid #ccc !important;
+    transition: all 0.3s ease;
+}
+
+.btn-login-selecionado {
+    width: 180px;
+    height: 40px;
+    border-radius: 9px;
+    background-color: #1a96cc !important;
+    color: #fff !important;
+    border: 1px solid #1a96cc !important;
+}
+
+.btn-login-opcao:hover {
+    background-color: #e6e6e6 !important;
+}
+.btn-login-selecionado:hover {
+    background-color: #1a96cc !important;
+}
+
+.btn-login {
+    width: 230px;
+    height: 60px;
+    border-radius: 9px;
+    background-color: #007ad9 !important;
+    color: white !important;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.link-cadastro {
+    color: #007ad9 !important;
+    text-decoration: none;
+    font-weight: 500;
+}
+.link-cadastro:hover {
     text-decoration: underline;
 }
