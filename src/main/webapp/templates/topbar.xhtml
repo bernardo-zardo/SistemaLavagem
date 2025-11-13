@@ -7,25 +7,34 @@
 	<h:form id="menuForm">
 		<header class="topbar">
 			<nav class="topbar-nav">
-				<a href="#{request.contextPath}/restrito/indexAdmin.xhtml" class="topbar-brand"> <i class="fa-solid fa-car-on"></i>
+			<h:panelGroup rendered="#{gerBean.responsavelLogado}">
+				<a href="#{request.contextPath}/restrito/indexAdmin.xhtml"
+					class="topbar-brand"> <i class="fa-solid fa-car-on"></i>
 					Lavagem Daniel
 				</a>
+			</h:panelGroup>	
+			
+			<h:panelGroup rendered="#{gerBean.clienteLogado}">
+				<a href="#{request.contextPath}/restritoCliente/indexCliente.xhtml"
+					class="topbar-brand"> <i class="fa-solid fa-car-on"></i>
+					Lavagem Daniel
+				</a>
+			</h:panelGroup>	
 
 				<button type="button" class="topbar-toggle" id="mobile-menu-button"
-				    aria-controls="topbar-menu" aria-expanded="false">
-				    <i class="pi pi-bars"></i>
+					aria-controls="topbar-menu" aria-expanded="false">
+					<i class="pi pi-bars"></i>
 				</button>
 
 				<div class="topbar-menu" id="topbar-menu">
-					<h:panelGroup rendered="#{gerBean.responsavelLogado}" layout="block"
-						styleClass="topbar-nav-main">
+					<h:panelGroup rendered="#{gerBean.responsavelLogado}"
+						layout="block" styleClass="topbar-nav-main">
 						<ul class="topbar-nav-list">
-							<li class="nav-item">
-								<h:link outcome="/restrito/indexAdmin" styleClass="nav-link">
+							<li class="nav-item"><h:link outcome="/restrito/indexAdmin"
+									styleClass="nav-link">
 									<i class="pi pi-home"></i> Home
-								</h:link>
-							</li>
-						
+								</h:link></li>
+
 							<li class="nav-item dropdown"><a href="#"
 								class="nav-link dropdown-toggle"> <i class="pi pi-folder"></i>
 									Cadastros
@@ -45,7 +54,7 @@
 										<i class="pi pi-briefcase"></i> Serviços </h:link>
 									<h:link outcome="/restrito/cadastros/agendamento"
 										styleClass="dropdown-item">
-										<i class="pi pi-calendar"></i> Agendamento </h:link>	
+										<i class="pi pi-calendar"></i> Agendamento </h:link>
 								</div></li>
 							<li class="nav-item dropdown"><a href="#"
 								class="nav-link dropdown-toggle"> <i class="pi pi-chart-bar"></i>
@@ -55,56 +64,78 @@
 									<h:link outcome="/restrito/consultas/consultaServico"
 										styleClass="dropdown-item">
 										<i class="pi pi-briefcase"></i> Serviços </h:link>
-										
+
 									<h:link outcome="/restrito/consultas/consultaAgendamento"
 										styleClass="dropdown-item">
-										<i class="pi pi-calendar"></i> Agendamentos </h:link>	
+										<i class="pi pi-calendar"></i> Agendamentos </h:link>
 								</div></li>
+								
+							<li class="nav-item"><h:link outcome="/restrito/consultas/agenda"
+									styleClass="nav-link">
+									<i class="pi pi-calendar"></i> Agenda
+								</h:link></li>	
 						</ul>
 					</h:panelGroup>
-					
+
 					<h:panelGroup rendered="#{gerBean.clienteLogado}" layout="block"
 						styleClass="topbar-nav-main">
 						<ul class="topbar-nav-list">
-							<li class="nav-item">
-								<h:link outcome="/restritoCliente/indexCliente" styleClass="nav-link">
+							<li class="nav-item"><h:link
+									outcome="/restritoCliente/indexCliente" styleClass="nav-link">
 									<i class="pi pi-calendar"></i> Agendamentos
-								</h:link>
-							</li>
-							
-							<li class="nav-item">
-								<h:link outcome="/restritoCliente/indexCliente" styleClass="nav-link">
+								</h:link></li>
+
+							<li class="nav-item"><h:link
+									outcome="/restritoCliente/indexCliente" styleClass="nav-link">
 									<i class="pi pi-user"></i> Minha Conta
-								</h:link>
-							</li>
+								</h:link></li>
 						</ul>
 					</h:panelGroup>
 
 					<div class="topbar-nav-user">
-						<h:panelGroup rendered="#{not gerBean.responsavelLogado and not gerBean.clienteLogado}">
-							<p:commandButton value="Login" icon="pi pi-fw pi-sign-in"
+						<h:panelGroup
+							rendered="#{not gerBean.responsavelLogado and not gerBean.clienteLogado}">
+							<p:commandButton value="Entrar / Cadastrar-se"
 								action="#{loginBean.redirecionarParaLogin}" ajax="false"
-								styleClass="user-button ui-button-login" />
+								styleClass="ui-button-login" />
 						</h:panelGroup>
 
-						<h:panelGroup rendered="#{gerBean.responsavelLogado}"
-							styleClass="user-info-group">
-							<span class="user-name"> <i class="pi pi-user"></i> <p:outputLabel
+						<h:panelGroup id="userPanel" rendered="#{gerBean.responsavelLogado}"
+							styleClass="user-info-group" layout="block">
+							<h:outputLink id="userLink" styleClass="user-name"
+								onclick="PF('userMenu').toggle(this);return false;">
+								<i class="pi pi-user"></i>
+								<p:outputLabel
 									value="#{usuarioLogadoBean.responsavelLogado.resNome}" />
-							</span>
-							<p:commandButton value="Sair" icon="pi pi-fw pi-sign-out"
-								action="#{gerBean.logout}" ajax="false"
-								styleClass="user-button ui-button-login" />
+							</h:outputLink>
+
+							<p:overlayPanel widgetVar="userMenu" for="userLink"
+								my="right top" at="right bottom" showEffect="fade"
+								hideEffect="fade" styleClass="user-overlaypanel">
+								<p:menu>
+									<p:menuitem value="Sair" icon="pi pi-sign-out"
+										action="#{gerBean.logout}" ajax="false" />
+								</p:menu>
+							</p:overlayPanel>
 						</h:panelGroup>
-						
-						<h:panelGroup rendered="#{gerBean.clienteLogado}"
-							styleClass="user-info-group">
-							<span class="user-name"> <i class="pi pi-user"></i> <p:outputLabel
+
+						<h:panelGroup id="userPanelCliente" rendered="#{gerBean.clienteLogado}"
+							styleClass="user-info-group" layout="block">
+							<h:outputLink id="userLinkCliente" styleClass="user-name"
+								onclick="PF('userMenuCliente').toggle(this);return false;">
+								<i class="pi pi-user"></i>
+								<p:outputLabel
 									value="#{usuarioLogadoBean.clienteLogado.cliNome}" />
-							</span>
-							<p:commandButton value="Sair" icon="pi pi-fw pi-sign-out"
-								action="#{gerBean.logout}" ajax="false"
-								styleClass="user-button ui-button-login" />
+							</h:outputLink>
+
+							<p:overlayPanel widgetVar="userMenuCliente" for="userLinkCliente"
+								my="right top" at="right bottom" showEffect="fade"
+								hideEffect="fade" styleClass="user-overlaypanel">
+								<p:menu>
+									<p:menuitem value="Sair" icon="pi pi-sign-out"
+										action="#{gerBean.logout}" ajax="false" />
+								</p:menu>
+							</p:overlayPanel>
 						</h:panelGroup>
 					</div>
 				</div>

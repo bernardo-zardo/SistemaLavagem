@@ -108,6 +108,17 @@ public class AgendamentoService extends BaseService<Agendamento> {
 
 		return customEntityManager.executeNativeQuery(Agendamento.class, sql.toString());
 	}
+	
+	public List<Agendamento> consultarAgendamentosCliente(Integer idCLiente) {
+
+		StringBuilder sql = new StringBuilder();
+		sql.append(" SELECT * FROM AGENDAMENTO_SERVICO a ");
+		sql.append(" JOIN VEICULO v ON v.VEI_ID_VEICULO = a.AG_ID_VEICULO ");
+		sql.append(" JOIN cliente c ON c.CLI_ID_CLIENTE = v.VEI_ID_CLIENTE ");
+		sql.append(" WHERE c.CLI_ID_CLIENTE = ").append(idCLiente);
+
+		return customEntityManager.executeNativeQuery(Agendamento.class, sql.toString());
+	}
 
 	public List<AgendamentoResumoAux> buscarProximosAgendamentos() {
 		StringBuilder sql = new StringBuilder();

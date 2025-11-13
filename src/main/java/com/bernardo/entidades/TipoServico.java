@@ -64,7 +64,7 @@ public class TipoServico implements Serializable {
 		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 	    return this.tsNome + " - " + nf.format(this.tsPreco);
 	}
-
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(tsIdTipoServico);

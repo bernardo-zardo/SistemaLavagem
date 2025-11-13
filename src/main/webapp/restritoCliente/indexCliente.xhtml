@@ -11,9 +11,84 @@
     </ui:define>
 
 	<ui:define name="content">
-		<h:form>
-			<p:panel styleClass="painel-custom">
+		<h:form id="form1">
+		<p:growl id="mensagem" />
+			<p:panel id="panelAgendamentos" styleClass="painel-custom">
+				<br />
+				<p:panelGrid layout="grid" columns="1">
+					<p:outputLabel
+						value="Bem-vindo, #{usuarioLogadoBean.clienteLogado.cliNome}!"
+						style="font-weight: bold; font-size: 25px;" />
+						<br />
+						<h:outputText value="Meus Agendamentos" styleClass="titulo-total"
+							style="font-size: 22px !important" />
+				</p:panelGrid>
+
+				<p:dataGrid id="gridAgendamentos" layout="grid"
+					value="#{agendamentoClienteBean.agendamentosFiltrados}" var="a"
+					columns="3" paginator="true" rows="6" paginatorPosition="bottom"
+					styleClass="dataGrid-servicos"
+					emptyMessage="Nenhum agendamento encontrado.">
+
+					<p:panel styleClass="card-total" style="min-height: 180px">
+						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px;">
+
+							<p:panelGrid layout="grid" columns="1">
+								<p:panelGrid layout="grid" columns="2"
+									columnClasses="ui-grid-col-1,ui-grid-col-11"
+									style="align-items: center; margin-left: -20px">
+									<h:panelGroup>
+										<i class="#{a.statusIcon}"
+											style="#{a.statusIconStyle}; font-size: 20px; vertical-align: middle; margin-left: -5px"></i>
+									</h:panelGroup>
+
+									<h:outputText
+										value="#{a.dataPadraoFormatada} - #{a.horaFormatada}"
+										style="font-weight: bold; font-size: 19px; margin-left: -8px" />
+								</p:panelGrid>
+							</p:panelGrid>
+
+							<p:panelGrid layout="grid" columns="1"
+								style="margin-left: -10px; margin-top: -10px">
+								<h:outputText value="#{a.agTipoServico.tsNome}"
+									style="font-weight: bold;" />
+
+								<h:outputText value="Status: #{a.statusDescricao}"
+									style="#{a.statusStyle}" />
+
+								<h:outputText
+									value="Veículo: #{a.agVeiculo.veiModelo} - #{a.agVeiculo.veiPlaca}" />
+								
+								<h:outputText value="#{a.descEntrega}" />
+								
+								<h:outputText value="Preço total: #{a.precoTotalDesc}"
+									style="font-weight: bold; font-size: 18px" />
+							</p:panelGrid>
+						</p:panelGrid>
+						
+						<h:panelGroup rendered="#{a.statusPendente}">
+							<div align="right">
+								<p:commandButton value="Cancelar" icon="pi pi-times"
+									actionListener="#{agendamentoClienteBean.cancelarAgendamento(a)}"
+									update=":form1:mensagem :form1:panelAgendamentos"
+									styleClass="link-cancelar" process="@this">
+									<p:confirm header="Atenção!"
+										message="Cancelar este agendamento?"
+										icon="pi pi-exclamation-triangle" />
+								</p:commandButton>
+							</div>
+						</h:panelGroup>
+					</p:panel>
+				</p:dataGrid>
 			</p:panel>
+			
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+				width="350">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+			</p:confirmDialog>
 		</h:form>
 	</ui:define>
 </ui:composition>

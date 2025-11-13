@@ -170,8 +170,7 @@ body .ui-tabs .ui-tabs-nav {
 	background-color: #0e5695 !important;
 	background: #0e5695 !important;
 	border: #0e5695 !important;
-	width: 110px;
-	border-radius: 12px !important;
+	border-radius: 20px !important;
 }
 
 .ui-chkbox .ui-chkbox-label {
@@ -509,4 +508,50 @@ body .ui-chkbox .ui-chkbox-box.ui-state-active {
 
 .panelgrid-transparente .ui-panelgrid-cell {
 	background: transparent !important;
+}
+
+.user-info-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.user-name {
+    font-weight: 500;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer !important;
+    text-decoration: none;
+}
+
+.user-name i {
+    cursor: pointer;
+}
+
+.user-name:hover {
+    opacity: 0.9;
+}
+
+.ui-overlaypanel {
+    border-radius: 8px;
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+.ui-menu {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.user-overlaypanel {
+    padding: 0 !important;
+    overflow: hidden !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+.user-overlaypanel .ui-overlaypanel-content {
+    padding: 0 !important;
 }

@@ -39,7 +39,7 @@
 
 						<div class="topbar-nav-user">
 							<h:panelGroup rendered="#{not gerBean.responsavelLogado and not gerBean.clienteLogado}">
-							<p:commandButton value="Login" icon="pi pi-fw pi-sign-in"
+							<p:commandButton value="Entrar / Cadastrar-se"
 								action="#{loginBean.redirecionarParaLogin}" ajax="false"
 								styleClass="user-button ui-button-login" />
 						</h:panelGroup>
@@ -49,7 +49,7 @@
 							<span class="user-name"> <i class="pi pi-user"></i> <p:outputLabel
 									value="#{responsavelLogadoBean.responsavelLogado.resNome}" />
 							</span>
-							<p:commandButton value="Sair" icon="pi pi-fw pi-sign-out"
+							<p:commandButton value="Sair"
 								action="#{gerBean.logout}" ajax="false"
 								styleClass="user-button ui-button-login" />
 						</h:panelGroup>
@@ -59,7 +59,7 @@
 							<span class="user-name"> <i class="pi pi-user"></i> <p:outputLabel
 									value="#{responsavelLogadoBean.clienteLogado.cliNome}" />
 							</span>
-							<p:commandButton value="Sair" icon="pi pi-fw pi-sign-out"
+							<p:commandButton value="Sair"
 								action="#{gerBean.logout}" ajax="false"
 								styleClass="user-button ui-button-login" />
 						</h:panelGroup>
