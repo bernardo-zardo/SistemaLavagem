@@ -6,7 +6,7 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 	<ui:define name="title">
-        Consulta de Agendamento
+        Controle de Agendamento
     </ui:define>
 
 	<ui:define name="content">
@@ -97,7 +97,7 @@
 
 				<p:dataGrid id="gridAgendamentos" layout="grid"
 					value="#{consultaAgendamentoBean.agendamentosFiltrados}" var="a"
-					columns="3" paginator="true" rows="16" paginatorPosition="bottom"
+					columns="3" paginator="true" rows="9" paginatorPosition="bottom"
 					styleClass="dataGrid-servicos"
 					emptyMessage="Nenhum agendamento encontrado.">
 
@@ -132,8 +132,15 @@
 
 							<p:panelGrid layout="grid" columns="1"
 								style="margin-left: -10px; margin-top: -10px">
-								<h:outputText value="#{a.agTipoServico.tsNome}"
-									style="font-weight: bold;" />
+								<h:panelGroup rendered="#{a.agTipoServico ne null}">
+									<h:outputText value="#{a.agTipoServico.tsNome}"
+										style="font-weight: bold;" />
+								</h:panelGroup>
+
+								<h:panelGroup rendered="#{a.agTipoServico eq null}">
+									<h:outputText value="#{a.agObservacao}"
+										style="font-weight: bold;" />
+								</h:panelGroup>
 
 								<h:outputText value="Status: #{a.statusDescricao}"
 									style="#{a.statusStyle}" />
@@ -145,8 +152,10 @@
 
 								<h:outputText value="#{a.descEntrega}" />
 
-								<h:outputText value="Preço total: #{a.precoTotalDesc}"
-									style="font-weight: bold;" />
+								<h:panelGroup rendered="#{a.agPrecoServicoExtra ne null}">
+									<h:outputText value="Preço total: #{a.precoTotalDesc}"
+										style="font-weight: bold;" />
+								</h:panelGroup>
 							</p:panelGrid>
 						</p:panelGrid>
 
@@ -192,9 +201,18 @@
 			   box-shadow:0 2px 6px rgba(0,0,0,0.1);
 			   padding:15px 20px; margin-bottom:20px;">
 
-					<h:outputText value="Tipo de Serviço:"
+					<h:outputText value="Serviço:"
+						style="font-weight:bold; color:#555;"
+						rendered="#{consultaAgendamentoBean.agendamentoSelecionado.agObservacao ne null}" />
+					<h:outputText
+						value="#{consultaAgendamentoBean.agendamentoSelecionado.agObservacao}"
+						rendered="#{consultaAgendamentoBean.agendamentoSelecionado.agObservacao ne null}" />
+
+					<h:outputText value="Serviço:"
+						rendered="#{consultaAgendamentoBean.agendamentoSelecionado.agObservacao eq null}"
 						style="font-weight:bold; color:#555;" />
 					<h:outputText
+						rendered="#{consultaAgendamentoBean.agendamentoSelecionado.agObservacao eq null}"
 						value="#{consultaAgendamentoBean.agendamentoSelecionado.agTipoServico.tsNome}" />
 
 					<h:outputText value="Cliente:"
@@ -216,15 +234,30 @@
 					<h:outputText
 						value="#{consultaAgendamentoBean.agendamentoSelecionado.horaFormatada}" />
 
-					<h:outputText value="Preço Total:"
-						style="font-weight:bold; color:#555;" />
-					<h:outputText
-						value="#{consultaAgendamentoBean.agendamentoSelecionado.precoTotalDesc}" />
+					<h:panelGroup
+						rendered="#{consultaAgendamentoBean.agendamentoSelecionado.agPrecoServicoExtra ne null}">
+						<h:outputText value="Preço Total:"
+							style="font-weight:bold; color:#555;" />
+						<h:outputText
+							value="#{consultaAgendamentoBean.agendamentoSelecionado.precoTotalDesc}" />
+					</h:panelGroup>
+
+					<h:panelGroup
+						rendered="#{consultaAgendamentoBean.agendamentoSelecionado.agObservacao ne null}">
+						<p:outputLabel value="Preço do Serviço de Busca/Entrega"
+							for="preco" style="font-weight:bold; color:#555;" />
+						<p:inputNumber id="preco"
+							disabled="#{not consultaAgendamentoBean.agendamentoSelecionado.agPossuiBuscaVeiculo and not consultaAgendamentoBean.agendamentoSelecionado.agPossuiEntregaVeiculo}"
+							value="#{consultaAgendamentoBean.agendamentoSelecionado.agPrecoServicoExtra}"
+							required="true" requiredMessage="O campo Preço é obrigatório."
+							symbol="R$ " decimalPlaces="2" thousandSeparator="."
+							decimalSeparator="," style="width:100%" />
+					</h:panelGroup>
 				</p:panelGrid>
 
 				<p:panelGrid columns="1" layout="grid">
 					<h:outputLabel for="responsavel" value="Responsável pelo serviço:"
-						style="font-weight:bold; color:#444; margin-bottom:6px;" />
+						style="font-weight:bold;" />
 					<p:selectOneMenu id="responsavel"
 						value="#{consultaAgendamentoBean.responsavelSelecionado}"
 						style="width:100%; border-radius:6px; border:1px solid #ccc;">
@@ -232,6 +265,18 @@
 							noSelectionOption="true" />
 						<f:selectItems value="#{consultaAgendamentoBean.responsaveis}"
 							var="r" itemLabel="#{r.resNome}" itemValue="#{r}" />
+					</p:selectOneMenu>
+				</p:panelGrid>
+
+				<p:panelGrid columns="1" layout="grid" rendered="#{consultaAgendamentoBean.agendamentoSelecionado.agObservacao ne null}">
+					<p:outputLabel value="Tipo de Serviço" for="tipoServico" style="font-weight:bold;" />
+					<p:selectOneMenu id="tipoServico"
+						value="#{consultaAgendamentoBean.tipoServicoSelecionado}"
+						style="width:100%">
+						<f:selectItem itemLabel="Selecione um tipo" itemValue="#{null}"
+							noSelectionOption="true" />
+						<f:selectItems value="#{consultaAgendamentoBean.tiposServico}"
+							var="t" itemLabel="#{t.tsNome}" itemValue="#{t}" />
 					</p:selectOneMenu>
 				</p:panelGrid>
 

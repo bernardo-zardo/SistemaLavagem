@@ -65,6 +65,10 @@ public class TipoServico implements Serializable {
 	    return this.tsNome + " - " + nf.format(this.tsPreco);
 	}
 	
+	public String getTipoServicoPrecoFormat() {
+	    return "R$" + this.tsPreco;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(tsIdTipoServico);

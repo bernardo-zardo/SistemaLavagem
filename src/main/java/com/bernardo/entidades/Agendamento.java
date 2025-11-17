@@ -46,8 +46,8 @@ public class Agendamento implements Serializable {
 	@JoinColumn(name = "AG_ID_VEICULO", referencedColumnName = "VEI_ID_VEICULO", nullable = false)
 	private Veiculo agVeiculo;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "AG_ID_TIPO_SERVICO", referencedColumnName = "TS_ID_TIPO_SERVICO", nullable = false)
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "AG_ID_TIPO_SERVICO", referencedColumnName = "TS_ID_TIPO_SERVICO", nullable = true)
 	private TipoServico agTipoServico;
 
 	@Column(name = "AG_POSSUI_BUSCA_VEICULO", nullable = false)
@@ -69,6 +69,9 @@ public class Agendamento implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "AG_ID_ENDERECO_ENTREGA")
 	private EnderecoCliente agEnderecoEntrega;
+	
+	@Column(name = "AG_OBSERVACAO", length = 150)
+    private String agObservacao;
 
 	public Agendamento() {
 	}
@@ -160,6 +163,14 @@ public class Agendamento implements Serializable {
 	public void setAgEnderecoEntrega(EnderecoCliente agEnderecoEntrega) {
 		this.agEnderecoEntrega = agEnderecoEntrega;
 	}
+	
+	public String getAgObservacao() {
+		return agObservacao;
+	}
+
+	public void setAgObservacao(String agObservacao) {
+		this.agObservacao = agObservacao;
+	}
 
 	public String getStatusDescricao() {
 		if (this.agStatus.equals("P")) {
@@ -216,14 +227,21 @@ public class Agendamento implements Serializable {
 	public boolean isStatusPendente() {
 		return this.agStatus.equals("P");
 	}
+	
+	public boolean isStatusConcluido() {
+		return this.agStatus.equals("C");
+	}
 
 	public String getDescEntrega() {
-		if (this.agPrecoServicoExtra == null) {
+		if (!this.agPossuiBuscaVeiculo && !this.agPossuiEntregaVeiculo) {
 			return "Sem Busca/Entrega";
 		}
-
-		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
-		return "Serviço de Busca/Entrega incluída: " + nf.format(this.agPrecoServicoExtra);
+		if (this.agPrecoServicoExtra != null) {
+			NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+			return "Serviço de Busca/Entrega incluída: " + nf.format(this.agPrecoServicoExtra);
+		} else {
+			return "Serviço de Busca/Entrega incluída";
+		}
 	}
 	
 	public String getPrecoTotalDesc() {

@@ -49,6 +49,9 @@ public class Cliente implements Serializable {
     
     @OneToMany(mappedBy = "endCliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<EnderecoCliente> cliEnderecos = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "veiCliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Veiculo> cliVeiculos = new ArrayList<>();
 
     public Cliente() {
     }
@@ -101,6 +104,14 @@ public class Cliente implements Serializable {
 		this.cliEnderecos = cliEnderecos;
 	}
 	
+	public List<Veiculo> getCliVeiculos() {
+		return cliVeiculos;
+	}
+
+	public void setCliVeiculos(List<Veiculo> cliVeiculos) {
+		this.cliVeiculos = cliVeiculos;
+	}
+
 	public String getCliSenha() {
 		return cliSenha;
 	}
@@ -122,7 +133,7 @@ public class Cliente implements Serializable {
 	    this.cliEnderecos.remove(endereco);
 	    endereco.setEndCliente(null);
 	}
-
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(cliIdCliente);

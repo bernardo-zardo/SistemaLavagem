@@ -5,6 +5,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
+import com.bernardo.beans.AgendamentoClienteBean;
 import com.bernardo.beans.cadastros.AgendamentoBean;
 import com.bernardo.beans.cadastros.ServicoBean;
 import com.bernardo.entidades.EnderecoCliente;
@@ -52,7 +53,24 @@ public class EnderecoClienteConverter implements Converter<EnderecoCliente> {
 			return agendamentoBean.getCrudObj().getAgVeiculo().getVeiCliente().getCliEnderecos().stream()
 					.filter(e -> e.getEndIdEndereco().equals(id)).findFirst().orElse(null);
 		}
+		
+		AgendamentoClienteBean agendamentoClienteBean =
+			    context.getApplication().evaluateExpressionGet(context, "#{agendamentoClienteBean}", AgendamentoClienteBean.class);
 
+			if (agendamentoClienteBean != null 
+			        && agendamentoClienteBean.getAgendamento() != null
+			        && agendamentoClienteBean.getAgendamento().getAgVeiculo() != null
+			        && agendamentoClienteBean.getAgendamento().getAgVeiculo().getVeiCliente() != null) {
+
+			    return agendamentoClienteBean.getAgendamento()
+			        .getAgVeiculo()
+			        .getVeiCliente()
+			        .getCliEnderecos()
+			        .stream()
+			        .filter(e -> e.getEndIdEndereco().equals(id))
+			        .findFirst()
+			        .orElse(null);
+			}
 		return null;
 	}
 }

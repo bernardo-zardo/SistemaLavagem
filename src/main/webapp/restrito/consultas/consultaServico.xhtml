@@ -6,7 +6,7 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 	<ui:define name="title">
-        Consulta de Serviço
+        Controle de Serviço
     </ui:define>
 
 	<ui:define name="content">
@@ -133,7 +133,7 @@
 				header="Serviços Filtrados">
 				<p:dataGrid id="gridServicos" layout="grid"
 					value="#{consultaServicoBean.servicosFiltrados}" var="s"
-					columns="3" paginator="true" rows="16" paginatorPosition="bottom"
+					columns="3" paginator="true" rows="9" paginatorPosition="bottom"
 					styleClass="dataGrid-servicos"
 					emptyMessage="Nenhum serviço encontrado.">
 

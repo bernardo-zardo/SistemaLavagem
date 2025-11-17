@@ -46,4 +46,14 @@ public class ClienteService extends BaseService<Cliente> {
                 + "WHERE c.CLI_CPF = '" + cpf + "'";
         return customEntityManager.executeNativeQuery(Cliente.class, sql);
     }
+    
+    public List<Cliente> buscarPorIdComColecoes(Long id) {
+    	String sql =
+            "SELECT c FROM Cliente c " +
+            "LEFT JOIN FETCH c.cliEnderecos " +
+            "LEFT JOIN FETCH c.cliVeiculos " +
+            "WHERE c.cliId = " + id;
+        return customEntityManager.executeNativeQuery(Cliente.class, sql);
+    }
+
 }

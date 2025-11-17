@@ -52,7 +52,7 @@
 									<f:selectItem itemLabel="Selecione um tipo" itemValue="#{null}"
 										noSelectionOption="true" />
 									<f:selectItems value="#{servicoBean.tiposServico}" var="t"
-										itemLabel="#{t.tipoServicoDesc}" itemValue="#{t}" />
+										itemLabel="#{t.tsNome} - #{t.tipoServicoPrecoFormat}" itemValue="#{t}" />
 								</p:selectOneMenu>
 							</h:panelGroup>
 
@@ -115,6 +115,7 @@
 											var="e"
 											itemLabel="#{e.endDescricao} - #{e.endRua}, #{e.endNumero} - #{e.endBairro}"
 											itemValue="#{e}" />
+										<p:ajax />		
 									</p:selectOneMenu>
 								</h:panelGroup>
 							</p:panelGrid>
@@ -144,6 +145,7 @@
 											var="e"
 											itemLabel="#{e.endDescricao} - #{e.endRua}, #{e.endNumero} - #{e.endBairro}"
 											itemValue="#{e}" />
+										<p:ajax />		
 									</p:selectOneMenu>
 								</h:panelGroup>
 							</p:panelGrid>

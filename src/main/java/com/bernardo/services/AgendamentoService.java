@@ -121,38 +121,39 @@ public class AgendamentoService extends BaseService<Agendamento> {
 	}
 
 	public List<AgendamentoResumoAux> buscarProximosAgendamentos() {
-		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT ");
-		sql.append(" a.AG_ID_AGENDAMENTO AS id, ");
-		sql.append(" c.CLI_NOME AS cliente, ");
-		sql.append(" CONCAT(v.VEI_MODELO, ' - ', v.VEI_PLACA) AS veiculo, ");
-		sql.append(" a.AG_DATA AS data, ");
-		sql.append(" DATE_FORMAT(a.AG_HORA, '%H:%i') AS hora, ");
-		sql.append(" ts.TS_NOME AS servico ");
-		sql.append("FROM agendamento_servico a ");
-		sql.append("JOIN veiculo v ON v.VEI_ID_VEICULO = a.AG_ID_VEICULO ");
-		sql.append("JOIN cliente c ON c.CLI_ID_CLIENTE = v.VEI_ID_CLIENTE ");
-		sql.append("JOIN tipo_servico ts ON ts.TS_ID_TIPO_SERVICO = a.AG_ID_TIPO_SERVICO ");
-		sql.append("WHERE a.AG_DATA >= CURDATE() ");
-		sql.append("AND a.AG_STATUS = 'P' ");
-		sql.append("ORDER BY a.AG_DATA ASC, a.AG_HORA ASC ");
-		sql.append("LIMIT 4");
+	    StringBuilder sql = new StringBuilder();
+	    sql.append("SELECT ");
+	    sql.append(" a.AG_ID_AGENDAMENTO AS id, ");
+	    sql.append(" c.CLI_NOME AS cliente, ");
+	    sql.append(" CONCAT(v.VEI_MODELO, ' - ', v.VEI_PLACA) AS veiculo, ");
+	    sql.append(" a.AG_DATA AS data, ");
+	    sql.append(" DATE_FORMAT(a.AG_HORA, '%H:%i') AS hora, ");
+	    sql.append(" COALESCE(ts.TS_NOME, a.AG_OBSERVACAO) AS servico ");   // <<<<<< ALTERAÇÃO
+	    sql.append("FROM agendamento_servico a ");
+	    sql.append("JOIN veiculo v ON v.VEI_ID_VEICULO = a.AG_ID_VEICULO ");
+	    sql.append("JOIN cliente c ON c.CLI_ID_CLIENTE = v.VEI_ID_CLIENTE ");
+	    sql.append("LEFT JOIN tipo_servico ts ON ts.TS_ID_TIPO_SERVICO = a.AG_ID_TIPO_SERVICO "); // <<<<<< LEFT JOIN
+	    sql.append("WHERE a.AG_DATA >= CURDATE() ");
+	    sql.append("AND a.AG_STATUS = 'P' ");
+	    sql.append("ORDER BY a.AG_DATA ASC, a.AG_HORA ASC ");
+	    sql.append("LIMIT 4");
 
-		List<Object[]> resultados = customEntityManager.executeNativeQueryArray(sql.toString());
-		List<AgendamentoResumoAux> lista = new ArrayList<>();
+	    List<Object[]> resultados = customEntityManager.executeNativeQueryArray(sql.toString());
+	    List<AgendamentoResumoAux> lista = new ArrayList<>();
 
-		for (Object[] r : resultados) {
-		    AgendamentoResumoAux aux = new AgendamentoResumoAux();
-		    aux.setId(((Number) r[0]).intValue());
-		    aux.setCliente((String) r[1]);
-		    aux.setVeiculo((String) r[2]);
-		    aux.setData((Date) r[3]);
-		    aux.setHora((String) r[4]);
-		    aux.setServico((String) r[5]);
-		    lista.add(aux);
-		}
-		
-		return lista;
+	    for (Object[] r : resultados) {
+	        AgendamentoResumoAux aux = new AgendamentoResumoAux();
+	        aux.setId(((Number) r[0]).intValue());
+	        aux.setCliente((String) r[1]);
+	        aux.setVeiculo((String) r[2]);
+	        aux.setData((Date) r[3]);
+	        aux.setHora((String) r[4]);
+	        String servicoBruto = (String) r[5];
+	        String servicoFormatado = servicoBruto != null ? servicoBruto.split("\\(")[0].trim() : null;
+	        aux.setServico(servicoFormatado);
+	        lista.add(aux);
+	    }
+
+	    return lista;
 	}
-
 }

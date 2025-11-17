@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -71,6 +72,7 @@ public class ConsultaAgendamentoBean implements Serializable {
 	private String filtroStatus = "P";
 
 	private Responsavel responsavelSelecionado;
+	private TipoServico tipoServicoSelecionado;
 
 	private List<Agendamento> agendamentosFiltrados = new ArrayList<>();
 
@@ -100,8 +102,8 @@ public class ConsultaAgendamentoBean implements Serializable {
 			String corBorda;
 			if ("C".equalsIgnoreCase(a.getAgStatus())) {
 				classeCor = "evento-concluido";
-				corFundo = "#1E3A8A";
-				corBorda = "#1E3A8A";
+				corFundo = "#2e7d32";
+				corBorda = "#2e7d32";
 			} else if ("P".equalsIgnoreCase(a.getAgStatus())) {
 				classeCor = "evento-pendente";
 				corFundo = "#1a96cc";
@@ -194,7 +196,14 @@ public class ConsultaAgendamentoBean implements Serializable {
 
 		Servico s = new Servico();
 		s.setSerData(agendamentoSelecionado.getAgData());
-		s.setSerTipoServico(agendamentoSelecionado.getAgTipoServico());
+		
+		TipoServico tipoServicoAux = new TipoServico();
+		if (agendamentoSelecionado.getAgTipoServico() != null) {
+			tipoServicoAux = agendamentoSelecionado.getAgTipoServico();
+		} else {
+			tipoServicoAux = tipoServicoSelecionado;
+		}
+		s.setSerTipoServico(tipoServicoAux);
 		s.setSerVeiculo(agendamentoSelecionado.getAgVeiculo());
 		s.setSerResponsavel(responsavelSelecionado);
 		s.setSerEnderecoBusca(agendamentoSelecionado.getAgEnderecoBusca());
@@ -202,16 +211,18 @@ public class ConsultaAgendamentoBean implements Serializable {
 		s.setSerPossuiBuscaVeiculo(agendamentoSelecionado.isAgPossuiBuscaVeiculo());
 		s.setSerPossuiEntregaVeiculo(agendamentoSelecionado.isAgPossuiEntregaVeiculo());
 		s.setSerPrecoServicoExtra(agendamentoSelecionado.getAgPrecoServicoExtra());
+		
 		if (agendamentoSelecionado.getAgPrecoServicoExtra() != null) {
-			s.setSerPrecoTotal(agendamentoSelecionado.getAgTipoServico().getTsPreco()
+			s.setSerPrecoTotal(tipoServicoAux.getTsPreco()
 					+ agendamentoSelecionado.getAgPrecoServicoExtra());
 		} else {
-			s.setSerPrecoTotal(agendamentoSelecionado.getAgTipoServico().getTsPreco());
+			s.setSerPrecoTotal(tipoServicoAux.getTsPreco());
 		}
 
 		servicoService.salvar(s);
 
 		agendamentoSelecionado.setAgStatus("C");
+		agendamentoSelecionado.setAgTipoServico(tipoServicoAux);
 		agendamentoService.salvar(agendamentoSelecionado);
 
 		JsfUtil.info("Serviço concluído e registrado com sucesso.");
@@ -304,5 +315,13 @@ public class ConsultaAgendamentoBean implements Serializable {
 
 	public void setResponsavelSelecionado(Responsavel responsavelSelecionado) {
 		this.responsavelSelecionado = responsavelSelecionado;
+	}
+
+	public TipoServico getTipoServicoSelecionado() {
+		return tipoServicoSelecionado;
+	}
+
+	public void setTipoServicoSelecionado(TipoServico tipoServicoSelecionado) {
+		this.tipoServicoSelecionado = tipoServicoSelecionado;
 	}
 }

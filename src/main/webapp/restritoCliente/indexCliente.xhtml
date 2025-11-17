@@ -12,16 +12,22 @@
 
 	<ui:define name="content">
 		<h:form id="form1">
-		<p:growl id="mensagem" />
+			<p:growl id="mensagem" />
 			<p:panel id="panelAgendamentos" styleClass="painel-custom">
 				<br />
 				<p:panelGrid layout="grid" columns="1">
 					<p:outputLabel
 						value="Bem-vindo, #{usuarioLogadoBean.clienteLogado.cliNome}!"
 						style="font-weight: bold; font-size: 25px;" />
-						<br />
-						<h:outputText value="Meus Agendamentos" styleClass="titulo-total"
-							style="font-size: 22px !important" />
+					<br />
+					<h:outputText value="Meus Agendamentos" styleClass="titulo-total"
+						style="font-size: 22px !important" />
+
+					<p:commandButton id="btnNovoAgendamentoCliente"
+						value="Novo Agendamento" icon="pi pi-plus"
+						oncomplete="PF('dlgNovoAgendamentoClienteWV').show()"
+						actionListener="#{agendamentoClienteBean.abrirNovoAgendamento}"
+						update=":form1:dlgNovoAgendamentoCliente" />
 				</p:panelGrid>
 
 				<p:dataGrid id="gridAgendamentos" layout="grid"
@@ -30,7 +36,7 @@
 					styleClass="dataGrid-servicos"
 					emptyMessage="Nenhum agendamento encontrado.">
 
-					<p:panel styleClass="card-total" style="min-height: 180px">
+					<p:panel styleClass="card-total" style="min-height: 190px">
 						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px;">
 
 							<p:panelGrid layout="grid" columns="1">
@@ -50,22 +56,30 @@
 
 							<p:panelGrid layout="grid" columns="1"
 								style="margin-left: -10px; margin-top: -10px">
-								<h:outputText value="#{a.agTipoServico.tsNome}"
-									style="font-weight: bold;" />
+
+								<h:panelGroup rendered="#{a.agTipoServico ne null}">
+									<h:outputText value="#{a.agTipoServico.tsNome}"
+										style="font-weight: bold;" />
+								</h:panelGroup>
+
+								<h:panelGroup rendered="#{a.agTipoServico eq null}">
+									<h:outputText value="#{a.agObservacao}"
+										style="font-weight: bold;" />
+								</h:panelGroup>
 
 								<h:outputText value="Status: #{a.statusDescricao}"
 									style="#{a.statusStyle}" />
 
 								<h:outputText
 									value="Veículo: #{a.agVeiculo.veiModelo} - #{a.agVeiculo.veiPlaca}" />
-								
-								<h:outputText value="#{a.descEntrega}" />
-								
-								<h:outputText value="Preço total: #{a.precoTotalDesc}"
-									style="font-weight: bold; font-size: 18px" />
+
+								<h:panelGroup rendered="#{a.statusConcluido and a.agTipoServico ne null}">
+									<h:outputText value="Preço total: #{a.precoTotalDesc}"
+										style="font-weight: bold; font-size: 18px" />
+								</h:panelGroup>
 							</p:panelGrid>
 						</p:panelGrid>
-						
+
 						<h:panelGroup rendered="#{a.statusPendente}">
 							<div align="right">
 								<p:commandButton value="Cancelar" icon="pi pi-times"
@@ -81,7 +95,160 @@
 					</p:panel>
 				</p:dataGrid>
 			</p:panel>
-			
+
+			<p:dialog id="dlgNovoAgendamentoCliente"
+				widgetVar="dlgNovoAgendamentoClienteWV" header="Novo Agendamento"
+				modal="true" closable="true" resizable="false" width="720">
+
+				<p:panelGrid columns="1" layout="grid">
+
+					<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+						<h:panelGroup>
+							<p:outputLabel value="Data" for="data" />
+							<br />
+							<p:datePicker id="data"
+								value="#{agendamentoClienteBean.agendamento.agData}"
+								pattern="dd/MM/yyyy" showIcon="true" style="width:200px"
+								styleClass="datePicker">
+								<p:ajax event="dateSelect"
+									listener="#{agendamentoClienteBean.carregarHorariosDisponiveis}"
+									update="hora" />
+							</p:datePicker>
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+						<h:panelGroup>
+							<p:outputLabel value="Horários Disponíveis" for="hora" />
+							<br />
+							<p:selectOneMenu id="hora"
+								value="#{agendamentoClienteBean.agendamento.agHora}"
+								style="width:100%" converter="horaConverter">
+								<f:selectItem itemLabel="Selecione..." itemValue="#{null}" />
+								<f:selectItems
+									value="#{agendamentoClienteBean.horariosDisponiveis}" var="h"
+									itemLabel="#{agendamentoClienteBean.formatarHora(h)}"
+									itemValue="#{h}" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+
+						<h:panelGroup>
+							<p:outputLabel value="Tipo de Serviço" for="tipoServico" />
+							<br />
+							<p:selectOneMenu id="tipoServico"
+								value="#{agendamentoClienteBean.agendamento.agObservacao}"
+								filter="true" filterMatchMode="contains" style="width:100%">
+								<f:selectItem itemLabel="Selecione um tipo" itemValue="#{null}"
+									noSelectionOption="true" />
+								<f:selectItems
+									value="#{agendamentoClienteBean.tiposServicoCliente}" var="ts"
+									itemLabel="#{ts}" itemValue="#{ts}" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+
+						<h:panelGroup>
+							<p:outputLabel value="Veículo" for="veiculo" />
+							<br />
+							<p:selectOneMenu id="veiculo" filter="true"
+								filterMatchMode="contains"
+								value="#{agendamentoClienteBean.agendamento.agVeiculo}"
+								style="width:100%">
+								<f:selectItem itemLabel="Selecione um veículo"
+									itemValue="#{null}" noSelectionOption="true" />
+								<f:selectItems
+									value="#{usuarioLogadoBean.clienteLogado.cliVeiculos}" var="v"
+									itemLabel="#{v.veiModelo} - #{v.veiPlaca} - #{v.veiCliente.cliNome}"
+									itemValue="#{v}" />
+								<p:ajax update="pnBuscaEntrega" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+
+					</p:panelGrid>
+
+					<h:panelGroup id="pnBuscaEntrega">
+
+						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
+							<p:selectBooleanCheckbox id="possuiBusca"
+								itemLabel="Possui Busca do Veículo"
+								value="#{agendamentoClienteBean.agendamento.agPossuiBuscaVeiculo}">
+								<p:ajax process="@this" update="pnBuscaEntrega" />
+							</p:selectBooleanCheckbox>
+						</p:panelGrid>
+
+						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
+							<h:panelGroup>
+								<p:outputLabel value="Endereço de Busca" for="endBusca" />
+								<p:selectOneMenu id="endBusca" filter="true"
+									converter="enderecoClienteConverter"
+									disabled="#{not agendamentoClienteBean.agendamento.agPossuiBuscaVeiculo}"
+									filterMatchMode="contains"
+									value="#{agendamentoClienteBean.agendamento.agEnderecoBusca}"
+									style="width:100%">
+									<f:selectItem itemLabel="Selecione um endereço"
+										itemValue="#{null}" noSelectionOption="true" />
+									<f:selectItems
+										value="#{agendamentoClienteBean.agendamento.agVeiculo.veiCliente.cliEnderecos}"
+										var="e"
+										itemLabel="#{e.endDescricao} - #{e.endRua}, #{e.endNumero} - #{e.endBairro}"
+										itemValue="#{e}" />
+									<p:ajax />
+								</p:selectOneMenu>
+							</h:panelGroup>
+						</p:panelGrid>
+
+						<br />
+
+						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
+							<p:selectBooleanCheckbox id="possuiEntrega"
+								itemLabel="Possui Entrega do Veículo"
+								value="#{agendamentoClienteBean.agendamento.agPossuiEntregaVeiculo}">
+								<p:ajax process="@this" update="pnBuscaEntrega" />
+							</p:selectBooleanCheckbox>
+						</p:panelGrid>
+
+						<p:panelGrid columns="1" layout="grid" style="margin-left:-10px">
+							<h:panelGroup>
+								<p:outputLabel value="Endereço de Entrega" for="endEntrega" />
+								<p:selectOneMenu id="endEntrega" filter="true"
+									converter="enderecoClienteConverter"
+									disabled="#{not agendamentoClienteBean.agendamento.agPossuiEntregaVeiculo}"
+									filterMatchMode="contains"
+									value="#{agendamentoClienteBean.agendamento.agEnderecoEntrega}"
+									style="width:100%">
+									<f:selectItem itemLabel="Selecione um endereço"
+										itemValue="#{null}" noSelectionOption="true" />
+									<f:selectItems
+										value="#{agendamentoClienteBean.agendamento.agVeiculo.veiCliente.cliEnderecos}"
+										var="e"
+										itemLabel="#{e.endDescricao} - #{e.endRua}, #{e.endNumero} - #{e.endBairro}"
+										itemValue="#{e}" />
+									<p:ajax />
+								</p:selectOneMenu>
+							</h:panelGroup>
+						</p:panelGrid>
+						<br />
+					</h:panelGroup>
+				</p:panelGrid>
+				<br />
+
+				<div style="text-align: right">
+					<p:commandButton value="Cancelar" icon="pi pi-times"
+						onclick="PF('dlgNovoAgendamentoClienteWV').hide()" type="button"
+						styleClass="btn-acoes ui-button-secondary" />
+
+					<p:commandButton value="Salvar" icon="pi pi-check"
+						action="#{agendamentoClienteBean.salvarNovoAgendamento}"
+						update=":form1 :form1:dlgNovoAgendamentoCliente"
+						styleClass="btn-acoes ui-button-success"
+						oncomplete="if (!args.validationFailed) PF('dlgNovoAgendamentoClienteWV').hide();" />
+				</div>
+
+			</p:dialog>
+
+
 			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
 				width="350">
 				<p:commandButton value="Sim" type="button"

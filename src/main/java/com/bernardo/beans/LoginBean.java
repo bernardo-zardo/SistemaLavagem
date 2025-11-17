@@ -48,6 +48,9 @@ public class LoginBean implements Serializable {
     }
 
     public void doLogin() {
+    	usuarioLogadoBean.setClienteLogado(null);
+    	usuarioLogadoBean.setResponsavelLogado(null);
+    	
         if (StringUtil.isNullOrEmpty(cpf)) {
             JsfUtil.warn("É necessário informar seu CPF");
             return;
