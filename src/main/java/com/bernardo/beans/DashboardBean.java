@@ -36,8 +36,13 @@ import com.bernardo.services.ServicoService;
 import com.bernardo.services.TipoServicoService;
 import com.bernardo.services.VeiculoService;
 import com.bernardo.utils.AgendamentoResumoAux;
+import com.bernardo.utils.EmailService;
 import com.bernardo.utils.ServicoResumoAux;
 
+/**
+*
+* @author Bernardo Zardo Mergen
+*/
 @Named
 @ViewScoped
 public class DashboardBean implements Serializable {
@@ -72,7 +77,7 @@ public class DashboardBean implements Serializable {
 		atualizarTotaisDashboard();
 		proximosAgendamentos = agendamentoService.buscarProximosAgendamentos();
 	}
-
+	
 	private void createDonutModel() {
 	    List<ServicoResumoAux> servicos = tipoServicoService.buscarServicosPorTipoNoMes();
 

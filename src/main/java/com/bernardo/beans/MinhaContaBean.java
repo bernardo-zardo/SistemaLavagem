@@ -1,19 +1,18 @@
-package com.bernardo.beans.cadastros;
+package com.bernardo.beans;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.bernardo.entidades.Cliente;
 import com.bernardo.entidades.EnderecoCliente;
-import com.bernardo.services.BaseCrud;
+import com.bernardo.entidades.Veiculo;
 import com.bernardo.services.ClienteService;
 import com.bernardo.utils.CEPUtil;
 import com.bernardo.utils.GeocodingUtil;
@@ -27,90 +26,65 @@ import com.bernardo.utils.StringUtil;
  */
 @Named
 @ViewScoped
-public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
+public class MinhaContaBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	
+	@Inject
+	private UsuarioLogadoBean usuarioLogado;
 	@EJB
 	private ClienteService clienteService;
 
 	private boolean alterando;
-	private List<Cliente> clientes;
 
 	private EnderecoCliente novoEndereco = new EnderecoCliente();
 	private boolean editandoEndereco = false;
+	
+	private Veiculo novoVeiculo = new Veiculo();
+	private boolean editandoVeiculo = false;
+	
+	private Cliente clienteLogado = new Cliente();
+	private String novaSenha;
 
+	private List<String> listaMarcas;
+	
 	@PostConstruct
 	public void montaRegistros() {
-		clientes = clienteService.filtrar(new HashMap<>());
+		clienteLogado = usuarioLogado.getClienteLogado();
+		
+		listaMarcas = Arrays.asList(
+				// Populares
+				"Chevrolet", "Volkswagen", "Fiat", "Ford", "Toyota", "Honda", "Renault", "Hyundai", "Peugeot",
+				"Citroën", "Nissan", "Jeep", "Mitsubishi", "Kia", "Chery", "JAC Motors", "Great Wall", "BYD",
+				"GWM Haval",
+
+				// Premium e esportivas
+				"BMW", "Mercedes-Benz", "Audi", "Volvo", "Lexus", "Mini", "Porsche", "Land Rover", "Jaguar", "Tesla",
+
+				// Outras conhecidas no Brasil
+				"Suzuki", "Subaru", "RAM", "Dodge", "Chrysler", "Alfa Romeo", "Maserati", "Ferrari", "Lamborghini",
+
+				// Antigas ou menos comuns
+				"Troller", "Mahindra", "Effa", "Lifan", "Geely", "Hafei", "Agrale", "Seat", "Saab",
+
+				// Caminhonetes e utilitários
+				"Iveco", "Scania", "MAN", "Volare");
 	}
 
-	@Override
-	public void criaObj() {
-		crudObj = new Cliente();
-		alterando = false;
-	}
-
-	@Override
 	public void salvar() {
-		if (!StringUtil.isCPFValido(crudObj.getCliCpf())) {
+		if (!StringUtil.isCPFValido(clienteLogado.getCliCpf())) {
 			JsfUtil.error("CPF inválido");
 			return;
 		}
-
-		crudObj.setCliCpf(StringUtil.getOnlyNumbers(crudObj.getCliCpf()));
-		crudObj.setCliTelefone(StringUtil.getOnlyNumbers(crudObj.getCliTelefone()));
-
-		if (alterando) {
-			clienteService.salvar(crudObj);
-			JsfUtil.info("Cliente atualizado com sucesso!");
-		} else {
-			Map<String, Object> filtros = new HashMap<>();
-			filtros.put("cliCpf", crudObj.getCliCpf());
-			List<Cliente> clientesExistentes = clienteService.filtrar(filtros);
-
-			if (clientesExistentes.isEmpty()) {
-				clienteService.salvar(crudObj);
-				JsfUtil.info("Cliente salvo com sucesso!");
-			} else {
-				JsfUtil.warn("Cliente já cadastrado com o CPF: " + clientesExistentes.get(0).getCliNome());
-				return;
-			}
+		clienteLogado.setCliCpf(StringUtil.getOnlyNumbers(clienteLogado.getCliCpf()));
+		clienteLogado.setCliTelefone(StringUtil.getOnlyNumbers(clienteLogado.getCliTelefone()));
+		
+		if (novaSenha != null && !novaSenha.isEmpty()) {
+		    clienteLogado.setCliSenha(StringUtil.gerarHashSHA256(novaSenha));
 		}
-		clientes = clienteService.filtrar(new HashMap<>());
-		criaObj();
-	}
-
-	@Override
-	public void deletar() {
-		clienteService.deletar(crudObj);
-		criaObj();
-		JsfUtil.info("Cliente excluído com sucesso!");
-		clientes = clienteService.filtrar(new HashMap<>());
-	}
-
-	public void selecionarCliente(Cliente cliente) {
-		this.crudObj = cliente;
-		this.alterando = true;
-		JsfUtil.info("Cliente selecionado.");
-	}
-
-	public void excluirCliente(Cliente cliente) {
-		this.crudObj = cliente;
-		boolean sucesso = clienteService.deletar(cliente);
-		criaObj();
-		if (sucesso) {
-			JsfUtil.info("Cliente excluído com sucesso!");
-		}
-		clientes = clienteService.filtrar(new HashMap<>());
-	}
-
-	public void excluirClienteSelecionado() {
-		boolean sucesso = clienteService.deletar(crudObj);
-		if (sucesso) {
-			JsfUtil.info("Cliente excluido com sucesso!");
-		}
-		criaObj();
+		
+		clienteService.salvar(clienteLogado);
+		JsfUtil.info("Cadastro atualizado com sucesso!");
 	}
 
 	public void salvarEndereco() {
@@ -154,7 +128,7 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
 		}
 
 		if (!editandoEndereco) {
-			crudObj.adicionarEndereco(novoEndereco);
+			clienteLogado.adicionarEndereco(novoEndereco);
 			JsfUtil.info("Endereço adicionado à lista.");
 		} else {
 			JsfUtil.info("Endereço editado.");
@@ -176,6 +150,35 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
 			}
 		}
 	}
+	
+	public void salvarVeiculo() {
+		if (StringUtil.isNullOrEmpty(novoVeiculo.getVeiMarca())) {
+			JsfUtil.error("O campo Marca é obrigatório.");
+			return;
+		}
+		if (StringUtil.isNullOrEmpty(novoVeiculo.getVeiModelo())) {
+			JsfUtil.error("O campo Modelo é obrigatório.");
+			return;
+		}
+		if (StringUtil.isNullOrEmpty(novoVeiculo.getVeiCor())) {
+			JsfUtil.error("O campo Cor é obrigatório.");
+			return;
+		}
+		if (StringUtil.isNullOrEmpty(novoVeiculo.getVeiPlaca())) {
+			JsfUtil.error("O campo Placa é obrigatório.");
+			return;
+		}
+
+		if (!editandoVeiculo) {
+			clienteLogado.adicionarVeiculo(novoVeiculo);
+			JsfUtil.info("Veículo adicionado à lista.");
+		} else {
+			JsfUtil.info("Veículo editado.");
+		}
+
+		this.novoVeiculo = new Veiculo();
+		JsfUtil.pfHideDialog("dlgVeiculo");
+	}
 
 	public void novoEndereco() {
 		this.novoEndereco = new EnderecoCliente();
@@ -186,9 +189,15 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
 		this.novoEndereco = end;
 		this.editandoEndereco = true;
 	}
+	
+	public void novoVeiculo() {
+		this.novoVeiculo = new Veiculo();
+		this.editandoVeiculo = false;
+	}
 
-	public Cliente getCrudObj() {
-		return crudObj;
+	public void editarVeiculo(Veiculo vei) {
+		this.novoVeiculo = vei;
+		this.editandoVeiculo = true;
 	}
 
 	public boolean isAlterando() {
@@ -197,14 +206,6 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
 
 	public void setAlterando(boolean alterando) {
 		this.alterando = alterando;
-	}
-
-	public List<Cliente> getClientes() {
-		return clientes;
-	}
-
-	public void setClientes(List<Cliente> clientes) {
-		this.clientes = clientes;
 	}
 
 	public EnderecoCliente getNovoEndereco() {
@@ -221,5 +222,45 @@ public class ClienteBean extends BaseCrud<Cliente> implements Serializable {
 
 	public void setEditandoEndereco(boolean editandoEndereco) {
 		this.editandoEndereco = editandoEndereco;
+	}
+	
+	public Veiculo getNovoVeiculo() {
+		return novoVeiculo;
+	}
+
+	public void setNovoVeiculo(Veiculo novoVeiculo) {
+		this.novoVeiculo = novoVeiculo;
+	}
+
+	public boolean isEditandoVeiculo() {
+		return editandoVeiculo;
+	}
+
+	public void setEditandoVeiculo(boolean editandoVeiculo) {
+		this.editandoVeiculo = editandoVeiculo;
+	}
+
+	public Cliente getClienteLogado() {
+		return clienteLogado;
+	}
+
+	public void setClienteLogado(Cliente clienteLogado) {
+		this.clienteLogado = clienteLogado;
+	}
+
+	public List<String> getListaMarcas() {
+		return listaMarcas;
+	}
+
+	public void setListaMarcas(List<String> listaMarcas) {
+		this.listaMarcas = listaMarcas;
+	}
+
+	public String getNovaSenha() {
+		return novaSenha;
+	}
+
+	public void setNovaSenha(String novaSenha) {
+		this.novaSenha = novaSenha;
 	}
 }

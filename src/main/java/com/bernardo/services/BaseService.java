@@ -1,6 +1,9 @@
 package com.bernardo.services;
 
+import com.bernardo.utils.ExclusaoException;
 import com.bernardo.utils.FiltrosPesquisa;
+import com.bernardo.utils.JsfUtil;
+
 import javax.ejb.EJB;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,7 +51,12 @@ public abstract class BaseService<T> implements Serializable {
     }
 
     public boolean deletar(Object obj) {
-        return customEntityManager.deletar(obj);
+        try {
+            return customEntityManager.deletar(obj);
+        } catch (ExclusaoException e) {
+            JsfUtil.warn("Não é possível excluir este registro. Ele está vinculado a outros dados.");
+            return false;
+        }
     }
 
     public void executeNativeUpdate(String query) {

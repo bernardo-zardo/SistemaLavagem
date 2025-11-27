@@ -88,9 +88,11 @@ public class AgendamentoBean extends BaseCrud<Agendamento> implements Serializab
 
 	@Override
 	public void deletar() {
-		agendamentoService.deletar(crudObj);
+		boolean sucesso = agendamentoService.deletar(crudObj);
 		criaObj();
-		JsfUtil.info("Agendamento excluído com sucesso!");
+		if (sucesso) {
+			JsfUtil.info("Agendamento excluído com sucesso!");
+		}
 		agendamentos = agendamentoService.filtrar(new HashMap<>());
 		agendamentos.sort(Comparator.comparing(Agendamento::getAgIdAgendamento).reversed());
 	}
@@ -104,9 +106,11 @@ public class AgendamentoBean extends BaseCrud<Agendamento> implements Serializab
 
 	public void excluirAgendamento(Agendamento agendamento) {
 		this.crudObj = agendamento;
-		agendamentoService.deletar(agendamento);
+		boolean sucesso = agendamentoService.deletar(agendamento);
 		criaObj();
-		JsfUtil.info("Agendamento excluído com sucesso!");
+		if (sucesso) {
+			JsfUtil.info("Agendamento excluído com sucesso!");
+		}
 		agendamentos = agendamentoService.filtrar(new HashMap<>());
 		agendamentos.sort(Comparator.comparing(Agendamento::getAgIdAgendamento).reversed());
 	}

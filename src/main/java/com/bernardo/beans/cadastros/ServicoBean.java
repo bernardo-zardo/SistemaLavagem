@@ -104,9 +104,11 @@ public class ServicoBean extends BaseCrud<Servico> implements Serializable {
 
 	@Override
 	public void deletar() {
-		servicoService.deletar(crudObj);
+		boolean sucesso = servicoService.deletar(crudObj);
 		criaObj();
-		JsfUtil.info("Serviço excluído com sucesso!");
+		if (sucesso) {
+			JsfUtil.info("Serviço excluído com sucesso!");
+		}
 		servicos = servicoService.filtrar(new HashMap<>());
 		servicos.sort(Comparator.comparing(Servico::getSerIdServico).reversed());
 	}
@@ -119,9 +121,11 @@ public class ServicoBean extends BaseCrud<Servico> implements Serializable {
 
 	public void excluirServico(Servico servico) {
 		this.crudObj = servico;
-		servicoService.deletar(servico);
+		boolean sucesso = servicoService.deletar(servico);
 		criaObj();
-		JsfUtil.info("Serviço excluído com sucesso!");
+		if (sucesso) {
+			JsfUtil.info("Serviço excluído com sucesso!");
+		}
 		servicos = servicoService.filtrar(new HashMap<>());
 		servicos.sort(Comparator.comparing(Servico::getSerIdServico).reversed());
 	}

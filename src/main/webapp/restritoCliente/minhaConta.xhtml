@@ -1,0 +1,391 @@
+<ui:composition template="/templates/pagina.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:components="http://xmlns.jcp.org/jsf/composite/components">
+
+	<ui:define name="title">
+        Cadastro de Cliente
+    </ui:define>
+
+	<ui:define name="content">
+		<link rel="stylesheet"
+			href="https://unpkg.com/leaflet/dist/leaflet.css" />
+		<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+		<h:form id="form1">
+			<p:growl id="mensagem" />
+
+			<p:panel header="Minha Conta" id="painelCliente"
+				styleClass="painel-custom-header">
+				<p:panelGrid columns="2" layout="grid">
+					<p:panelGrid columns="1" layout="grid">
+						<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
+							<h:panelGroup>
+								<p:outputLabel value="Nome Completo" for="nome" />
+								<p:inputText id="nome"
+									value="#{minhaContaBean.clienteLogado.cliNome}" required="true"
+									maxlength="50" style="width:100%" />
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:outputLabel value="E-mail" for="email" />
+								<p:inputText id="email"
+									value="#{minhaContaBean.clienteLogado.cliEmail}"
+									required="true" maxlength="64" style="width:100%" />
+							</h:panelGroup>
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
+							<h:panelGroup>
+								<p:outputLabel value="CPF" for="cpf" />
+								<p:inputMask id="cpf"
+									value="#{minhaContaBean.clienteLogado.cliCpf}"
+									mask="999.999.999-99" required="true" style="width:100%">
+								</p:inputMask>
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:outputLabel value="Telefone" for="telefone" />
+								<p:inputMask id="telefone"
+									value="#{minhaContaBean.clienteLogado.cliTelefone}"
+									mask="(99) 99999-9999" required="true" style="width:100%" />
+							</h:panelGroup>
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
+							<h:panelGroup>
+								<p:outputLabel value="Nova Senha" for="senha" />
+								<p:password id="senha" value="#{minhaContaBean.novaSenha}"
+									maxlength="32" toggleMask="true" style="width:100%" />
+							</h:panelGroup>
+						</p:panelGrid>
+
+						<p:divider style="width: 99%;" />
+
+						<p:outputLabel value="Endereços" />
+
+						<h:panelGroup id="endereco">
+							<p:panelGrid columns="1" layout="grid" style="margin-left: -10px">
+								<p:commandButton value="Cadastrar Endereço" icon="pi pi-plus"
+									oncomplete="PF('dlgEndereco').show()" process="@this"
+									actionListener="#{minhaContaBean.novoEndereco()}"
+									update=":form1:dialogEndereco" style="margin-top:10px;" />
+							</p:panelGrid>
+
+							<p:panelGrid columns="1" layout="grid" style="margin-left: -25px">
+								<p:dataGrid id="enderecosTable" var="endereco" layout="grid"
+									columns="1"
+									value="#{minhaContaBean.clienteLogado.cliEnderecos}"
+									styleClass="dataGrid-servicos"
+									emptyMessage="Nenhum endereço adicionado">
+
+									<p:panel styleClass="card-servico">
+										<p:panelGrid columns="2" layout="grid">
+											<p:panelGrid columns="1" layout="grid"
+												style="margin-left:-10px">
+												<p:panelGrid layout="grid" columns="1"
+													style="margin-left: -10px; margin-top: -10px">
+													<h:outputText value="#{endereco.endDescricao}"
+														style="font-weight: bold" />
+
+													<h:outputText
+														value="#{endereco.endRua}, #{endereco.endNumero}, #{endereco.endComplemento}" />
+
+													<h:outputText
+														value="#{endereco.endCidade}, #{endereco.endUf}" />
+												</p:panelGrid>
+											</p:panelGrid>
+
+											<h:panelGroup>
+												<div align="right" style="margin-top: 15px;">
+													<p:commandButton icon="pi pi-map-marker"
+														onclick="mostrarMapa('#{endereco.endLatitude}', '#{endereco.endLongitude}', '#{endereco.endRua}'); return false;"
+														type="button" />
+
+													<p:commandButton icon="pi pi-pencil"
+														actionListener="#{minhaContaBean.editarEndereco(endereco)}"
+														oncomplete="PF('dlgEndereco').show()"
+														update=":form1:dialogEndereco" process="@this"
+														styleClass="ui-button-success" style="margin-left:10px;" />
+
+													<p:commandButton icon="pi pi-trash"
+														styleClass="ui-button-danger"
+														actionListener="#{minhaContaBean.clienteLogado.removerEndereco(endereco)}"
+														update="enderecosTable" process="@this"
+														style="margin-left:10px;">
+														<p:confirm header="Atenção!"
+															message="Excluir este endereço?"
+															icon="pi pi-exclamation-triangle" />
+													</p:commandButton>
+												</div>
+											</h:panelGroup>
+										</p:panelGrid>
+									</p:panel>
+								</p:dataGrid>
+							</p:panelGrid>
+						</h:panelGroup>
+
+						<p:divider style="width: 99%;" />
+
+						<p:outputLabel value="Veículos" />
+
+						<h:panelGroup id="veiculo">
+							<p:panelGrid columns="1" layout="grid" style="margin-left: -10px">
+								<p:commandButton value="Cadastrar Veículo" icon="pi pi-plus"
+									oncomplete="PF('dlgVeiculo').show()" process="@this"
+									actionListener="#{minhaContaBean.novoEndereco()}"
+									update=":form1:dialogVeiculo" style="margin-top:10px;" />
+							</p:panelGrid>
+
+							<p:panelGrid columns="1" layout="grid" style="margin-left: -25px">
+								<p:dataGrid id="veiculosTable" var="veiculo" layout="grid"
+									columns="1" value="#{minhaContaBean.clienteLogado.cliVeiculos}"
+									styleClass="dataGrid-servicos"
+									emptyMessage="Nenhum Veículo adicionado">
+
+									<p:panel styleClass="card-servico">
+										<p:panelGrid columns="2" layout="grid">
+											<p:panelGrid columns="1" layout="grid"
+												style="margin-left:-10px">
+												<p:panelGrid layout="grid" columns="1"
+													style="margin-left: -10px; margin-top: -10px">
+													<h:outputText
+														value="#{veiculo.veiMarca} - #{veiculo.veiModelo}"
+														style="font-weight: bold" />
+
+													<h:outputText
+														value="Placa: #{veiculo.veiPlaca}, Cor: #{veiculo.veiCor}" />
+												</p:panelGrid>
+											</p:panelGrid>
+
+											<h:panelGroup>
+												<div align="right" style="margin-top: 15px;">
+													<p:commandButton icon="pi pi-pencil"
+														actionListener="#{minhaContaBean.editarVeiculo(veiculo)}"
+														oncomplete="PF('dlgVeiculo').show()"
+														update=":form1:dialogVeiculo" process="@this"
+														styleClass="ui-button-success" style="margin-left:10px;" />
+
+													<p:commandButton icon="pi pi-trash"
+														styleClass="ui-button-danger"
+														actionListener="#{minhaContaBean.clienteLogado.removerVeiculo(veiculo)}"
+														update="veiculosTable" process="@this"
+														style="margin-left:10px;">
+														<p:confirm header="Atenção!"
+															message="Excluir este veículo?"
+															icon="pi pi-exclamation-triangle" />
+													</p:commandButton>
+												</div>
+											</h:panelGroup>
+										</p:panelGrid>
+									</p:panel>
+								</p:dataGrid>
+							</p:panelGrid>
+						</h:panelGroup>
+					</p:panelGrid>
+				</p:panelGrid>
+			</p:panel>
+
+			<p:panel styleClass="painel-custom">
+				<div align="right">
+					<p:commandButton value="Salvar"
+						actionListener="#{minhaContaBean.salvar()}" icon="pi pi-save"
+						process="@form" update=":form1:painelCliente :form1:mensagem"
+						styleClass="btn-acoes ui-button-success" />
+				</div>
+			</p:panel>
+
+			<p:dialog id="dlgMapa" widgetVar="mapDialog"
+				header="Localização do Cliente" modal="true" width="1200"
+				height="600" responsive="true">
+				<div id="mapaCliente" style="width: 100%; height: 600px;"></div>
+			</p:dialog>
+
+			<p:dialog id="dialogEndereco" widgetVar="dlgEndereco" modal="true"
+				header="Cadastro de Endereço" width="700" closable="true"
+				resizable="false">
+
+				<p:panelGrid id="enderecoNovo" columns="1" layout="grid">
+					<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
+						<h:panelGroup>
+							<p:outputLabel value="Descrição" for="desc" />
+							<p:inputText id="desc"
+								value="#{minhaContaBean.novoEndereco.endDescricao}"
+								style="width:100%">
+								<p:ajax process="@this" />
+							</p:inputText>
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
+						<h:panelGroup>
+							<p:outputLabel value="CEP *" for="cepEnd" />
+							<p:inputMask id="cepEnd" mask="99999-999"
+								value="#{minhaContaBean.novoEndereco.endCep}" style="width:100%">
+								<p:ajax event="blur"
+									listener="#{minhaContaBean.preencherEnderecoPorCep()}"
+									update="form1:enderecoNovo" />
+							</p:inputMask>
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
+						<h:panelGroup>
+							<p:outputLabel value="Rua *" for="ruaEnd" />
+							<p:inputText id="ruaEnd"
+								value="#{minhaContaBean.novoEndereco.endRua}" style="width:100%" />
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
+						<h:panelGroup>
+							<p:outputLabel value="Número *" for="numEnd" />
+							<p:inputText id="numEnd"
+								value="#{minhaContaBean.novoEndereco.endNumero}"
+								style="width:100%" />
+						</h:panelGroup>
+
+						<h:panelGroup>
+							<p:outputLabel value="Complemento" for="compEnd" />
+							<p:inputText id="compEnd"
+								value="#{minhaContaBean.novoEndereco.endComplemento}"
+								style="width:100%" />
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
+						<h:panelGroup>
+							<p:outputLabel value="Cidade *" for="cidadeEnd" />
+							<p:inputText id="cidadeEnd"
+								value="#{minhaContaBean.novoEndereco.endCidade}"
+								style="width:100%" />
+						</h:panelGroup>
+
+						<h:panelGroup>
+							<p:outputLabel value="Bairro *" for="bairroEnd" />
+							<p:inputText id="bairroEnd"
+								value="#{minhaContaBean.novoEndereco.endBairro}"
+								style="width:100%" />
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" layout="grid" style="margin-left: -10px">
+						<h:panelGroup>
+							<p:outputLabel value="UF *" for="ufEnd" />
+							<p:inputText id="ufEnd"
+								value="#{minhaContaBean.novoEndereco.endUf}" size="2"
+								style="width:100%" />
+						</h:panelGroup>
+					</p:panelGrid>
+				</p:panelGrid>
+				<br />
+				<br />
+
+				<div align="right">
+					<p:commandButton value="Salvar" icon="pi pi-check"
+						actionListener="#{minhaContaBean.salvarEndereco()}"
+						update=":form1:enderecosTable :form1:mensagem"
+						process=":form1:dialogEndereco"
+						styleClass="ui-button-success btn-acoes" />
+					<p:commandButton value="Cancelar" icon="pi pi-times"
+						onclick="PF('dlgEndereco').hide()" type="button"
+						styleClass="ui-button-secondary btn-acoes" />
+				</div>
+			</p:dialog>
+
+			<p:dialog id="dialogVeiculo" widgetVar="dlgVeiculo" modal="true"
+				header="Cadastro de Veículo" width="700" closable="true"
+				resizable="false">
+				<p:panelGrid id="veiculoNovo" columns="1" layout="grid">
+					<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+						<h:panelGroup>
+							<p:outputLabel value="Marca *" for="marca" />
+							<p:selectOneMenu id="marca"
+								value="#{minhaContaBean.novoVeiculo.veiMarca}"
+								style="width:100%" filterMatchMode="contains" filter="true">
+								<f:selectItem itemLabel="Selecione a marca do Veículo"
+									itemValue="" noSelectionOption="true" />
+								<f:selectItems value="#{minhaContaBean.listaMarcas}" var="marca"
+									itemLabel="#{marca}" itemValue="#{marca}" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+
+						<h:panelGroup>
+							<p:outputLabel value="Modelo *" for="modelo" />
+							<p:inputText id="modelo"
+								value="#{minhaContaBean.novoVeiculo.veiModelo}" maxlength="45"
+								style="width:100%" />
+						</h:panelGroup>
+					</p:panelGrid>
+
+					<p:panelGrid columns="2" layout="grid" style="margin-left:-10px">
+						<h:panelGroup>
+							<p:outputLabel value="Cor" for="cor" />
+							<p:inputText id="cor"
+								value="#{minhaContaBean.novoVeiculo.veiCor}" maxlength="45"
+								style="width:100%" />
+						</h:panelGroup>
+
+						<h:panelGroup>
+							<p:outputLabel value="Placa *" for="placa" />
+							<p:inputText id="placa"
+								value="#{minhaContaBean.novoVeiculo.veiPlaca}" maxlength="15"
+								style="width:100%" />
+						</h:panelGroup>
+					</p:panelGrid>
+				</p:panelGrid>
+				<br />
+				<br />
+
+				<div align="right">
+					<p:commandButton value="Salvar" icon="pi pi-check"
+						actionListener="#{minhaContaBean.salvarVeiculo()}"
+						update=":form1:veiculosTable :form1:mensagem"
+						process=":form1:dialogVeiculo"
+						styleClass="ui-button-success btn-acoes" />
+					<p:commandButton value="Cancelar" icon="pi pi-times"
+						onclick="PF('dlgVeiculo').hide()" type="button"
+						styleClass="ui-button-secondary btn-acoes" />
+				</div>
+			</p:dialog>
+		</h:form>
+
+		<script>
+		    var mapa = null;
+		
+		    function mostrarMapa(latStr, lngStr, nome) {
+		        PF('mapDialog').show();
+		
+		        setTimeout(function() {
+		            var latNum = parseFloat(String(latStr).replace(',', '.'));
+		            var lngNum = parseFloat(String(lngStr).replace(',', '.'));
+		
+		            console.log('mostrarMapa() raw:', latStr, lngStr);
+		            console.log('mostrarMapa() parsed:', latNum, lngNum);
+		
+		            if (isNaN(latNum) || isNaN(lngNum)) {
+		                alert('Coordenadas inválidas para o cliente.\nLatitude: ' + latStr + '\nLongitude: ' + lngStr);
+		                return;
+		            }
+		            if (mapa !== null) {
+		                mapa.remove();
+		                mapa = null;
+		            }
+		            mapa = L.map('mapaCliente', { scrollWheelZoom: false }).setView([latNum, lngNum], 15);
+		
+		            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		                maxZoom: 19,
+		                attribution: '© OpenStreetMap contributors'
+		            }).addTo(mapa);
+		
+		            L.marker([latNum, lngNum]).addTo(mapa)
+		                .bindPopup(nome || 'Localização')
+		                .openPopup();
+		        }, 200);
+		    }
+		</script>
+	</ui:define>
+</ui:composition>

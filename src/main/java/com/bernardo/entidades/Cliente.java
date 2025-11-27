@@ -134,6 +134,16 @@ public class Cliente implements Serializable {
 	    endereco.setEndCliente(null);
 	}
 	
+	public void adicionarVeiculo(Veiculo veiculo) {
+	    veiculo.setVeiCliente(this);
+	    this.cliVeiculos.add(veiculo);
+	}
+
+	public void removerVeiculo(Veiculo veiculo) {
+	    this.cliVeiculos.remove(veiculo);
+	    veiculo.setVeiCliente(null);
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(cliIdCliente);

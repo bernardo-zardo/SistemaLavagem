@@ -5,6 +5,9 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
+import com.bernardo.utils.ExclusaoException;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -26,12 +29,21 @@ public class CustomEntityManager implements Serializable {
     }
 
     public boolean deletar(Object obj) {
-        if (!entityManager.contains(obj)) {
-            obj = entityManager.merge(obj);
-        }
+        try {
 
-        entityManager.remove(obj);
-        return true;
+            if (!entityManager.contains(obj)) {
+                obj = entityManager.merge(obj);
+            }
+
+            entityManager.remove(obj);
+
+            entityManager.flush();
+
+            return true;
+
+        } catch (Exception e) {
+            throw new ExclusaoException("Erro ao excluir registro.", e);
+        }
     }
 
     public void executeNativeUpdate(String query) {

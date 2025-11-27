@@ -34,6 +34,7 @@ import com.bernardo.services.ResponsavelService;
 import com.bernardo.services.ServicoService;
 import com.bernardo.services.TipoServicoService;
 import com.bernardo.services.VeiculoService;
+import com.bernardo.utils.EmailService;
 import com.bernardo.utils.JsfUtil;
 
 /**
@@ -182,10 +183,40 @@ public class ConsultaAgendamentoBean implements Serializable {
 	}
 
 	public void cancelarAgendamento(Agendamento a) {
-		a.setAgStatus("X");
-		agendamentoService.salvar(a);
-		JsfUtil.info("Agendamento cancelado com sucesso.");
-		filtrarAgendamentos();
+	    a.setAgStatus("X");
+	    agendamentoService.salvar(a);
+
+	    try {
+	    	String email = "bernardozardomergen@gmail.com";
+	    	String nome = a.getAgVeiculo().getVeiCliente().getCliNome();
+
+	    	String assunto = "Cancelamento de Agendamento - Lavagem Daniel";
+
+	    	String mensagem = 
+	    	        "<div style='font-family: Arial, sans-serif; padding: 20px; color: #333; line-height: 1.6; font-size: 16px;'>"
+	    	        + "    <h2 style='color:#1a96cc; font-weight: bold;'>Cancelamento de Agendamento</h2>"
+	    	        + "    <p style='font-size: 16px;'>Olá <strong>" + nome + "</strong>,</p>"
+	    	        + "    <p style='font-size: 16px;'>"
+	    	        + "        Informamos que o seu agendamento marcado para o dia "
+	    	        + "        <strong>" + a.getDataPadraoFormatada() + "</strong> foi <strong>cancelado</strong>."
+	    	        + "    </p>"
+	    	        + "    <p style='font-size: 16px;'>"
+	    	        + "        Caso deseje reagendar, nossa equipe está à disposição para ajudar!"
+	    	        + "    </p>"
+	    	        + "    <br>"
+	    	        + "    <p style='font-weight: bold; font-size: 16px;'>Atenciosamente,<br>Lavagem Daniel</p>"
+	    	        + "    <hr style='margin-top:25px; border: none; border-top: 1px solid #ddd;'>"
+	    	        + "    <p style='font-size: 12px; color:#777;'>Esta é uma mensagem automática. Por favor, não responda este e-mail.</p>"
+	    	        + "</div>";
+
+	        EmailService.enviarEmail(email, assunto, mensagem);
+
+	    } catch (Exception e) {
+	        System.err.println("Erro ao enviar e-mail de cancelamento: " + e.getMessage());
+	    }
+
+	    JsfUtil.info("Agendamento cancelado com sucesso.");
+	    filtrarAgendamentos();
 	}
 
 	public void concluirServico() {
@@ -224,6 +255,53 @@ public class ConsultaAgendamentoBean implements Serializable {
 		agendamentoSelecionado.setAgStatus("C");
 		agendamentoSelecionado.setAgTipoServico(tipoServicoAux);
 		agendamentoService.salvar(agendamentoSelecionado);
+		
+	    try {
+	        String email = "bernardozardomergen@gmail.com";
+	        String nome = agendamentoSelecionado.getAgVeiculo().getVeiCliente().getCliNome();
+
+	        String assunto = "Serviço Concluído - Lavagem Daniel";
+
+	        String servico = tipoServicoAux.getTsNome();
+	        String data = agendamentoSelecionado.getDataPadraoFormatada();
+
+	        String mensagemEntregaOuRetirada;
+
+	        if (agendamentoSelecionado.isAgPossuiEntregaVeiculo()) {
+	            mensagemEntregaOuRetirada =
+	                "Em breve, o veículo será entregue no endereço selecionado para <strong>entrega</strong>.";
+	        } else {
+	            mensagemEntregaOuRetirada =
+	                "Seu veículo está pronto para <strong>retirada</strong> na Lavagem Daniel.";
+	        }
+
+	        String mensagem =
+	            "<div style='font-family: Arial, sans-serif; padding: 20px; color: #333; line-height: 1.6; font-size: 16px;'>"
+	            + "    <h2 style='color:#1a96cc; font-weight: bold;'>Serviço Concluído</h2>"
+	            + "    <p style='font-size: 16px;'>Olá <strong>" + nome + "</strong>,</p>"
+	            + "    <p style='font-size: 16px;'>Seu serviço foi concluído com sucesso!</p>"
+
+	            + "    <p style='font-size: 16px; margin-top: 10px;'>"
+	            + "        <strong>Serviço:</strong> " + servico + "<br>"
+	            + "        <strong>Data:</strong> " + data
+	            + "    </p>"
+
+	            + "    <p style='font-size: 16px; margin-top: 10px;'>"
+	            +          mensagemEntregaOuRetirada
+	            + "    </p>"
+
+	            + "    <br>"
+	            + "    <p style='font-weight: bold; font-size: 16px;'>Agradecemos pela preferência.<br>Lavagem Daniel</p>"
+
+	            + "    <hr style='margin-top:25px; border: none; border-top: 1px solid #ddd;'>"
+	            + "    <p style='font-size: 12px; color:#777;'>Esta é uma mensagem automática. Por favor, não responda este e-mail.</p>"
+	            + "</div>";
+	        
+	        EmailService.enviarEmail(email, assunto, mensagem);
+
+	    } catch (Exception e) {
+	        System.err.println("Erro ao enviar email de conclusão: " + e.getMessage());
+	    }
 
 		JsfUtil.info("Serviço concluído e registrado com sucesso.");
 		filtrarAgendamentos();

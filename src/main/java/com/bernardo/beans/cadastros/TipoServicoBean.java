@@ -56,9 +56,11 @@ public class TipoServicoBean extends BaseCrud<TipoServico> implements Serializab
     
     @Override
     public void deletar() {
-    	tipoServicoService.deletar(crudObj);
+    	boolean sucesso = tipoServicoService.deletar(crudObj);
     	criaObj();
-    	JsfUtil.info("Tipo de Serviço excluído com sucesso!");
+    	if (sucesso) {
+    		JsfUtil.info("Tipo de Serviço excluído com sucesso!");
+    	}
     	tiposServico = tipoServicoService.filtrar(new HashMap<>());
     }
 
@@ -70,9 +72,11 @@ public class TipoServicoBean extends BaseCrud<TipoServico> implements Serializab
     
     public void excluirTipoServico(TipoServico tipoServico) {
         this.crudObj = tipoServico;
-        tipoServicoService.deletar(tipoServico);
+        boolean sucesso = tipoServicoService.deletar(tipoServico);
         criaObj();
-        JsfUtil.info("Tipo de Serviço excluído com sucesso!");
+        if (sucesso) {
+        	JsfUtil.info("Tipo de Serviço excluído com sucesso!");
+        }
         tiposServico = tipoServicoService.filtrar(new HashMap<>());
     }
     
