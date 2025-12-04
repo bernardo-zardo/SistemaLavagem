@@ -7,19 +7,19 @@
 	<h:form id="menuForm">
 		<header class="topbar">
 			<nav class="topbar-nav">
-			<h:panelGroup rendered="#{gerBean.responsavelLogado}">
-				<a href="#{request.contextPath}/restrito/indexAdmin.xhtml"
-					class="topbar-brand"> <i class="fa-solid fa-car-on"></i>
-					Lavagem Daniel
-				</a>
-			</h:panelGroup>	
-			
-			<h:panelGroup rendered="#{gerBean.clienteLogado}">
-				<a href="#{request.contextPath}/restritoCliente/indexCliente.xhtml"
-					class="topbar-brand"> <i class="fa-solid fa-car-on"></i>
-					Lavagem Daniel
-				</a>
-			</h:panelGroup>	
+				<h:panelGroup rendered="#{gerBean.responsavelLogado}">
+					<a href="#{request.contextPath}/restrito/indexAdmin.xhtml"
+						class="topbar-brand"> <i class="fa-solid fa-car-on"></i>
+						Lavagem Daniel
+					</a>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{gerBean.clienteLogado}">
+					<a href="#{request.contextPath}/restritoCliente/indexCliente.xhtml"
+						class="topbar-brand"> <i class="fa-solid fa-car-on"></i>
+						Lavagem Daniel
+					</a>
+				</h:panelGroup>
 
 				<button type="button" class="topbar-toggle" id="mobile-menu-button"
 					aria-controls="topbar-menu" aria-expanded="false">
@@ -55,6 +55,9 @@
 									<h:link outcome="/restrito/cadastros/agendamento"
 										styleClass="dropdown-item">
 										<i class="pi pi-calendar"></i> Agendamento </h:link>
+									<h:link outcome="/restrito/cadastros/cadastroResponsavel"
+										styleClass="dropdown-item">
+										<i class="pi pi-id-card"></i> Responsável</h:link>
 								</div></li>
 							<li class="nav-item dropdown"><a href="#"
 								class="nav-link dropdown-toggle"> <i class="pi pi-chart-bar"></i>
@@ -69,11 +72,11 @@
 										styleClass="dropdown-item">
 										<i class="pi pi-calendar"></i> Agendamentos </h:link>
 								</div></li>
-								
-							<li class="nav-item"><h:link outcome="/restrito/consultas/agenda"
-									styleClass="nav-link">
+
+							<li class="nav-item"><h:link
+									outcome="/restrito/consultas/agenda" styleClass="nav-link">
 									<i class="pi pi-calendar"></i> Agenda
-								</h:link></li>	
+								</h:link></li>
 						</ul>
 					</h:panelGroup>
 
@@ -100,7 +103,8 @@
 								styleClass="ui-button-login" />
 						</h:panelGroup>
 
-						<h:panelGroup id="userPanel" rendered="#{gerBean.responsavelLogado}"
+						<h:panelGroup id="userPanel"
+							rendered="#{gerBean.responsavelLogado}"
 							styleClass="user-info-group" layout="block">
 							<h:outputLink id="userLink" styleClass="user-name"
 								onclick="PF('userMenu').toggle(this);return false;">
@@ -119,8 +123,9 @@
 							</p:overlayPanel>
 						</h:panelGroup>
 
-						<h:panelGroup id="userPanelCliente" rendered="#{gerBean.clienteLogado}"
-							styleClass="user-info-group" layout="block">
+						<h:panelGroup id="userPanelCliente"
+							rendered="#{gerBean.clienteLogado}" styleClass="user-info-group"
+							layout="block">
 							<h:outputLink id="userLinkCliente" styleClass="user-name"
 								onclick="PF('userMenuCliente').toggle(this);return false;">
 								<i class="pi pi-user"></i>

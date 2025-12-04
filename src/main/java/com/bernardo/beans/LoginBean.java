@@ -77,7 +77,9 @@ public class LoginBean implements Serializable {
             }
 
             Responsavel usuario = responsavelList.get(0);
-            if (!senha.equals(usuario.getResSenha())) {
+            String senhaCriptografada = StringUtil.gerarHashSHA256(senha);
+            
+            if (!senhaCriptografada.equals(usuario.getResSenha())) {
                 JsfUtil.warn("Senha inválida");
                 return;
             }

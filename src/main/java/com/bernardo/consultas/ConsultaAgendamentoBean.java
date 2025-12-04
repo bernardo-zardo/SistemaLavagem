@@ -11,10 +11,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -76,6 +76,8 @@ public class ConsultaAgendamentoBean implements Serializable {
 	private TipoServico tipoServicoSelecionado;
 
 	private List<Agendamento> agendamentosFiltrados = new ArrayList<>();
+	private boolean enviarEmailConclusao = true;
+	private boolean enviarEmailCancelamento = true;
 
 	@PostConstruct
 	public void init() {
@@ -187,32 +189,39 @@ public class ConsultaAgendamentoBean implements Serializable {
 	    agendamentoService.salvar(a);
 
 	    try {
-	    	String email = "bernardozardomergen@gmail.com";
-	    	String nome = a.getAgVeiculo().getVeiCliente().getCliNome();
+	        final String email = "bernardozardomergen@gmail.com";
+	        final String nome = a.getAgVeiculo().getVeiCliente().getCliNome();
+	        final String data = a.getDataPadraoFormatada();
+	        final String assunto = "Cancelamento de Agendamento - Lavagem Daniel";
 
-	    	String assunto = "Cancelamento de Agendamento - Lavagem Daniel";
+	        CompletableFuture.runAsync(() -> {
+	            try {
+	                String mensagem =
+	                        "<div style='font-family: Arial, sans-serif; padding: 20px; color: #333; line-height: 1.6; font-size: 16px;'>"
+	                        + "    <h2 style='color:#1a96cc; font-weight: bold;'>Cancelamento de Agendamento</h2>"
+	                        + "    <p style='font-size: 16px;'>Olá <strong>" + nome + "</strong>,</p>"
+	                        + "    <p style='font-size: 16px;'>"
+	                        + "        Informamos que o seu agendamento marcado para o dia "
+	                        + "        <strong>" + data + "</strong> foi <strong>cancelado</strong>."
+	                        + "    </p>"
+	                        + "    <p style='font-size: 16px;'>"
+	                        + "        Caso deseje reagendar, nossa equipe está à disposição para ajudar!"
+	                        + "    </p>"
+	                        + "    <br>"
+	                        + "    <p style='font-weight: bold; font-size: 16px;'>Atenciosamente,<br>Lavagem Daniel</p>"
+	                        + "    <hr style='margin-top:25px; border: none; border-top: 1px solid #ddd;'>"
+	                        + "    <p style='font-size: 12px; color:#777;'>Esta é uma mensagem automática. Por favor, não responda este e-mail.</p>"
+	                        + "</div>";
 
-	    	String mensagem = 
-	    	        "<div style='font-family: Arial, sans-serif; padding: 20px; color: #333; line-height: 1.6; font-size: 16px;'>"
-	    	        + "    <h2 style='color:#1a96cc; font-weight: bold;'>Cancelamento de Agendamento</h2>"
-	    	        + "    <p style='font-size: 16px;'>Olá <strong>" + nome + "</strong>,</p>"
-	    	        + "    <p style='font-size: 16px;'>"
-	    	        + "        Informamos que o seu agendamento marcado para o dia "
-	    	        + "        <strong>" + a.getDataPadraoFormatada() + "</strong> foi <strong>cancelado</strong>."
-	    	        + "    </p>"
-	    	        + "    <p style='font-size: 16px;'>"
-	    	        + "        Caso deseje reagendar, nossa equipe está à disposição para ajudar!"
-	    	        + "    </p>"
-	    	        + "    <br>"
-	    	        + "    <p style='font-weight: bold; font-size: 16px;'>Atenciosamente,<br>Lavagem Daniel</p>"
-	    	        + "    <hr style='margin-top:25px; border: none; border-top: 1px solid #ddd;'>"
-	    	        + "    <p style='font-size: 12px; color:#777;'>Esta é uma mensagem automática. Por favor, não responda este e-mail.</p>"
-	    	        + "</div>";
+	                EmailService.enviarEmail(email, assunto, mensagem);
 
-	        EmailService.enviarEmail(email, assunto, mensagem);
+	            } catch (Exception e) {
+	                System.err.println("Erro ao enviar e-mail de cancelamento: " + e.getMessage());
+	            }
+	        });
 
 	    } catch (Exception e) {
-	        System.err.println("Erro ao enviar e-mail de cancelamento: " + e.getMessage());
+	        System.err.println("Erro ao preparar e-mail assíncrono: " + e.getMessage());
 	    }
 
 	    JsfUtil.info("Agendamento cancelado com sucesso.");
@@ -256,55 +265,57 @@ public class ConsultaAgendamentoBean implements Serializable {
 		agendamentoSelecionado.setAgTipoServico(tipoServicoAux);
 		agendamentoService.salvar(agendamentoSelecionado);
 		
-	    try {
-	        String email = "bernardozardomergen@gmail.com";
-	        String nome = agendamentoSelecionado.getAgVeiculo().getVeiCliente().getCliNome();
-
-	        String assunto = "Serviço Concluído - Lavagem Daniel";
-
-	        String servico = tipoServicoAux.getTsNome();
-	        String data = agendamentoSelecionado.getDataPadraoFormatada();
-
-	        String mensagemEntregaOuRetirada;
-
-	        if (agendamentoSelecionado.isAgPossuiEntregaVeiculo()) {
-	            mensagemEntregaOuRetirada =
-	                "Em breve, o veículo será entregue no endereço selecionado para <strong>entrega</strong>.";
-	        } else {
-	            mensagemEntregaOuRetirada =
-	                "Seu veículo está pronto para <strong>retirada</strong> na Lavagem Daniel.";
-	        }
-
-	        String mensagem =
-	            "<div style='font-family: Arial, sans-serif; padding: 20px; color: #333; line-height: 1.6; font-size: 16px;'>"
-	            + "    <h2 style='color:#1a96cc; font-weight: bold;'>Serviço Concluído</h2>"
-	            + "    <p style='font-size: 16px;'>Olá <strong>" + nome + "</strong>,</p>"
-	            + "    <p style='font-size: 16px;'>Seu serviço foi concluído com sucesso!</p>"
-
-	            + "    <p style='font-size: 16px; margin-top: 10px;'>"
-	            + "        <strong>Serviço:</strong> " + servico + "<br>"
-	            + "        <strong>Data:</strong> " + data
-	            + "    </p>"
-
-	            + "    <p style='font-size: 16px; margin-top: 10px;'>"
-	            +          mensagemEntregaOuRetirada
-	            + "    </p>"
-
-	            + "    <br>"
-	            + "    <p style='font-weight: bold; font-size: 16px;'>Agradecemos pela preferência.<br>Lavagem Daniel</p>"
-
-	            + "    <hr style='margin-top:25px; border: none; border-top: 1px solid #ddd;'>"
-	            + "    <p style='font-size: 12px; color:#777;'>Esta é uma mensagem automática. Por favor, não responda este e-mail.</p>"
-	            + "</div>";
-	        
-	        EmailService.enviarEmail(email, assunto, mensagem);
-
-	    } catch (Exception e) {
-	        System.err.println("Erro ao enviar email de conclusão: " + e.getMessage());
-	    }
+		if (enviarEmailConclusao) {
+			try {
+		        final String email = "bernardozardomergen@gmail.com";
+		        final String nome = agendamentoSelecionado.getAgVeiculo().getVeiCliente().getCliNome();
+		        final String assunto = "Serviço Concluído - Lavagem Daniel";
+		        final String servico = tipoServicoAux.getTsNome();
+		        final String data = agendamentoSelecionado.getDataPadraoFormatada();
+		        final boolean entrega = agendamentoSelecionado.isAgPossuiEntregaVeiculo();
+	
+		        CompletableFuture.runAsync(() -> {
+		            try {
+		                String mensagemEntregaOuRetirada = entrega
+		                    ? "Em breve, o veículo será entregue no endereço selecionado."
+		                    : "Seu veículo está pronto para retirada na Lavagem Daniel.";
+	
+		                String mensagem =
+		        	            "<div style='font-family: Arial, sans-serif; padding: 20px; color: #333; line-height: 1.6; font-size: 16px;'>"
+		        	            + "    <h2 style='color:#1a96cc; font-weight: bold;'>Serviço Concluído</h2>"
+		        	            + "    <p style='font-size: 16px;'>Olá <strong>" + nome + "</strong>,</p>"
+		        	            + "    <p style='font-size: 16px;'>Seu serviço foi concluído com sucesso!</p>"
+	
+		        	            + "    <p style='font-size: 16px; margin-top: 10px;'>"
+		        	            + "        <strong>Serviço:</strong> " + servico + "<br>"
+		        	            + "        <strong>Data:</strong> " + data
+		        	            + "    </p>"
+	
+		        	            + "    <p style='font-size: 16px; margin-top: 10px;'>"
+		        	            +          mensagemEntregaOuRetirada
+		        	            + "    </p>"
+	
+		        	            + "    <br>"
+		        	            + "    <p style='font-weight: bold; font-size: 16px;'>Agradecemos pela preferência.<br>Lavagem Daniel</p>"
+	
+		        	            + "    <hr style='margin-top:25px; border: none; border-top: 1px solid #ddd;'>"
+		        	            + "    <p style='font-size: 12px; color:#777;'>Esta é uma mensagem automática. Por favor, não responda este e-mail.</p>"
+		        	            + "</div>";
+	
+		                EmailService.enviarEmail(email, assunto, mensagem);
+		            } catch (Exception e) {
+		                System.err.println("Erro ao enviar email: " + e.getMessage());
+		            }
+		        });
+	
+		    } catch (Exception e) {
+		        System.err.println("Erro ao preparar email: " + e.getMessage());
+		    }
+		}
 
 		JsfUtil.info("Serviço concluído e registrado com sucesso.");
 		filtrarAgendamentos();
+		JsfUtil.pfHideDialog("dlgConcluirServico");
 	}
 
 	public ScheduleModel getEventModel() {
@@ -401,5 +412,21 @@ public class ConsultaAgendamentoBean implements Serializable {
 
 	public void setTipoServicoSelecionado(TipoServico tipoServicoSelecionado) {
 		this.tipoServicoSelecionado = tipoServicoSelecionado;
+	}
+
+	public boolean isEnviarEmailConclusao() {
+		return enviarEmailConclusao;
+	}
+
+	public void setEnviarEmailConclusao(boolean enviarEmailConclusao) {
+		this.enviarEmailConclusao = enviarEmailConclusao;
+	}
+
+	public boolean isEnviarEmailCancelamento() {
+		return enviarEmailCancelamento;
+	}
+
+	public void setEnviarEmailCancelamento(boolean enviarEmailCancelamento) {
+		this.enviarEmailCancelamento = enviarEmailCancelamento;
 	}
 }

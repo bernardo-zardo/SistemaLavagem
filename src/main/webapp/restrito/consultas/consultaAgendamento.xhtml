@@ -183,7 +183,13 @@
 			</p:panel>
 
 			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
-				width="350">
+				width="550">
+				
+				<p:panelGrid columns="1" layout="grid">
+					<p:selectBooleanCheckbox itemLabel="Enviar e-mail ao cliente sobre o cancelamento do serviço" value="#{consultaAgendamentoBean.enviarEmailCancelamento}" />
+				</p:panelGrid>
+				<br />
+				
 				<p:commandButton value="Sim" type="button"
 					styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
 				<p:commandButton value="Não" type="button"
@@ -279,12 +285,15 @@
 							var="t" itemLabel="#{t.tsNome}" itemValue="#{t}" />
 					</p:selectOneMenu>
 				</p:panelGrid>
+				
+				<p:panelGrid columns="1" layout="grid">
+					<p:selectBooleanCheckbox itemLabel="Enviar e-mail ao cliente sobre a conclusão do serviço" value="#{consultaAgendamentoBean.enviarEmailConclusao}" />
+				</p:panelGrid>
 
 				<f:facet name="footer">
 					<p:commandButton value="Salvar" icon="pi pi-check"
 						actionListener="#{consultaAgendamentoBean.concluirServico()}"
 						update=":form1:mensagem :form1:panelAgendamentos"
-						oncomplete="PF('dlgConcluirServico').hide()"
 						styleClass="ui-button-success" />
 					<p:commandButton value="Fechar" icon="pi pi-times"
 						onclick="PF('dlgConcluirServico').hide();return false;"
